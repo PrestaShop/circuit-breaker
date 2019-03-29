@@ -122,6 +122,12 @@ final class SymfonyCircuitBreaker extends PartialCircuitBreaker implements Confi
 
     /**
      * Helper to dispatch event
+     *
+     * @param string $eventName the transition name
+     * @param string $service the Service URI
+     * @param array $parameters the Service parameters
+     *
+     * @return \Symfony\Component\EventDispatcher\Event
      */
     private function dispatch($eventName, $service, array $parameters)
     {

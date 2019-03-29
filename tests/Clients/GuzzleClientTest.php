@@ -4,7 +4,7 @@ namespace Tests\PrestaShop\CircuitBreaker\Clients;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\Clients\GuzzleClient;
-use PrestaShop\CircuitBreaker\Exceptions\UnavailableService;
+use PrestaShop\CircuitBreaker\Exceptions\UnavailableServiceException;
 
 class GuzzleClientTest extends TestCase
 {
@@ -19,7 +19,7 @@ class GuzzleClientTest extends TestCase
 
     public function testWrongRequestThrowsAnException()
     {
-        $this->expectException(UnavailableService::class);
+        $this->expectException(UnavailableServiceException::class);
 
         $client = new GuzzleClient();
         $client->request('http://not-even-a-valid-domain.xxx', []);

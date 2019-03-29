@@ -5,7 +5,7 @@ namespace PrestaShop\CircuitBreaker\Clients;
 use Exception;
 use GuzzleHttp\Client as OriginalGuzzleClient;
 use PrestaShop\CircuitBreaker\Contracts\Client;
-use PrestaShop\CircuitBreaker\Exceptions\UnavailableService;
+use PrestaShop\CircuitBreaker\Exceptions\UnavailableServiceException;
 
 /**
  * Guzzle implementation of client.
@@ -40,7 +40,7 @@ class GuzzleClient implements Client
 
             return (string) $client->request($method, $resource, $options)->getBody();
         } catch (Exception $exception) {
-            throw new UnavailableService($exception->getMessage());
+            throw new UnavailableServiceException($exception->getMessage());
         }
     }
 

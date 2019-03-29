@@ -2,23 +2,24 @@
 
 namespace PrestaShop\CircuitBreaker\Exceptions;
 
-use Exception;
 use PrestaShop\CircuitBreaker\Utils\ErrorFormatter;
 
-final class InvalidPlace extends Exception
+final class InvalidTransactionException extends CircuitBreakerException
 {
     /**
+     * @param mixed $service the service URI
      * @param mixed $failures the failures
-     * @param mixed $timeout the timeout
+     * @param mixed $state the Circuit Breaker
      * @param mixed $threshold the threshold
      *
      * @return self
      */
-    public static function invalidSettings($failures, $timeout, $threshold)
+    public static function invalidParameters($service, $failures, $state, $threshold)
     {
-        $exceptionMessage = 'Invalid settings for Place' . PHP_EOL .
+        $exceptionMessage = 'Invalid parameters for Transaction' . PHP_EOL .
+            ErrorFormatter::format('service', $service, 'isURI', 'an URI') .
             ErrorFormatter::format('failures', $failures, 'isPositiveInteger', 'a positive integer') .
-            ErrorFormatter::format('timeout', $timeout, 'isPositiveValue', 'a float') .
+            ErrorFormatter::format('state', $state, 'isString', 'a string') .
             ErrorFormatter::format('threshold', $threshold, 'isPositiveInteger', 'a positive integer')
         ;
 

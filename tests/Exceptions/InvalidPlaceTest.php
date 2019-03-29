@@ -3,15 +3,15 @@
 namespace Tests\PrestaShop\CircuitBreaker\Exceptions;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\CircuitBreaker\Exceptions\InvalidPlace;
+use PrestaShop\CircuitBreaker\Exceptions\InvalidPlaceException;
 
 class InvalidPlaceTest extends TestCase
 {
     public function testCreation()
     {
-        $invalidPlace = new InvalidPlace();
+        $invalidPlace = new InvalidPlaceException();
 
-        $this->assertInstanceOf(InvalidPlace::class, $invalidPlace);
+        $this->assertInstanceOf(InvalidPlaceException::class, $invalidPlace);
     }
 
     /**
@@ -22,7 +22,7 @@ class InvalidPlaceTest extends TestCase
      */
     public function testInvalidSettings($settings, $expectedExceptionMessage)
     {
-        $invalidPlace = InvalidPlace::invalidSettings(
+        $invalidPlace = InvalidPlaceException::invalidSettings(
             $settings[0], // failures
             $settings[1], // timeout
             $settings[2]  // threshold

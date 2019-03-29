@@ -5,7 +5,7 @@ namespace PrestaShop\CircuitBreaker\Transactions;
 use DateTime;
 use PrestaShop\CircuitBreaker\Contracts\Place;
 use PrestaShop\CircuitBreaker\Contracts\Transaction;
-use PrestaShop\CircuitBreaker\Exceptions\InvalidTransaction;
+use PrestaShop\CircuitBreaker\Exceptions\InvalidTransactionException;
 use PrestaShop\CircuitBreaker\Utils\Assert;
 
 /**
@@ -134,9 +134,9 @@ final class SimpleTransaction implements Transaction
      * @param string $state the Circuit Breaker state
      * @param int $threshold the threshold should be a positive value
      *
-     * @throws InvalidTransaction
-     *
      * @return bool true if valid
+     * @throws InvalidTransactionException
+     *
      */
     private function validate($service, $failures, $state, $threshold)
     {
@@ -150,6 +150,6 @@ final class SimpleTransaction implements Transaction
             return true;
         }
 
-        throw InvalidTransaction::invalidParameters($service, $failures, $state, $threshold);
+        throw InvalidTransactionException::invalidParameters($service, $failures, $state, $threshold);
     }
 }

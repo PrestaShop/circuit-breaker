@@ -4,7 +4,7 @@ namespace Tests\PrestaShop\CircuitBreaker\Storages;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\Contracts\Transaction;
-use PrestaShop\CircuitBreaker\Exceptions\TransactionNotFound;
+use PrestaShop\CircuitBreaker\Exceptions\TransactionNotFoundException;
 use PrestaShop\CircuitBreaker\Storages\SimpleArray;
 
 class SimpleArrayTest extends TestCase
@@ -86,7 +86,7 @@ class SimpleArrayTest extends TestCase
      */
     public function testGetNotFoundTransactionThrowsAnException()
     {
-        $this->expectException(TransactionNotFound::class);
+        $this->expectException(TransactionNotFoundException::class);
 
         $simpleArray = new SimpleArray();
         $simpleArray->getTransaction('http://test.com');

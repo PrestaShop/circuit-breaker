@@ -2,7 +2,7 @@
 
 namespace PrestaShop\CircuitBreaker\Contracts;
 
-use PrestaShop\CircuitBreaker\Exceptions\TransactionNotFound;
+use PrestaShop\CircuitBreaker\Exceptions\TransactionNotFoundException;
 
 /**
  * Store the transaction between the Circuit Breaker
@@ -13,36 +13,30 @@ interface Storage
     /**
      * Save the CircuitBreaker transaction.
      *
-     * @var string The service name
-     * @var Transaction $transaction the transaction
+     * @param string $service The service name
+     * @param Transaction $transaction the transaction
      *
      * @return bool
-     *
-     * @param mixed $service
      */
     public function saveTransaction($service, Transaction $transaction);
 
     /**
      * Retrieve the CircuitBreaker transaction for a specific service.
      *
-     * @var string the service name
-     *
-     * @throws TransactionNotFound
+     * @param string $service the service name
      *
      * @return Transaction
      *
-     * @param mixed $service
+     * @throws TransactionNotFoundException
      */
     public function getTransaction($service);
 
     /**
      * Checks if the transaction exists.
      *
-     * @var string the service name
+     * @param string $service the service name
      *
      * @return bool
-     *
-     * @param mixed $service
      */
     public function hasTransaction($service);
 

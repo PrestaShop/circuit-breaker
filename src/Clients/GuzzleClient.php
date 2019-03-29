@@ -79,9 +79,7 @@ class GuzzleClient implements Client
         }
 
         if (isset($options['method'])) {
-            if (!array_key_exists($options['method'], self::SUPPORTED_METHODS)
-                || !self::SUPPORTED_METHODS[$options['method']]
-            ) {
+            if (!array_key_exists($options['method'], self::SUPPORTED_METHODS)) {
                 throw UnsupportedMethodException::unsupportedMethod($options['method']);
             }
 

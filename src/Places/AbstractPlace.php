@@ -86,8 +86,8 @@ abstract class AbstractPlace implements Place
      * @param int $threshold the threshold should be a positive value
      *
      * @return bool true if valid
-     * @throws InvalidPlaceException
      *
+     * @throws InvalidPlaceException
      */
     private function validate($failures, $timeout, $threshold)
     {

@@ -9,5 +9,4 @@ use Exception;
  */
 class CircuitBreakerException extends Exception
 {
-
 }

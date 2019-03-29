@@ -37,7 +37,6 @@ class GuzzleClient implements Client
      */
     private $mainOptions;
 
-
     public function __construct(array $mainOptions = [])
     {
         $this->mainOptions = $mainOptions;
@@ -45,6 +44,7 @@ class GuzzleClient implements Client
 
     /**
      * {@inheritdoc}
+     *
      * @throws UnavailableServiceException
      */
     public function request($resource, array $options)
@@ -58,6 +58,7 @@ class GuzzleClient implements Client
             unset($options['method']);
 
             $request = $client->createRequest($method, $resource, $options);
+
             return (string) $client->send($request)->getBody();
         } catch (Exception $e) {
             throw new UnavailableServiceException($e->getMessage(), $e->getCode(), $e);
@@ -68,6 +69,7 @@ class GuzzleClient implements Client
      * @param array $options the list of options
      *
      * @return string the method
+     *
      * @throws UnsupportedMethodException
      */
     private function getHttpMethod(array $options)
@@ -82,6 +84,7 @@ class GuzzleClient implements Client
             ) {
                 throw UnsupportedMethodException::unsupportedMethod($options['method']);
             }
+
             return $options['method'];
         }
 
@@ -102,6 +105,7 @@ class GuzzleClient implements Client
 
     /**
      * Builds a client with a mock
+     *
      * @return OriginalGuzzleClient
      */
     private function buildMockClient(Mock $mock)

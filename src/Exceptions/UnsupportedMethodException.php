@@ -7,7 +7,6 @@ namespace PrestaShop\CircuitBreaker\Exceptions;
  */
 class UnsupportedMethodException extends CircuitBreakerException
 {
-
     /**
      * @param string $methodName
      *
@@ -17,5 +16,4 @@ class UnsupportedMethodException extends CircuitBreakerException
     {
         return new static(sprintf('Unsupported method: "%s"', $methodName));
     }
-
 }

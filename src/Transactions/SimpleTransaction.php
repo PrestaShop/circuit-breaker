@@ -135,8 +135,8 @@ final class SimpleTransaction implements Transaction
      * @param int $threshold the threshold should be a positive value
      *
      * @return bool true if valid
-     * @throws InvalidTransactionException
      *
+     * @throws InvalidTransactionException
      */
     private function validate($service, $failures, $state, $threshold)
     {

@@ -4,7 +4,7 @@ namespace PrestaShop\CircuitBreaker\Storages;
 
 use PrestaShop\CircuitBreaker\Contracts\Storage;
 use PrestaShop\CircuitBreaker\Contracts\Transaction;
-use PrestaShop\CircuitBreaker\Exceptions\TransactionNotFound;
+use PrestaShop\CircuitBreaker\Exceptions\TransactionNotFoundException;
 
 /**
  * Very simple implementation of Storage using a simple PHP array.
@@ -39,7 +39,7 @@ final class SimpleArray implements Storage
             return self::$transactions[$key];
         }
 
-        throw new TransactionNotFound();
+        throw new TransactionNotFoundException();
     }
 
     /**

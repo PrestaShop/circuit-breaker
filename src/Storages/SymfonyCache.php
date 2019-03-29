@@ -4,7 +4,7 @@ namespace PrestaShop\CircuitBreaker\Storages;
 
 use PrestaShop\CircuitBreaker\Contracts\Storage;
 use PrestaShop\CircuitBreaker\Contracts\Transaction;
-use PrestaShop\CircuitBreaker\Exceptions\TransactionNotFound;
+use PrestaShop\CircuitBreaker\Exceptions\TransactionNotFoundException;
 use Psr\SimpleCache\CacheInterface;
 
 /**
@@ -43,7 +43,7 @@ final class SymfonyCache implements Storage
             return $this->symfonyCache->get($key);
         }
 
-        throw new TransactionNotFound();
+        throw new TransactionNotFoundException();
     }
 
     /**

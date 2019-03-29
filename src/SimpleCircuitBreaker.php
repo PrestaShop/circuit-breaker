@@ -6,7 +6,7 @@ use PrestaShop\CircuitBreaker\Contracts\Place;
 use PrestaShop\CircuitBreaker\Contracts\Client;
 use PrestaShop\CircuitBreaker\Systems\MainSystem;
 use PrestaShop\CircuitBreaker\Storages\SimpleArray;
-use PrestaShop\CircuitBreaker\Exceptions\UnavailableService;
+use PrestaShop\CircuitBreaker\Exceptions\UnavailableServiceException;
 
 /**
  * Main implementation of Circuit Breaker.
@@ -44,7 +44,7 @@ final class SimpleCircuitBreaker extends PartialCircuitBreaker
             $this->moveStateTo(States::CLOSED_STATE, $service);
 
             return $response;
-        } catch (UnavailableService $exception) {
+        } catch (UnavailableServiceException $exception) {
             $transaction->incrementFailures();
             $this->storage->saveTransaction($service, $transaction);
 

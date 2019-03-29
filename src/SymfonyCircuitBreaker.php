@@ -7,7 +7,7 @@ use PrestaShop\CircuitBreaker\Contracts\System;
 use PrestaShop\CircuitBreaker\Contracts\Storage;
 use PrestaShop\CircuitBreaker\Events\TransitionEvent;
 use PrestaShop\CircuitBreaker\Contracts\ConfigurableCall;
-use PrestaShop\CircuitBreaker\Exceptions\UnavailableService;
+use PrestaShop\CircuitBreaker\Exceptions\UnavailableServiceException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -72,7 +72,7 @@ final class SymfonyCircuitBreaker extends PartialCircuitBreaker implements Confi
             );
 
             return $response;
-        } catch (UnavailableService $exception) {
+        } catch (UnavailableServiceException $exception) {
             $transaction->incrementFailures();
             $this->storage->saveTransaction($service, $transaction);
 

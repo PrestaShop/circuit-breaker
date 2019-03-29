@@ -3,15 +3,15 @@
 namespace Tests\PrestaShop\CircuitBreaker\Exceptions;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\CircuitBreaker\Exceptions\InvalidTransaction;
+use PrestaShop\CircuitBreaker\Exceptions\InvalidTransactionException;
 
 class InvalidTransactionTest extends TestCase
 {
     public function testCreation()
     {
-        $invalidPlace = new InvalidTransaction();
+        $invalidPlace = new InvalidTransactionException();
 
-        $this->assertInstanceOf(InvalidTransaction::class, $invalidPlace);
+        $this->assertInstanceOf(InvalidTransactionException::class, $invalidPlace);
     }
 
     /**
@@ -22,7 +22,7 @@ class InvalidTransactionTest extends TestCase
      */
     public function testInvalidParameters($parameters, $expectedExceptionMessage)
     {
-        $invalidPlace = InvalidTransaction::invalidParameters(
+        $invalidPlace = InvalidTransactionException::invalidParameters(
             $parameters[0], // service
             $parameters[1], // failures
             $parameters[2], // state

@@ -4,8 +4,10 @@ namespace PrestaShop\CircuitBreaker\Clients;
 
 use Exception;
 use GuzzleHttp\Client as OriginalGuzzleClient;
+use GuzzleHttp\Subscriber\Mock;
 use PrestaShop\CircuitBreaker\Contracts\Client;
-use PrestaShop\CircuitBreaker\Exceptions\UnavailableService;
+use PrestaShop\CircuitBreaker\Exceptions\UnavailableServiceException;
+use PrestaShop\CircuitBreaker\Exceptions\UnsupportedMethodException;
 
 /**
  * Guzzle implementation of client.
@@ -19,9 +21,22 @@ class GuzzleClient implements Client
     const DEFAULT_METHOD = 'GET';
 
     /**
+     * Supported HTTP methods
+     */
+    const SUPPORTED_METHODS = [
+        'GET' => true,
+        'HEAD' => true,
+        'POST' => true,
+        'PUT' => true,
+        'DELETE' => true,
+        'OPTIONS' => true,
+    ];
+
+    /**
      * @var array the Client main options
      */
     private $mainOptions;
+
 
     public function __construct(array $mainOptions = [])
     {
@@ -30,17 +45,22 @@ class GuzzleClient implements Client
 
     /**
      * {@inheritdoc}
+     * @throws UnavailableServiceException
      */
     public function request($resource, array $options)
     {
         try {
-            $client = new OriginalGuzzleClient($this->mainOptions);
-            $method = $this->defineMethod($options);
-            $options['http_errors'] = true;
+            $client = $this->buildClient();
+            $method = $this->getHttpMethod($options);
+            $options['exceptions'] = true;
 
-            return (string) $client->request($method, $resource, $options)->getBody();
-        } catch (Exception $exception) {
-            throw new UnavailableService($exception->getMessage());
+            // prevents unhandled method errors in Guzzle 5
+            unset($options['method']);
+
+            $request = $client->createRequest($method, $resource, $options);
+            return (string) $client->send($request)->getBody();
+        } catch (Exception $e) {
+            throw new UnavailableServiceException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -48,17 +68,51 @@ class GuzzleClient implements Client
      * @param array $options the list of options
      *
      * @return string the method
+     * @throws UnsupportedMethodException
      */
-    private function defineMethod(array $options)
+    private function getHttpMethod(array $options)
     {
         if (isset($this->mainOptions['method'])) {
             return $this->mainOptions['method'];
         }
 
         if (isset($options['method'])) {
+            if (!array_key_exists($options['method'], self::SUPPORTED_METHODS)
+                || !self::SUPPORTED_METHODS[$options['method']]
+            ) {
+                throw UnsupportedMethodException::unsupportedMethod($options['method']);
+            }
             return $options['method'];
         }
 
         return self::DEFAULT_METHOD;
+    }
+
+    /**
+     * @return OriginalGuzzleClient
+     */
+    private function buildClient()
+    {
+        if (isset($this->mainOptions['mock']) && $this->mainOptions['mock'] instanceof Mock) {
+            return $this->buildMockClient($this->mainOptions['mock']);
+        }
+
+        return new OriginalGuzzleClient($this->mainOptions);
+    }
+
+    /**
+     * Builds a client with a mock
+     * @return OriginalGuzzleClient
+     */
+    private function buildMockClient(Mock $mock)
+    {
+        $options = $this->mainOptions;
+        unset($options['mock']);
+
+        $client = new OriginalGuzzleClient($options);
+
+        $client->getEmitter()->attach($mock);
+
+        return $client;
     }
 }

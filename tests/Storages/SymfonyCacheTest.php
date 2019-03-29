@@ -4,7 +4,7 @@ namespace Tests\PrestaShop\CircuitBreaker\Storages;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\Contracts\Transaction;
-use PrestaShop\CircuitBreaker\Exceptions\TransactionNotFound;
+use PrestaShop\CircuitBreaker\Exceptions\TransactionNotFoundException;
 use PrestaShop\CircuitBreaker\Storages\SymfonyCache;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 
@@ -89,7 +89,7 @@ class SymfonyCacheTest extends TestCase
      */
     public function testGetNotFoundTransactionThrowsAnException()
     {
-        $this->expectException(TransactionNotFound::class);
+        $this->expectException(TransactionNotFoundException::class);
 
         $this->symfonyCache->getTransaction('http://test.com');
     }
@@ -106,7 +106,7 @@ class SymfonyCacheTest extends TestCase
 
         // We have stored 2 transactions
         $this->assertTrue($this->symfonyCache->clear());
-        $this->expectException(TransactionNotFound::class);
+        $this->expectException(TransactionNotFoundException::class);
 
         $this->symfonyCache->getTransaction('http://a.com');
     }

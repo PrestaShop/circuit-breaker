@@ -2,7 +2,7 @@
 
 namespace Tests\PrestaShop\CircuitBreaker\Places;
 
-use PrestaShop\CircuitBreaker\Exceptions\InvalidPlace;
+use PrestaShop\CircuitBreaker\Exceptions\InvalidPlaceException;
 use PrestaShop\CircuitBreaker\Places\ClosedPlace;
 use PrestaShop\CircuitBreaker\States;
 
@@ -33,7 +33,7 @@ class ClosedPlaceTest extends PlaceTestCase
      */
     public function testCreationWithInvalidValues($failures, $timeout, $threshold)
     {
-        $this->expectException(InvalidPlace::class);
+        $this->expectException(InvalidPlaceException::class);
 
         new ClosedPlace($failures, $timeout, $threshold);
     }

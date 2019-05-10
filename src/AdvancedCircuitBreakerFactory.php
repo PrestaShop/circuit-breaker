@@ -16,11 +16,23 @@ use PrestaShop\CircuitBreaker\Systems\MainSystem;
  */
 final class AdvancedCircuitBreakerFactory implements Factory
 {
+    /** @var array */
+    private $defaultSettings;
+
+    /**
+     * @param array $defaultSettings
+     */
+    public function __construct(array $defaultSettings = [])
+    {
+        $this->defaultSettings = $defaultSettings;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function create(array $settings)
     {
+        $settings = array_merge($this->defaultSettings, $settings);
         $openPlace = OpenPlace::fromArray($settings['open']);
         $halfOpenPlace = HalfOpenPlace::fromArray($settings['half_open']);
         $closedPlace = ClosedPlace::fromArray($settings['closed']);

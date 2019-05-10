@@ -128,6 +128,23 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
         $this->assertInstanceOf(AdvancedCircuitBreaker::class, $circuitBreaker);
     }
 
+    public function testFactoryDefaultSettings()
+    {
+        $defaultSettings = [
+            'closed' => [
+                'failures' => 2,
+                'timeout' => 0.1,
+                'threshold' => 0,
+            ]
+        ];
+        $factory = new AdvancedCircuitBreakerFactory($defaultSettings);
+        $circuitBreaker = $factory->create([
+            'open' => [0, 0, 10],
+            'half_open' => [1, 0.2, 0],
+        ]);
+        $this->assertNotNull($circuitBreaker);
+    }
+
     /**
      * @return array
      */

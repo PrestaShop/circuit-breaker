@@ -38,6 +38,30 @@ class ClosedPlaceTest extends PlaceTestCase
         new ClosedPlace($failures, $timeout, $threshold);
     }
 
+    /**
+     * @dataProvider getArrayFixtures
+     *
+     * @param array $settings
+     */
+    public function testFromArrayWith(array $settings)
+    {
+        $closedPlace = ClosedPlace::fromArray($settings);
+
+        $this->assertNotNull($closedPlace);
+    }
+
+    /**
+     * @dataProvider getInvalidArrayFixtures
+     *
+     * @param array $settings
+     */
+    public function testFromArrayWithInvalidValues(array $settings)
+    {
+        $this->expectException(InvalidPlaceException::class);
+
+        ClosedPlace::fromArray($settings);
+    }
+
     public function testGetExpectedState()
     {
         $closedPlace = new ClosedPlace(1, 1, 1);

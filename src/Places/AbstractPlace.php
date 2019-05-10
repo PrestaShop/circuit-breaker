@@ -72,10 +72,40 @@ abstract class AbstractPlace implements Place
      * @var array the failures, timeout and treshold
      *
      * @return self
+     *
+     * @throws InvalidPlaceException
      */
     public static function fromArray(array $settings)
     {
-        return new static($settings[0], $settings[1], $settings[2]);
+        static::validateSettings($settings);
+
+        return new static(
+            isset($settings[0]) ? $settings[0] : $settings['failures'],
+            isset($settings[1]) ? $settings[1] : $settings['timeout'],
+            isset($settings[2]) ? $settings[2] : $settings['threshold']
+        );
+    }
+
+    /**
+     * Ensure the array settings is correctly formatted.
+     *
+     * @param array $settings
+     *
+     * @return bool true if valid
+     *
+     * @throws InvalidPlaceException
+     */
+    private static function validateSettings(array $settings)
+    {
+        if (isset($settings[0]) && isset($settings[1]) && isset($settings[2])) {
+            return true;
+        }
+
+        if (isset($settings['failures']) && isset($settings['timeout']) && isset($settings['threshold'])) {
+            return true;
+        }
+
+        throw InvalidPlaceException::invalidArraySettings($settings);
     }
 
     /**

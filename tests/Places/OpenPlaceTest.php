@@ -17,11 +17,11 @@ class OpenPlaceTest extends PlaceTestCase
      */
     public function testCreationWith($failures, $timeout, $threshold)
     {
-        $closedPlace = new OpenPlace($failures, $timeout, $threshold);
+        $openPlace = new OpenPlace($failures, $timeout, $threshold);
 
-        $this->assertSame($failures, $closedPlace->getFailures());
-        $this->assertSame($timeout, $closedPlace->getTimeout());
-        $this->assertSame($threshold, $closedPlace->getThreshold());
+        $this->assertSame($failures, $openPlace->getFailures());
+        $this->assertSame($timeout, $openPlace->getTimeout());
+        $this->assertSame($threshold, $openPlace->getThreshold());
     }
 
     /**
@@ -38,10 +38,34 @@ class OpenPlaceTest extends PlaceTestCase
         new OpenPlace($failures, $timeout, $threshold);
     }
 
+    /**
+     * @dataProvider getArrayFixtures
+     *
+     * @param array $settings
+     */
+    public function testFromArrayWith(array $settings)
+    {
+        $openPlace = OpenPlace::fromArray($settings);
+
+        $this->assertNotNull($openPlace);
+    }
+
+    /**
+     * @dataProvider getInvalidArrayFixtures
+     *
+     * @param array $settings
+     */
+    public function testFromArrayWithInvalidValues(array $settings)
+    {
+        $this->expectException(InvalidPlaceException::class);
+
+        OpenPlace::fromArray($settings);
+    }
+
     public function testGetExpectedState()
     {
-        $closedPlace = new OpenPlace(1, 1, 1);
+        $openPlace = new OpenPlace(1, 1, 1);
 
-        $this->assertSame(States::OPEN_STATE, $closedPlace->getState());
+        $this->assertSame(States::OPEN_STATE, $openPlace->getState());
     }
 }

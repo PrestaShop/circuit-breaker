@@ -2,6 +2,7 @@
 
 namespace Tests\PrestaShop\CircuitBreaker;
 
+use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use PrestaShop\CircuitBreaker\Storages\SymfonyCache;
 use PrestaShop\CircuitBreaker\SymfonyCircuitBreaker;
@@ -136,6 +137,7 @@ class CircuitBreakerTests extends CircuitBreakerTestCase
         return [
             'simple' => $this->createSimpleCircuitBreaker(),
             'symfony' => $this->createSymfonyCircuitBreaker(),
+            'advanced' => $this->creatAdvancedCircuitBreaker(),
         ];
     }
 
@@ -149,6 +151,26 @@ class CircuitBreakerTests extends CircuitBreakerTestCase
             new HalfOpenPlace(0, 0.2, 0), // timeout 0.2s to test the service
             new ClosedPlace(2, 0.2, 0), // 2 failures allowed, 0.2s timeout
             $this->getTestClient()
+        );
+    }
+
+    /**
+     * @return AdvancedCircuitBreaker the circuit breaker for testing purposes
+     */
+    private function creatAdvancedCircuitBreaker()
+    {
+        $system = new MainSystem(
+            new ClosedPlace(2, 0.2, 0),
+            new HalfOpenPlace(0, 0.2, 0),
+            new OpenPlace(0, 0, 1)
+        );
+
+        $symfonyCache = new SymfonyCache(new ArrayCache());
+
+        return new AdvancedCircuitBreaker(
+            $system,
+            $this->getTestClient(),
+            $symfonyCache
         );
     }
 

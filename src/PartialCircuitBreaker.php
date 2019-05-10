@@ -13,6 +13,11 @@ use DateTime;
 
 abstract class PartialCircuitBreaker implements CircuitBreaker
 {
+    /**
+     * @param System $system
+     * @param Client $client
+     * @param Storage $storage
+     */
     public function __construct(
         System $system,
         Client $client,

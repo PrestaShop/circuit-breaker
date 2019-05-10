@@ -27,7 +27,11 @@
 namespace Tests\PrestaShop\CircuitBreaker;
 
 use PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount;
+use GuzzleHttp\Message\Response;
+use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\Subscriber\Mock;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
+use PrestaShop\CircuitBreaker\Clients\GuzzleClient;
 use PrestaShop\CircuitBreaker\Places\ClosedPlace;
 use PrestaShop\CircuitBreaker\Places\HalfOpenPlace;
 use PrestaShop\CircuitBreaker\Places\OpenPlace;
@@ -74,6 +78,29 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
         $this->assertSame('TRIAL', $invocations[1]->parameters[0]);
         $this->assertSame('TRIAL', $invocations[2]->parameters[0]);
         $this->assertSame('OPENING', $invocations[3]->parameters[0]);
+    }
+
+    public function testSimpleCall()
+    {
+        $system = new MainSystem(
+            new ClosedPlace(2, 0.2, 0),
+            new HalfOpenPlace(0, 0.2, 0),
+            new OpenPlace(0, 0, 1)
+        );
+        $symfonyCache = new SymfonyCache(new ArrayCache());
+        $mock = new Mock([
+            new Response(200, [], Stream::factory('{"hello": "world"}')),
+        ]);
+        $client = new GuzzleClient(['mock' => $mock]);
+
+        $circuitBreaker = new AdvancedCircuitBreaker(
+            $system,
+            $client,
+            $symfonyCache
+        );
+
+        $response = $circuitBreaker->call('anything', function() { return false; });
+        $this->assertEquals('{"hello": "world"}', $response);
     }
 
     /**

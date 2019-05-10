@@ -60,7 +60,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker implements Configurab
      */
     public function call($service, callable $fallback)
     {
-        $this->callWithParameters($service, $fallback, []);
+        return $this->callWithParameters($service, $fallback, []);
     }
 
     /**

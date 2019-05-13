@@ -74,38 +74,6 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
     }
 
     /**
-     * Once the threshold is reached, the circuit breaker
-     * try again to reach the service. This time, the service
-     * is not reachable.
-     *
-     * @dataProvider getCircuitBreakers
-     *
-     * @param CircuitBreaker $circuitBreaker
-     */
-    public function testAfterTheThresholdTheCircuitBreakerMovesInHalfOpenState($circuitBreaker)
-    {
-        // CLOSED
-        $circuitBreaker->call('https://httpbin.org/get/foo', $this->createFallbackResponse());
-        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
-
-        // OPEN
-        $circuitBreaker->call('https://httpbin.org/get/foo', $this->createFallbackResponse());
-        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
-
-        sleep(2 * self::OPEN_THRESHOLD);
-        // NOW HALF OPEN
-        $this->assertSame(
-            '{}',
-            $circuitBreaker->call(
-                'https://httpbin.org/get/foo',
-                $this->createFallbackResponse()
-            )
-        );
-        $this->assertSame(States::HALF_OPEN_STATE, $circuitBreaker->getState());
-        $this->assertTrue($circuitBreaker->isHalfOpened());
-    }
-
-    /**
      * In HalfOpen state, if the service is back we can
      * close the CircuitBreaker.
      *
@@ -127,18 +95,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
         $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
 
         sleep(2 * self::OPEN_THRESHOLD);
-        // SWITCH TO HALF OPEN - returns the fallback
-        $this->assertSame(
-            '{}',
-            $circuitBreaker->call(
-                'https://httpbin.org/get/foo',
-                $this->createFallbackResponse()
-            )
-        );
-        $this->assertSame(States::HALF_OPEN_STATE, $circuitBreaker->getState());
-        $this->assertTrue($circuitBreaker->isHalfOpened());
-
-        // HALF OPEN MODE - performs the call which succeeds
+        // SWITCH TO HALF OPEN - retry to call the service
         $this->assertSame(
             '{"hello": "world"}',
             $circuitBreaker->call(
@@ -146,7 +103,6 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
                 $this->createFallbackResponse()
             )
         );
-
         $this->assertSame(States::CLOSED_STATE, $circuitBreaker->getState());
         $this->assertTrue($circuitBreaker->isClosed());
     }

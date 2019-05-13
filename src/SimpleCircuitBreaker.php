@@ -32,11 +32,11 @@ final class SimpleCircuitBreaker extends PartialCircuitBreaker
         $transaction = $this->initTransaction($service);
         try {
             if ($this->isOpened()) {
-                if ($this->canAccessService($transaction)) {
-                    $this->moveStateTo(States::HALF_OPEN_STATE, $service);
+                if (!$this->canAccessService($transaction)) {
+                    return \call_user_func($fallback);
                 }
 
-                return \call_user_func($fallback);
+                $this->moveStateTo(States::HALF_OPEN_STATE, $service);
             }
             $response = $this->request($service);
             $this->moveStateTo(States::CLOSED_STATE, $service);

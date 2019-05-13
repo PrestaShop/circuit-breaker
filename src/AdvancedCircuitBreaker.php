@@ -75,17 +75,18 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker implements Configurab
 
         try {
             if ($this->isOpened()) {
-                if ($this->canAccessService($transaction)) {
-                    $this->moveStateTo(States::HALF_OPEN_STATE, $service);
-                    $this->beginTransition(
-                        Transitions::CHECKING_AVAILABILITY_TRANSITION,
-                        $service,
-                        $serviceParameters
-                    );
+                if (!$this->canAccessService($transaction)) {
+                    return \call_user_func($fallback);
                 }
 
-                return \call_user_func($fallback);
+                $this->moveStateTo(States::HALF_OPEN_STATE, $service);
+                $this->beginTransition(
+                    Transitions::CHECKING_AVAILABILITY_TRANSITION,
+                    $service,
+                    $serviceParameters
+                );
             }
+
             $response = $this->request($service, $serviceParameters);
             $this->moveStateTo(States::CLOSED_STATE, $service);
             $this->beginTransition(

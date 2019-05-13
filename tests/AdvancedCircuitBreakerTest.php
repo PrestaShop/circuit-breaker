@@ -26,6 +26,8 @@
 
 namespace Tests\PrestaShop\CircuitBreaker;
 
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Message\Request;
 use PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
@@ -35,6 +37,7 @@ use PrestaShop\CircuitBreaker\Clients\GuzzleClient;
 use PrestaShop\CircuitBreaker\Places\ClosedPlace;
 use PrestaShop\CircuitBreaker\Places\HalfOpenPlace;
 use PrestaShop\CircuitBreaker\Places\OpenPlace;
+use PrestaShop\CircuitBreaker\States;
 use PrestaShop\CircuitBreaker\Storages\SymfonyCache;
 use PrestaShop\CircuitBreaker\SymfonyCircuitBreaker;
 use PrestaShop\CircuitBreaker\Systems\MainSystem;
@@ -100,11 +103,119 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
         );
 
         $response = $circuitBreaker->call('anything', function () { return false; });
+        $this->assertSame(States::CLOSED_STATE, $circuitBreaker->getState());
+        $this->assertEquals(0, $mock->count());
         $this->assertEquals('{"hello": "world"}', $response);
     }
 
+    public function testOpenStateAfterTooManyFailures()
+    {
+        $system = new MainSystem(
+            new ClosedPlace(2, 0.2, 0),
+            new HalfOpenPlace(0, 0.2, 0),
+            new OpenPlace(0, 0, 1)
+        );
+        $symfonyCache = new SymfonyCache(new ArrayCache());
+        $mock = new Mock([
+            new RequestException('Service unavailable', new Request('GET', 'test')),
+            new RequestException('Service unavailable', new Request('GET', 'test')),
+        ]);
+        $client = new GuzzleClient(['mock' => $mock]);
+
+        $circuitBreaker = new AdvancedCircuitBreaker(
+            $system,
+            $client,
+            $symfonyCache
+        );
+
+        $response = $circuitBreaker->call('anything', function () { return false; });
+        $this->assertEquals(0, $mock->count());
+        $this->assertEquals(false, $response);
+        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
+    }
+
+    public function testBackToClosedStateAfterSuccess()
+    {
+        $system = new MainSystem(
+            new ClosedPlace(2, 0.2, 0),
+            new HalfOpenPlace(0, 0.2, 0),
+            new OpenPlace(0, 0, 1)
+        );
+        $symfonyCache = new SymfonyCache(new ArrayCache());
+        $mock = new Mock([
+            new RequestException('Service unavailable', new Request('GET', 'test')),
+            new RequestException('Service unavailable', new Request('GET', 'test')),
+            new Response(200, [], Stream::factory('{"hello": "world"}')),
+        ]);
+        $client = new GuzzleClient(['mock' => $mock]);
+
+        $circuitBreaker = new AdvancedCircuitBreaker(
+            $system,
+            $client,
+            $symfonyCache
+        );
+
+        $response = $circuitBreaker->call('anything', function () { return false; });
+        $this->assertEquals(1, $mock->count());
+        $this->assertEquals(false, $response);
+        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
+
+        //Stay in OPEN state
+        $response = $circuitBreaker->call('anything', function () { return false; });
+        $this->assertEquals(1, $mock->count());
+        $this->assertEquals(false, $response);
+        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
+
+        sleep(2);
+        //Switch to CLOSED state on success
+        $response = $circuitBreaker->call('anything', function () { return false; });
+        $this->assertEquals(0, $mock->count());
+        $this->assertEquals('{"hello": "world"}', $response);
+        $this->assertSame(States::CLOSED_STATE, $circuitBreaker->getState());
+    }
+
+    public function testStayInOpenStateAfterFailure()
+    {
+        $system = new MainSystem(
+            new ClosedPlace(2, 0.2, 0),
+            new HalfOpenPlace(0, 0.2, 0),
+            new OpenPlace(0, 0, 1)
+        );
+        $symfonyCache = new SymfonyCache(new ArrayCache());
+        $mock = new Mock([
+            new RequestException('Service unavailable', new Request('GET', 'test')),
+            new RequestException('Service unavailable', new Request('GET', 'test')),
+            new RequestException('Service unavailable', new Request('GET', 'test')),
+        ]);
+        $client = new GuzzleClient(['mock' => $mock]);
+
+        $circuitBreaker = new AdvancedCircuitBreaker(
+            $system,
+            $client,
+            $symfonyCache
+        );
+
+        $response = $circuitBreaker->call('anything', function () { return false; });
+        $this->assertEquals(1, $mock->count());
+        $this->assertEquals(false, $response);
+        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
+
+        //Stay in OPEN state
+        $response = $circuitBreaker->call('anything', function () { return false; });
+        $this->assertEquals(1, $mock->count());
+        $this->assertEquals(false, $response);
+        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
+
+        sleep(2);
+        //Switch to CLOSED state on success
+        $response = $circuitBreaker->call('anything', function () { return false; });
+        $this->assertEquals(0, $mock->count());
+        $this->assertEquals(false, $response);
+        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
+    }
+
     /**
-     * @return SymfonyCircuitBreaker the circuit breaker for testing purposes
+     * @return AdvancedCircuitBreaker the circuit breaker for testing purposes
      */
     private function createCircuitBreaker()
     {

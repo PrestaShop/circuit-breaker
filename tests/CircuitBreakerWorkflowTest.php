@@ -18,7 +18,7 @@ use PrestaShop\CircuitBreaker\Systems\MainSystem;
 use PrestaShop\CircuitBreaker\Places\OpenPlace;
 use Symfony\Component\Cache\Simple\ArrayCache;
 
-class CircuitBreakerTest extends CircuitBreakerTestCase
+class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
 {
     const OPEN_THRESHOLD = 1;
 

@@ -103,7 +103,7 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
         ]);
 
         $this->assertInstanceOf(AdvancedCircuitBreaker::class, $circuitBreaker);
-        $circuitBreaker->callWithParameters($localeService, function () {}, $expectedParameters);
+        $circuitBreaker->call($localeService, function () {}, $expectedParameters);
     }
 
     public function testCircuitBreakerWithStorage()

@@ -27,7 +27,6 @@
 namespace PrestaShop\CircuitBreaker;
 
 use PrestaShop\CircuitBreaker\Contracts\Client;
-use PrestaShop\CircuitBreaker\Contracts\ConfigurableCall;
 use PrestaShop\CircuitBreaker\Contracts\Storage;
 use PrestaShop\CircuitBreaker\Contracts\System;
 use PrestaShop\CircuitBreaker\Contracts\Transitioner;
@@ -38,7 +37,7 @@ use PrestaShop\CircuitBreaker\Exceptions\UnavailableServiceException;
  * it allows you to setup your client, system or storage. You can also add an optional transitioner.
  * And you can send requests with parameters.
  */
-class AdvancedCircuitBreaker extends PartialCircuitBreaker implements ConfigurableCall, Transitioner
+class AdvancedCircuitBreaker extends PartialCircuitBreaker implements Transitioner
 {
     /** @var Transitioner */
     protected $transitioner;
@@ -58,15 +57,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker implements Configurab
     /**
      * {@inheritdoc}
      */
-    public function call($service, callable $fallback)
-    {
-        return $this->callWithParameters($service, $fallback, []);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function callWithParameters(
+    public function call(
         $service,
         callable $fallback,
         array $serviceParameters = []
@@ -110,7 +101,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker implements Configurab
                 return \call_user_func($fallback);
             }
 
-            return $this->callWithParameters(
+            return $this->call(
                 $service,
                 $fallback,
                 $serviceParameters

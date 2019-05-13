@@ -27,8 +27,11 @@ final class SimpleCircuitBreaker extends PartialCircuitBreaker
     /**
      * {@inheritdoc}
      */
-    public function call($service, callable $fallback)
-    {
+    public function call(
+        $service,
+        callable $fallback,
+        array $serviceParameters = []
+    ) {
         $transaction = $this->initTransaction($service);
         try {
             if ($this->isOpened()) {
@@ -38,7 +41,7 @@ final class SimpleCircuitBreaker extends PartialCircuitBreaker
 
                 $this->moveStateTo(States::HALF_OPEN_STATE, $service);
             }
-            $response = $this->request($service);
+            $response = $this->request($service, $serviceParameters);
             $this->moveStateTo(States::CLOSED_STATE, $service);
 
             return $response;

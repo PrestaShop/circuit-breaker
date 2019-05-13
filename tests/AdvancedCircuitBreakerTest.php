@@ -62,7 +62,7 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
     {
         $circuitBreaker = $this->createCircuitBreaker();
 
-        $circuitBreaker->callWithParameters(
+        $circuitBreaker->call(
             'https://httpbin.org/get/foo',
             function () {
                 return '{}';
@@ -207,7 +207,7 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
         $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
 
         sleep(2);
-        //Switch to CLOSED state on success
+        //Switch to OPEN state on failure
         $response = $circuitBreaker->call('anything', function () { return false; });
         $this->assertEquals(0, $mock->count());
         $this->assertEquals(false, $response);

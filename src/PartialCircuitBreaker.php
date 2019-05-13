@@ -52,7 +52,7 @@ abstract class PartialCircuitBreaker implements CircuitBreaker
     /**
      * {@inheritdoc}
      */
-    abstract public function call($service, callable $fallback);
+    abstract public function call($service, callable $fallback, array $serviceParameters = []);
 
     /**
      * {@inheritdoc}

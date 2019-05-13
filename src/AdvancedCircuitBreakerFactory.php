@@ -11,8 +11,8 @@ use PrestaShop\CircuitBreaker\Storages\SimpleArray;
 use PrestaShop\CircuitBreaker\Systems\MainSystem;
 
 /**
- * Main implementation of Circuit Breaker Factory
- * Used to create a SimpleCircuitBreaker instance.
+ * Advanced implementation of Circuit Breaker Factory
+ * Used to create an AdvancedCircuitBreaker instance.
  */
 final class AdvancedCircuitBreakerFactory implements Factory
 {

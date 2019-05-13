@@ -112,6 +112,10 @@ abstract class PartialCircuitBreaker implements CircuitBreaker
     {
         if ($this->storage->hasTransaction($service)) {
             $transaction = $this->storage->getTransaction($service);
+            // CircuitBreaker needs to be in the same state as its last transaction
+            if ($this->getState() !== $transaction->getState()) {
+                $this->currentPlace = $this->places[$transaction->getState()];
+            }
         } else {
             $transaction = SimpleTransaction::createFromPlace(
                 $this->currentPlace,

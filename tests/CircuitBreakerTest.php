@@ -3,6 +3,11 @@
 namespace Tests\PrestaShop\CircuitBreaker;
 
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
+use PrestaShop\CircuitBreaker\Clients\GuzzleClient;
+use PrestaShop\CircuitBreaker\Contracts\CircuitBreaker;
+use PrestaShop\CircuitBreaker\Exceptions\UnavailableServiceException;
+use PrestaShop\CircuitBreaker\States;
+use PrestaShop\CircuitBreaker\Storages\SimpleArray;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use PrestaShop\CircuitBreaker\Storages\SymfonyCache;
 use PrestaShop\CircuitBreaker\SymfonyCircuitBreaker;
@@ -13,40 +18,52 @@ use PrestaShop\CircuitBreaker\Systems\MainSystem;
 use PrestaShop\CircuitBreaker\Places\OpenPlace;
 use Symfony\Component\Cache\Simple\ArrayCache;
 
-class CircuitBreakerTests extends CircuitBreakerTestCase
+class CircuitBreakerTest extends CircuitBreakerTestCase
 {
+    const OPEN_THRESHOLD = 1;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        //For SimpleCircuitBreaker tests we need to clear the storage cache because it is stored in a static variable
+        $storage = new SimpleArray();
+        $storage->clear();
+    }
+
     /**
      * When we use the circuit breaker on unreachable service
      * the fallback response is used.
      *
      * @dataProvider getCircuitBreakers
+     *
+     * @param CircuitBreaker $circuitBreaker
      */
     public function testCircuitBreakerIsInClosedStateAtStart($circuitBreaker)
     {
-        $this->assertSame('CLOSED', $circuitBreaker->getState());
-
-        $this->assertSame(
-            '{}',
-            $circuitBreaker->call(
-                'https://httpbin.org/get/foo',
-                $this->createFallbackResponse()
-            )
-        );
+        $this->assertSame(States::CLOSED_STATE, $circuitBreaker->getState());
     }
 
     /**
      * Once the number of failures is reached, the circuit breaker
-     * is opened. This time no calls to the services are done.
+     * is open. This time no calls to the services are done.
      *
-     * @depends testCircuitBreakerIsInClosedStateAtStart
      * @dataProvider getCircuitBreakers
+     *
+     * @param CircuitBreaker $circuitBreaker
      */
-    public function testCircuitBreakerWillBeOpenedInCaseOfFailures($circuitBreaker)
+    public function testCircuitBreakerWillBeOpenInCaseOfFailures($circuitBreaker)
     {
         // CLOSED
-        $circuitBreaker->call('https://httpbin.org/get/foo', $this->createFallbackResponse());
+        $this->assertSame(States::CLOSED_STATE, $circuitBreaker->getState());
+        $response = $circuitBreaker->call('https://httpbin.org/get/foo', $this->createFallbackResponse());
+        $this->assertSame('{}', $response);
 
-        $this->assertSame('OPENED', $circuitBreaker->getState());
+        //After two failed calls switch to OPEN state
+        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
         $this->assertSame(
             '{}',
             $circuitBreaker->call(
@@ -61,18 +78,21 @@ class CircuitBreakerTests extends CircuitBreakerTestCase
      * try again to reach the service. This time, the service
      * is not reachable.
      *
-     * @depends testCircuitBreakerIsInClosedStateAtStart
-     * @depends testCircuitBreakerWillBeOpenedInCaseOfFailures
      * @dataProvider getCircuitBreakers
+     *
+     * @param CircuitBreaker $circuitBreaker
      */
     public function testAfterTheThresholdTheCircuitBreakerMovesInHalfOpenState($circuitBreaker)
     {
         // CLOSED
         $circuitBreaker->call('https://httpbin.org/get/foo', $this->createFallbackResponse());
+        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
+
         // OPEN
         $circuitBreaker->call('https://httpbin.org/get/foo', $this->createFallbackResponse());
+        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
 
-        sleep(2);
+        sleep(2 * self::OPEN_THRESHOLD);
         // NOW HALF OPEN
         $this->assertSame(
             '{}',
@@ -81,7 +101,7 @@ class CircuitBreakerTests extends CircuitBreakerTestCase
                 $this->createFallbackResponse()
             )
         );
-        $this->assertSame('HALF_OPENED', $circuitBreaker->getState());
+        $this->assertSame(States::HALF_OPEN_STATE, $circuitBreaker->getState());
         $this->assertTrue($circuitBreaker->isHalfOpened());
     }
 
@@ -89,20 +109,25 @@ class CircuitBreakerTests extends CircuitBreakerTestCase
      * In HalfOpen state, if the service is back we can
      * close the CircuitBreaker.
      *
-     * @depends testCircuitBreakerIsInClosedStateAtStart
-     * @depends testCircuitBreakerWillBeOpenedInCaseOfFailures
-     * @depends testAfterTheThresholdTheCircuitBreakerMovesInHalfOpenState
      * @dataProvider getCircuitBreakers
+     *
+     * @param CircuitBreaker $circuitBreaker
      */
     public function testOnceInHalfOpenModeServiceIsFinallyReachable($circuitBreaker)
     {
-        // CLOSED
-        $circuitBreaker->call('https://httpbin.org/get/foo', $this->createFallbackResponse());
-        // OPEN
-        $circuitBreaker->call('https://httpbin.org/get/foo', $this->createFallbackResponse());
+        // CLOSED - first call fails (twice)
+        $this->assertSame(States::CLOSED_STATE, $circuitBreaker->getState());
+        $response = $circuitBreaker->call('https://httpbin.org/get/foo', $this->createFallbackResponse());
+        $this->assertSame('{}', $response);
+        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
 
-        sleep(2);
-        // NOW HALF OPEN
+        // OPEN - no call to client
+        $response = $circuitBreaker->call('https://httpbin.org/get/foo', $this->createFallbackResponse());
+        $this->assertSame('{}', $response);
+        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
+
+        sleep(2 * self::OPEN_THRESHOLD);
+        // SWITCH TO HALF OPEN - returns the fallback
         $this->assertSame(
             '{}',
             $circuitBreaker->call(
@@ -110,11 +135,10 @@ class CircuitBreakerTests extends CircuitBreakerTestCase
                 $this->createFallbackResponse()
             )
         );
-        $this->assertSame('HALF_OPENED', $circuitBreaker->getState());
+        $this->assertSame(States::HALF_OPEN_STATE, $circuitBreaker->getState());
         $this->assertTrue($circuitBreaker->isHalfOpened());
 
-        sleep(2);
-        // CLOSED
+        // HALF OPEN MODE - performs the call which succeeds
         $this->assertSame(
             '{"hello": "world"}',
             $circuitBreaker->call(
@@ -123,8 +147,43 @@ class CircuitBreakerTests extends CircuitBreakerTestCase
             )
         );
 
-        $this->assertSame('CLOSED', $circuitBreaker->getState());
+        $this->assertSame(States::CLOSED_STATE, $circuitBreaker->getState());
         $this->assertTrue($circuitBreaker->isClosed());
+    }
+
+    public function testRememberLastTransactionState()
+    {
+        $system = new MainSystem(
+            new ClosedPlace(1, 0.2, 0),
+            new HalfOpenPlace(0, 0.2, 0),
+            new OpenPlace(0, 0, 1)
+        );
+        $storage = new SymfonyCache(new ArrayCache());
+        $client = $this->createMock(GuzzleClient::class);
+        $client
+            ->expects($this->once())
+            ->method('request')
+            ->willThrowException(new UnavailableServiceException())
+        ;
+
+        $firstCircuitBreaker = new AdvancedCircuitBreaker(
+            $system,
+            $client,
+            $storage
+        );
+        $this->assertEquals(States::CLOSED_STATE, $firstCircuitBreaker->getState());
+        $firstCircuitBreaker->call('fake_service', function () { return false; });
+        $this->assertEquals(States::OPEN_STATE, $firstCircuitBreaker->getState());
+        $this->assertTrue($storage->hasTransaction('fake_service'));
+
+        $secondCircuitBreaker = new AdvancedCircuitBreaker(
+            $system,
+            $client,
+            $storage
+        );
+        $this->assertEquals(States::CLOSED_STATE, $secondCircuitBreaker->getState());
+        $secondCircuitBreaker->call('fake_service', function () { return false; });
+        $this->assertEquals(States::OPEN_STATE, $secondCircuitBreaker->getState());
     }
 
     /**
@@ -135,9 +194,9 @@ class CircuitBreakerTests extends CircuitBreakerTestCase
     public function getCircuitBreakers()
     {
         return [
-            'simple' => $this->createSimpleCircuitBreaker(),
-            'symfony' => $this->createSymfonyCircuitBreaker(),
-            'advanced' => $this->creatAdvancedCircuitBreaker(),
+            'simple' => [$this->createSimpleCircuitBreaker()],
+            'symfony' => [$this->createSymfonyCircuitBreaker()],
+            'advanced' => [$this->createAdvancedCircuitBreaker()],
         ];
     }
 
@@ -147,7 +206,7 @@ class CircuitBreakerTests extends CircuitBreakerTestCase
     private function createSimpleCircuitBreaker()
     {
         return new SimpleCircuitBreaker(
-            new OpenPlace(0, 0, 1), // threshold 1s
+            new OpenPlace(0, 0, self::OPEN_THRESHOLD), // threshold 1s
             new HalfOpenPlace(0, 0.2, 0), // timeout 0.2s to test the service
             new ClosedPlace(2, 0.2, 0), // 2 failures allowed, 0.2s timeout
             $this->getTestClient()
@@ -157,12 +216,12 @@ class CircuitBreakerTests extends CircuitBreakerTestCase
     /**
      * @return AdvancedCircuitBreaker the circuit breaker for testing purposes
      */
-    private function creatAdvancedCircuitBreaker()
+    private function createAdvancedCircuitBreaker()
     {
         $system = new MainSystem(
             new ClosedPlace(2, 0.2, 0),
             new HalfOpenPlace(0, 0.2, 0),
-            new OpenPlace(0, 0, 1)
+            new OpenPlace(0, 0, self::OPEN_THRESHOLD)
         );
 
         $symfonyCache = new SymfonyCache(new ArrayCache());
@@ -182,7 +241,7 @@ class CircuitBreakerTests extends CircuitBreakerTestCase
         $system = new MainSystem(
             new ClosedPlace(2, 0.2, 0),
             new HalfOpenPlace(0, 0.2, 0),
-            new OpenPlace(0, 0, 1)
+            new OpenPlace(0, 0, self::OPEN_THRESHOLD)
         );
 
         $symfonyCache = new SymfonyCache(new ArrayCache());

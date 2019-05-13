@@ -135,7 +135,7 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
                 'failures' => 2,
                 'timeout' => 0.1,
                 'threshold' => 0,
-            ]
+            ],
         ];
         $factory = new AdvancedCircuitBreakerFactory($defaultSettings);
         $circuitBreaker = $factory->create([

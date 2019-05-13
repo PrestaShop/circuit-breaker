@@ -99,7 +99,7 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
             $symfonyCache
         );
 
-        $response = $circuitBreaker->call('anything', function() { return false; });
+        $response = $circuitBreaker->call('anything', function () { return false; });
         $this->assertEquals('{"hello": "world"}', $response);
     }
 

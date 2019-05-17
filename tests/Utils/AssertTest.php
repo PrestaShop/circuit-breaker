@@ -4,6 +4,7 @@ namespace Tests\PrestaShop\CircuitBreaker\Utils;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\Utils\Assert;
+use stdClass;
 
 class AssertTest extends TestCase
 {
@@ -49,7 +50,7 @@ class AssertTest extends TestCase
             '0' => [0, true],
             'str_0' => ['0', false],
             'float' => [0.1, true],
-            'stdclass' => [new \stdClass(), false],
+            'stdclass' => [new stdClass(), false],
             'callable' => [
                 function () {
                     return 0;
@@ -83,7 +84,7 @@ class AssertTest extends TestCase
             'empty' => ['', false],
             'null' => [null, false],
             'bool' => [false, false],
-            'stdclass' => [new \stdClass(), false],
+            'stdclass' => [new stdClass(), false],
             'valid2' => ['INVALID_STATE', true],
         ];
     }

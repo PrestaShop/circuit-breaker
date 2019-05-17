@@ -32,18 +32,18 @@ use PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Subscriber\Mock;
+use PHPUnit_Framework_MockObject_MockObject;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
 use PrestaShop\CircuitBreaker\Clients\GuzzleClient;
+use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcher;
 use PrestaShop\CircuitBreaker\Places\ClosedPlace;
 use PrestaShop\CircuitBreaker\Places\HalfOpenPlace;
 use PrestaShop\CircuitBreaker\Places\OpenPlace;
 use PrestaShop\CircuitBreaker\States;
 use PrestaShop\CircuitBreaker\Storages\SymfonyCache;
-use PrestaShop\CircuitBreaker\SymfonyCircuitBreaker;
 use PrestaShop\CircuitBreaker\Systems\MainSystem;
-use PrestaShop\CircuitBreaker\Transitions\EventDispatcher;
+use PrestaShop\CircuitBreaker\Transitions\NullDispatcher;
 use Symfony\Component\Cache\Simple\ArrayCache;
-use Symfony\Component\EventDispatcher\EventDispatcher as SymfonyEventDispatcher;
 
 class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
 {
@@ -99,7 +99,8 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
         $circuitBreaker = new AdvancedCircuitBreaker(
             $system,
             $client,
-            $symfonyCache
+            $symfonyCache,
+            new NullDispatcher()
         );
 
         $response = $circuitBreaker->call('anything', function () { return false; });
@@ -125,7 +126,8 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
         $circuitBreaker = new AdvancedCircuitBreaker(
             $system,
             $client,
-            $symfonyCache
+            $symfonyCache,
+            new NullDispatcher()
         );
 
         $response = $circuitBreaker->call('anything', function () { return false; });
@@ -152,7 +154,8 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
         $circuitBreaker = new AdvancedCircuitBreaker(
             $system,
             $client,
-            $symfonyCache
+            $symfonyCache,
+            new NullDispatcher()
         );
 
         $response = $circuitBreaker->call('anything', function () { return false; });
@@ -192,7 +195,8 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
         $circuitBreaker = new AdvancedCircuitBreaker(
             $system,
             $client,
-            $symfonyCache
+            $symfonyCache,
+            new NullDispatcher()
         );
 
         $response = $circuitBreaker->call('anything', function () { return false; });
@@ -226,17 +230,17 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
         );
 
         $symfonyCache = new SymfonyCache(new ArrayCache());
-        $eventDispatcherS = $this->createMock(SymfonyEventDispatcher::class);
-        $eventDispatcherS->expects($this->spy = $this->any())
-            ->method('dispatch')
+        /** @var PHPUnit_Framework_MockObject_MockObject|TransitionDispatcher $dispatcher */
+        $dispatcher = $this->createMock(TransitionDispatcher::class);
+        $dispatcher->expects($this->spy = $this->any())
+            ->method('dispatchTransition')
         ;
-        $transitioner = new EventDispatcher($eventDispatcherS);
 
         return new AdvancedCircuitBreaker(
             $system,
             $this->getTestClient(),
             $symfonyCache,
-            $transitioner
+            $dispatcher
         );
     }
 }

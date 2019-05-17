@@ -27,31 +27,18 @@
 namespace PrestaShop\CircuitBreaker\Transitions;
 
 use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcher;
-use PrestaShop\CircuitBreaker\Events\TransitionEvent;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Class EventDispatcher implements the TransitionDispatcher using the Symfony EventDispatcherInterface
+ * Class NullDispatcher is used when you have no TransitionDispatcher to inject
+ * because you don't need it.
  */
-class EventDispatcher implements TransitionDispatcher
+class NullDispatcher implements TransitionDispatcher
 {
-    /**
-     * @var EventDispatcherInterface the Symfony Event Dispatcher
-     */
-    private $eventDispatcher;
-
-    public function __construct(EventDispatcherInterface $eventDispatcher)
-    {
-        $this->eventDispatcher = $eventDispatcher;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function dispatchTransition($transition, $service, array $serviceParameters)
     {
-        $event = new TransitionEvent($transition, $service, $serviceParameters);
-
-        $this->eventDispatcher->dispatch($transition, $event);
+        // Simply does nothing
     }
 }

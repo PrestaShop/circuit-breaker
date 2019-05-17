@@ -30,7 +30,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory;
 use PrestaShop\CircuitBreaker\Contracts\Storage;
-use PrestaShop\CircuitBreaker\Contracts\Transitioner;
+use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcher;
 use PrestaShop\CircuitBreaker\Transitions;
 
 class AdvancedCircuitBreakerFactoryTest extends TestCase
@@ -61,9 +61,9 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
         $this->assertInstanceOf(AdvancedCircuitBreaker::class, $circuitBreaker);
     }
 
-    public function testCircuitBreakerWithTransitioner()
+    public function testCircuitBreakerWithDispatcher()
     {
-        $transitioner = $this->getMockBuilder(Transitioner::class)
+        $dispatcher = $this->getMockBuilder(TransitionDispatcher::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -71,18 +71,18 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
         $localeService = 'file://' . __FILE__;
         $expectedParameters = ['toto' => 'titi', 42 => 51];
 
-        $transitioner
+        $dispatcher
             ->expects($this->at(0))
-            ->method('beginTransition')
+            ->method('dispatchTransition')
             ->with(
                 $this->equalTo(Transitions::INITIATING_TRANSITION),
                 $this->equalTo($localeService),
                 $this->equalTo([])
             )
         ;
-        $transitioner
+        $dispatcher
             ->expects($this->at(1))
-            ->method('beginTransition')
+            ->method('dispatchTransition')
             ->with(
                 $this->equalTo(Transitions::TRIAL_TRANSITION),
                 $this->equalTo($localeService),
@@ -99,7 +99,7 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
             ],
             'open' => [0, 0, 10],
             'half_open' => [1, 0.2, 0],
-            'transitioner' => $transitioner,
+            'dispatcher' => $dispatcher,
         ]);
 
         $this->assertInstanceOf(AdvancedCircuitBreaker::class, $circuitBreaker);

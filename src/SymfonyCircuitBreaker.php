@@ -18,6 +18,12 @@ final class SymfonyCircuitBreaker extends AdvancedCircuitBreaker
      */
     private $eventDispatcher;
 
+    /**
+     * @param System $system
+     * @param Client $client
+     * @param Storage $storage
+     * @param EventDispatcherInterface $eventDispatcher
+     */
     public function __construct(
         System $system,
         Client $client,

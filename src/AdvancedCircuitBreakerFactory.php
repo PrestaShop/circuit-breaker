@@ -9,6 +9,7 @@ use PrestaShop\CircuitBreaker\Places\OpenPlace;
 use PrestaShop\CircuitBreaker\Clients\GuzzleClient;
 use PrestaShop\CircuitBreaker\Storages\SimpleArray;
 use PrestaShop\CircuitBreaker\Systems\MainSystem;
+use PrestaShop\CircuitBreaker\Transitions\NullDispatcher;
 
 /**
  * Advanced implementation of Circuit Breaker Factory
@@ -42,13 +43,13 @@ final class AdvancedCircuitBreakerFactory implements Factory
         $client = new GuzzleClient($clientSettings);
 
         $storage = array_key_exists('storage', $settings) ? $settings['storage'] : new SimpleArray();
-        $transitioner = array_key_exists('transitioner', $settings) ? $settings['transitioner'] : null;
+        $dispatcher = array_key_exists('dispatcher', $settings) ? $settings['dispatcher'] : new NullDispatcher();
 
         return new AdvancedCircuitBreaker(
             $system,
             $client,
             $storage,
-            $transitioner
+            $dispatcher
         );
     }
 }

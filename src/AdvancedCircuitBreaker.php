@@ -29,29 +29,28 @@ namespace PrestaShop\CircuitBreaker;
 use PrestaShop\CircuitBreaker\Contracts\Client;
 use PrestaShop\CircuitBreaker\Contracts\Storage;
 use PrestaShop\CircuitBreaker\Contracts\System;
-use PrestaShop\CircuitBreaker\Contracts\Transitioner;
+use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcher;
 use PrestaShop\CircuitBreaker\Exceptions\UnavailableServiceException;
 
 /**
  * This implementation of the CircuitBreaker is a bit more advanced than the SimpleCircuitBreaker,
- * it allows you to setup your client, system or storage. You can also add an optional transitioner.
- * And you can send requests with parameters.
+ * it allows you to setup your client, system, storage and dispatcher.
  */
-class AdvancedCircuitBreaker extends PartialCircuitBreaker implements Transitioner
+class AdvancedCircuitBreaker extends PartialCircuitBreaker
 {
-    /** @var Transitioner */
-    protected $transitioner;
+    /** @var TransitionDispatcher */
+    protected $dispatcher;
 
     /**
      * @param System $system
      * @param Client $client
      * @param Storage $storage
-     * @param Transitioner|null $transitioner
+     * @param TransitionDispatcher $dispatcher
      */
-    public function __construct(System $system, Client $client, Storage $storage, Transitioner $transitioner = null)
+    public function __construct(System $system, Client $client, Storage $storage, TransitionDispatcher $dispatcher)
     {
         parent::__construct($system, $client, $storage);
-        $this->transitioner = $transitioner;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -71,7 +70,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker implements Transition
                 }
 
                 $this->moveStateTo(States::HALF_OPEN_STATE, $service);
-                $this->beginTransition(
+                $this->dispatchTransition(
                     Transitions::CHECKING_AVAILABILITY_TRANSITION,
                     $service,
                     $serviceParameters
@@ -80,7 +79,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker implements Transition
 
             $response = $this->request($service, $serviceParameters);
             $this->moveStateTo(States::CLOSED_STATE, $service);
-            $this->beginTransition(
+            $this->dispatchTransition(
                 Transitions::CLOSING_TRANSITION,
                 $service,
                 $serviceParameters
@@ -96,7 +95,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker implements Transition
                 if ($this->isHalfOpened()) {
                     $transition = Transitions::REOPENING_TRANSITION;
                 }
-                $this->beginTransition($transition, $service, $serviceParameters);
+                $this->dispatchTransition($transition, $service, $serviceParameters);
 
                 return \call_user_func($fallback);
             }
@@ -110,15 +109,13 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker implements Transition
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $transition
+     * @param string $service
+     * @param array $serviceParameters
      */
-    public function beginTransition($transition, $service, array $serviceParameters)
+    protected function dispatchTransition($transition, $service, array $serviceParameters)
     {
-        if (null === $this->transitioner) {
-            return;
-        }
-
-        $this->transitioner->beginTransition($transition, $service, $serviceParameters);
+        $this->dispatcher->dispatchTransition($transition, $service, $serviceParameters);
     }
 
     /**
@@ -127,7 +124,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker implements Transition
     protected function initTransaction($service)
     {
         if (!$this->storage->hasTransaction($service)) {
-            $this->beginTransition(Transitions::INITIATING_TRANSITION, $service, []);
+            $this->dispatchTransition(Transitions::INITIATING_TRANSITION, $service, []);
         }
 
         return parent::initTransaction($service);
@@ -138,7 +135,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker implements Transition
      */
     protected function request($service, array $parameters = [])
     {
-        $this->beginTransition(Transitions::TRIAL_TRANSITION, $service, $parameters);
+        $this->dispatchTransition(Transitions::TRIAL_TRANSITION, $service, $parameters);
 
         return parent::request($service, $parameters);
     }

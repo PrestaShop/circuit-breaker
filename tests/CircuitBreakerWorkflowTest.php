@@ -8,6 +8,7 @@ use PrestaShop\CircuitBreaker\Contracts\CircuitBreaker;
 use PrestaShop\CircuitBreaker\Exceptions\UnavailableServiceException;
 use PrestaShop\CircuitBreaker\States;
 use PrestaShop\CircuitBreaker\Storages\SimpleArray;
+use PrestaShop\CircuitBreaker\Transitions\NullDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use PrestaShop\CircuitBreaker\Storages\SymfonyCache;
 use PrestaShop\CircuitBreaker\SymfonyCircuitBreaker;
@@ -107,6 +108,9 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
         $this->assertTrue($circuitBreaker->isClosed());
     }
 
+    /**
+     * This is not useful for SimpleCircuitBreaker since it has a SimpleArray storage
+     */
     public function testRememberLastTransactionState()
     {
         $system = new MainSystem(
@@ -125,7 +129,8 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
         $firstCircuitBreaker = new AdvancedCircuitBreaker(
             $system,
             $client,
-            $storage
+            $storage,
+            new NullDispatcher()
         );
         $this->assertEquals(States::CLOSED_STATE, $firstCircuitBreaker->getState());
         $firstCircuitBreaker->call('fake_service', function () { return false; });
@@ -135,7 +140,8 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
         $secondCircuitBreaker = new AdvancedCircuitBreaker(
             $system,
             $client,
-            $storage
+            $storage,
+            new NullDispatcher()
         );
         $this->assertEquals(States::CLOSED_STATE, $secondCircuitBreaker->getState());
         $secondCircuitBreaker->call('fake_service', function () { return false; });
@@ -185,7 +191,8 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
         return new AdvancedCircuitBreaker(
             $system,
             $this->getTestClient(),
-            $symfonyCache
+            $symfonyCache,
+            new NullDispatcher()
         );
     }
 

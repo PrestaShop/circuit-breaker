@@ -18,11 +18,6 @@ class PlaceTestCase extends TestCase
             '0_0_0' => [0, 0, 0],
             '1_100_0' => [1, 100, 0],
             '3_0.6_3' => [3, 0.6, 3],
-            'assoc' => [
-                'failures' => 1,
-                'timeout' => 2,
-                'threshold' => 3,
-            ],
         ];
     }
 
@@ -32,12 +27,7 @@ class PlaceTestCase extends TestCase
     public function getArrayFixtures()
     {
         return [
-            'invalid_indexes' => [[
-                0 => 3,
-                1 => 2,
-                2 => 1,
-            ]],
-            'invalid_keys' => [[
+            'assoc_array' => [[
                 'timeout' => 3,
                 'threshold' => 2,
                 'failures' => 1,

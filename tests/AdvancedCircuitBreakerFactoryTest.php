@@ -29,6 +29,7 @@ namespace Tests\PrestaShop\CircuitBreaker;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory;
+use PrestaShop\CircuitBreaker\Clients\GuzzleClient;
 use PrestaShop\CircuitBreaker\Contracts\Storage;
 use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcher;
 use PrestaShop\CircuitBreaker\Transitions;
@@ -36,17 +37,6 @@ use PrestaShop\CircuitBreaker\Transitions;
 class AdvancedCircuitBreakerFactoryTest extends TestCase
 {
     /**
-     * @return void
-     */
-    public function testCreation()
-    {
-        $factory = new AdvancedCircuitBreakerFactory();
-
-        $this->assertInstanceOf(AdvancedCircuitBreakerFactory::class, $factory);
-    }
-
-    /**
-     * @depends testCreation
      * @dataProvider getSettings
      *
      * @param array $settings the Circuit Breaker settings
@@ -97,8 +87,16 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
                 'timeout' => 0.1,
                 'threshold' => 0,
             ],
-            'open' => [0, 0, 10],
-            'half_open' => [1, 0.2, 0],
+            'open' => [
+                'failures' => 0,
+                'timeout' => 0,
+                'threshold' => 10,
+            ],
+            'half_open' => [
+                'failures' => 1,
+                'timeout' => 0.2,
+                'threshold' => 0,
+            ],
             'dispatcher' => $dispatcher,
         ]);
 
@@ -120,8 +118,16 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
                 'timeout' => 0.1,
                 'threshold' => 0,
             ],
-            'open' => [0, 0, 10],
-            'half_open' => [1, 0.2, 0],
+            'open' => [
+                'failures' => 0,
+                'timeout' => 0,
+                'threshold' => 10,
+            ],
+            'half_open' => [
+                'failures' => 1,
+                'timeout' => 0.2,
+                'threshold' => 0,
+            ],
             'storage' => $storage,
         ]);
 
@@ -139,8 +145,16 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
         ];
         $factory = new AdvancedCircuitBreakerFactory($defaultSettings);
         $circuitBreaker = $factory->create([
-            'open' => [0, 0, 10],
-            'half_open' => [1, 0.2, 0],
+            'open' => [
+                'failures' => 0,
+                'timeout' => 0,
+                'threshold' => 10,
+            ],
+            'half_open' => [
+                'failures' => 1,
+                'timeout' => 0.2,
+                'threshold' => 0,
+            ],
         ]);
         $this->assertNotNull($circuitBreaker);
     }
@@ -153,9 +167,22 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
         return [
             [
                 [
-                    'closed' => [2, 0.1, 0],
-                    'open' => [0, 0, 10],
-                    'half_open' => [1, 0.2, 0],
+                    'closed' => [
+                        'failures' => 2,
+                        'timeout' => 0.1,
+                        'threshold' => 0,
+                    ],
+                    'open' => [
+                        'failures' => 0,
+                        'timeout' => 0,
+                        'threshold' => 10,
+                    ],
+                    'half_open' => [
+                        'failures' => 1,
+                        'timeout' => 0.2,
+                        'threshold' => 0,
+                    ],
+                    'client' => ['proxy' => '192.168.16.1:10'],
                 ],
             ],
             [
@@ -165,9 +192,17 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
                         'timeout' => 0.1,
                         'threshold' => 0,
                     ],
-                    'open' => [0, 0, 10],
-                    'half_open' => [1, 0.2, 0],
-                    'client' => ['proxy' => '192.168.16.1:10'],
+                    'open' => [
+                        'failures' => 0,
+                        'timeout' => 0,
+                        'threshold' => 10,
+                    ],
+                    'half_open' => [
+                        'failures' => 1,
+                        'timeout' => 0.2,
+                        'threshold' => 0,
+                    ],
+                    'client' => new GuzzleClient(['proxy' => '192.168.16.1:10']),
                 ],
             ],
         ];

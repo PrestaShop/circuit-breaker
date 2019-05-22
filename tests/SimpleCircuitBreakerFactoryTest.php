@@ -42,16 +42,40 @@ class SimpleCircuitBreakerFactoryTest extends TestCase
         return [
             [
                 [
-                    'closed' => [2, 0.1, 0],
-                    'open' => [0, 0, 10],
-                    'half_open' => [1, 0.2, 0],
+                    'closed' => [
+                        'failures' => 2,
+                        'timeout' => 0.1,
+                        'threshold' => 0,
+                    ],
+                    'open' => [
+                        'failures' => 0,
+                        'timeout' => 0,
+                        'threshold' => 10,
+                    ],
+                    'half_open' => [
+                        'failures' => 1,
+                        'timeout' => 0.2,
+                        'threshold' => 0,
+                    ],
                 ],
             ],
             [
                 [
-                    'closed' => [2, 0.1, 0],
-                    'open' => [0, 0, 10],
-                    'half_open' => [1, 0.2, 0],
+                    'closed' => [
+                        'failures' => 2,
+                        'timeout' => 0.1,
+                        'threshold' => 0,
+                    ],
+                    'open' => [
+                        'failures' => 0,
+                        'timeout' => 0,
+                        'threshold' => 10,
+                    ],
+                    'half_open' => [
+                        'failures' => 1,
+                        'timeout' => 0.2,
+                        'threshold' => 0,
+                    ],
                     'client' => ['proxy' => '192.168.16.1:10'],
                 ],
             ],

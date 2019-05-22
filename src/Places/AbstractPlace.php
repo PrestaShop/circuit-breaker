@@ -80,9 +80,9 @@ abstract class AbstractPlace implements Place
         static::validateSettings($settings);
 
         return new static(
-            isset($settings[0]) ? $settings[0] : $settings['failures'],
-            isset($settings[1]) ? $settings[1] : $settings['timeout'],
-            isset($settings[2]) ? $settings[2] : $settings['threshold']
+            $settings['failures'],
+            $settings['timeout'],
+            $settings['threshold']
         );
     }
 
@@ -97,10 +97,6 @@ abstract class AbstractPlace implements Place
      */
     private static function validateSettings(array $settings)
     {
-        if (isset($settings[0]) && isset($settings[1]) && isset($settings[2])) {
-            return true;
-        }
-
         if (isset($settings['failures']) && isset($settings['timeout']) && isset($settings['threshold'])) {
             return true;
         }

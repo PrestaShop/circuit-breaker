@@ -31,8 +31,8 @@ final class InvalidPlaceException extends CircuitBreakerException
      */
     public static function invalidArraySettings(array $settings)
     {
-        $exceptionMessage = 'Invalid settings for Place::fromArray expected format are:' . PHP_EOL .
-            '[0 => {failures}, 1 => {timeout}, 2 => {threshold}]' . PHP_EOL .
+        $exceptionMessage = 'Invalid settings for Place::fromArray: ' .
+            var_export($settings, true) . '. The expected format is:' . PHP_EOL .
             '[\'failures\' => {failures}, \'timeout\' => {timeout}, \'threshold\' => {threshold}]' . PHP_EOL
         ;
 

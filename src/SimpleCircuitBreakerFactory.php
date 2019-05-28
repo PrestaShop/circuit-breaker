@@ -3,6 +3,7 @@
 namespace PrestaShop\CircuitBreaker;
 
 use PrestaShop\CircuitBreaker\Contracts\Factory;
+use PrestaShop\CircuitBreaker\Contracts\FactorySettingsInterface;
 use PrestaShop\CircuitBreaker\Places\ClosedPlace;
 use PrestaShop\CircuitBreaker\Places\HalfOpenPlace;
 use PrestaShop\CircuitBreaker\Places\OpenPlace;
@@ -17,14 +18,17 @@ final class SimpleCircuitBreakerFactory implements Factory
     /**
      * {@inheritdoc}
      */
-    public function create(array $settings)
+    public function create(FactorySettingsInterface $settings)
     {
-        $openPlace = OpenPlace::fromArray($settings['open']);
-        $halfOpenPlace = HalfOpenPlace::fromArray($settings['half_open']);
-        $closedPlace = ClosedPlace::fromArray($settings['closed']);
+        $closedPlace = new ClosedPlace($settings->getFailures(), $settings->getTimeout(), 0);
+        $openPlace = new OpenPlace(0, 0, $settings->getThreshold());
+        $halfOpenPlace = new HalfOpenPlace($settings->getFailures(), $settings->getStrippedTimeout(), 0);
 
-        $clientSettings = array_key_exists('client', $settings) ? $settings['client'] : [];
-        $client = new GuzzleClient($clientSettings);
+        if (null !== $settings->getClient()) {
+            $client = $settings->getClient();
+        } else {
+            $client = new GuzzleClient($settings->getClientSettings());
+        }
 
         return new SimpleCircuitBreaker(
             $openPlace,

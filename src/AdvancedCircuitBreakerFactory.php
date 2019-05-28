@@ -2,8 +2,8 @@
 
 namespace PrestaShop\CircuitBreaker;
 
-use PrestaShop\CircuitBreaker\Contracts\Client;
 use PrestaShop\CircuitBreaker\Contracts\Factory;
+use PrestaShop\CircuitBreaker\Contracts\FactorySettingsInterface;
 use PrestaShop\CircuitBreaker\Places\ClosedPlace;
 use PrestaShop\CircuitBreaker\Places\HalfOpenPlace;
 use PrestaShop\CircuitBreaker\Places\OpenPlace;
@@ -18,13 +18,13 @@ use PrestaShop\CircuitBreaker\Transitions\NullDispatcher;
  */
 final class AdvancedCircuitBreakerFactory implements Factory
 {
-    /** @var array */
+    /** @var FactorySettingsInterface */
     private $defaultSettings;
 
     /**
-     * @param array $defaultSettings
+     * @param FactorySettingsInterface|null $defaultSettings
      */
-    public function __construct(array $defaultSettings = [])
+    public function __construct(FactorySettingsInterface $defaultSettings = null)
     {
         $this->defaultSettings = $defaultSettings;
     }
@@ -32,26 +32,23 @@ final class AdvancedCircuitBreakerFactory implements Factory
     /**
      * {@inheritdoc}
      */
-    public function create(array $settings)
+    public function create(FactorySettingsInterface $settings)
     {
-        $settings = array_merge($this->defaultSettings, $settings);
-        $openPlace = OpenPlace::fromArray($settings['open']);
-        $halfOpenPlace = HalfOpenPlace::fromArray($settings['half_open']);
-        $closedPlace = ClosedPlace::fromArray($settings['closed']);
+        $settings = null !== $this->defaultSettings ? FactorySettings::merge($this->defaultSettings, $settings) : $settings;
+
+        $closedPlace = new ClosedPlace($settings->getFailures(), $settings->getTimeout(), 0);
+        $openPlace = new OpenPlace(0, 0, $settings->getThreshold());
+        $halfOpenPlace = new HalfOpenPlace($settings->getFailures(), $settings->getStrippedTimeout(), 0);
         $system = new MainSystem($closedPlace, $halfOpenPlace, $openPlace);
 
-        if (array_key_exists('client', $settings)) {
-            if ($settings['client'] instanceof Client) {
-                $client = $settings['client'];
-            } else {
-                $client = new GuzzleClient($settings['client']);
-            }
+        if (null !== $settings->getClient()) {
+            $client = $settings->getClient();
         } else {
-            $client = new GuzzleClient();
+            $client = new GuzzleClient($settings->getClientSettings());
         }
 
-        $storage = array_key_exists('storage', $settings) ? $settings['storage'] : new SimpleArray();
-        $dispatcher = array_key_exists('dispatcher', $settings) ? $settings['dispatcher'] : new NullDispatcher();
+        $storage = null !== $settings->getStorage() ? $settings->getStorage() : new SimpleArray();
+        $dispatcher = null !== $settings->getDispatcher() ? $settings->getDispatcher() : new NullDispatcher();
 
         return new AdvancedCircuitBreaker(
             $system,

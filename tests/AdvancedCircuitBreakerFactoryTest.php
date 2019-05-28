@@ -30,8 +30,10 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory;
 use PrestaShop\CircuitBreaker\Clients\GuzzleClient;
+use PrestaShop\CircuitBreaker\Contracts\FactorySettingsInterface;
 use PrestaShop\CircuitBreaker\Contracts\Storage;
 use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcher;
+use PrestaShop\CircuitBreaker\FactorySettings;
 use PrestaShop\CircuitBreaker\Transitions;
 
 class AdvancedCircuitBreakerFactoryTest extends TestCase
@@ -39,11 +41,11 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
     /**
      * @dataProvider getSettings
      *
-     * @param array $settings the Circuit Breaker settings
+     * @param FactorySettingsInterface $settings the Circuit Breaker settings
      *
      * @return void
      */
-    public function testCircuitBreakerCreation(array $settings)
+    public function testCircuitBreakerCreation(FactorySettingsInterface $settings)
     {
         $factory = new AdvancedCircuitBreakerFactory();
         $circuitBreaker = $factory->create($settings);
@@ -81,24 +83,10 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
         ;
 
         $factory = new AdvancedCircuitBreakerFactory();
-        $circuitBreaker = $factory->create([
-            'closed' => [
-                'failures' => 2,
-                'timeout' => 0.1,
-                'threshold' => 0,
-            ],
-            'open' => [
-                'failures' => 0,
-                'timeout' => 0,
-                'threshold' => 10,
-            ],
-            'half_open' => [
-                'failures' => 1,
-                'timeout' => 0.2,
-                'threshold' => 0,
-            ],
-            'dispatcher' => $dispatcher,
-        ]);
+        $circuitBreaker = $factory->create(
+            (new FactorySettings(2, 0.1, 10, 0.2))
+            ->setDispatcher($dispatcher)
+        );
 
         $this->assertInstanceOf(AdvancedCircuitBreaker::class, $circuitBreaker);
         $circuitBreaker->call($localeService, function () {}, $expectedParameters);
@@ -112,50 +100,19 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
         ;
 
         $factory = new AdvancedCircuitBreakerFactory();
-        $circuitBreaker = $factory->create([
-            'closed' => [
-                'failures' => 2,
-                'timeout' => 0.1,
-                'threshold' => 0,
-            ],
-            'open' => [
-                'failures' => 0,
-                'timeout' => 0,
-                'threshold' => 10,
-            ],
-            'half_open' => [
-                'failures' => 1,
-                'timeout' => 0.2,
-                'threshold' => 0,
-            ],
-            'storage' => $storage,
-        ]);
+        $circuitBreaker = $factory->create(
+            (new FactorySettings(2, 0.1, 10, 0.2))
+            ->setStorage($storage)
+        );
 
         $this->assertInstanceOf(AdvancedCircuitBreaker::class, $circuitBreaker);
     }
 
     public function testFactoryDefaultSettings()
     {
-        $defaultSettings = [
-            'closed' => [
-                'failures' => 2,
-                'timeout' => 0.1,
-                'threshold' => 0,
-            ],
-        ];
+        $defaultSettings = new FactorySettings(2, 0.1, 0, 0.1);
         $factory = new AdvancedCircuitBreakerFactory($defaultSettings);
-        $circuitBreaker = $factory->create([
-            'open' => [
-                'failures' => 0,
-                'timeout' => 0,
-                'threshold' => 10,
-            ],
-            'half_open' => [
-                'failures' => 1,
-                'timeout' => 0.2,
-                'threshold' => 0,
-            ],
-        ]);
+        $circuitBreaker = $factory->create(new FactorySettings(2, 0.1, 10, 0.2));
         $this->assertNotNull($circuitBreaker);
     }
 
@@ -166,44 +123,12 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
     {
         return [
             [
-                [
-                    'closed' => [
-                        'failures' => 2,
-                        'timeout' => 0.1,
-                        'threshold' => 0,
-                    ],
-                    'open' => [
-                        'failures' => 0,
-                        'timeout' => 0,
-                        'threshold' => 10,
-                    ],
-                    'half_open' => [
-                        'failures' => 1,
-                        'timeout' => 0.2,
-                        'threshold' => 0,
-                    ],
-                    'client' => ['proxy' => '192.168.16.1:10'],
-                ],
+                (new FactorySettings(2, 0.1, 10, 0.2))
+                    ->setClientSettings(['proxy' => '192.168.16.1:10']),
             ],
             [
-                [
-                    'closed' => [
-                        'failures' => 2,
-                        'timeout' => 0.1,
-                        'threshold' => 0,
-                    ],
-                    'open' => [
-                        'failures' => 0,
-                        'timeout' => 0,
-                        'threshold' => 10,
-                    ],
-                    'half_open' => [
-                        'failures' => 1,
-                        'timeout' => 0.2,
-                        'threshold' => 0,
-                    ],
-                    'client' => new GuzzleClient(['proxy' => '192.168.16.1:10']),
-                ],
+                (new FactorySettings(2, 0.1, 10, 0.2))
+                    ->setClient(new GuzzleClient(['proxy' => '192.168.16.1:10'])),
             ],
         ];
     }

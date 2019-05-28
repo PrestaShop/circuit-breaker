@@ -3,6 +3,8 @@
 namespace Tests\PrestaShop\CircuitBreaker;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\CircuitBreaker\Contracts\FactorySettingsInterface;
+use PrestaShop\CircuitBreaker\FactorySettings;
 use PrestaShop\CircuitBreaker\SimpleCircuitBreaker;
 use PrestaShop\CircuitBreaker\SimpleCircuitBreakerFactory;
 
@@ -22,11 +24,11 @@ class SimpleCircuitBreakerFactoryTest extends TestCase
      * @depends testCreation
      * @dataProvider getSettings
      *
-     * @param array $settings the Circuit Breaker settings
+     * @param FactorySettingsInterface $settings the Circuit Breaker settings
      *
      * @return void
      */
-    public function testCircuitBreakerCreation(array $settings)
+    public function testCircuitBreakerCreation(FactorySettingsInterface $settings)
     {
         $factory = new SimpleCircuitBreakerFactory();
         $circuitBreaker = $factory->create($settings);
@@ -41,43 +43,13 @@ class SimpleCircuitBreakerFactoryTest extends TestCase
     {
         return [
             [
-                [
-                    'closed' => [
-                        'failures' => 2,
-                        'timeout' => 0.1,
-                        'threshold' => 0,
-                    ],
-                    'open' => [
-                        'failures' => 0,
-                        'timeout' => 0,
-                        'threshold' => 10,
-                    ],
-                    'half_open' => [
-                        'failures' => 1,
-                        'timeout' => 0.2,
-                        'threshold' => 0,
-                    ],
-                ],
+                (new FactorySettings(2, 0.1, 10, 0.2))
+                    ->setStrippedFailures(1),
             ],
             [
-                [
-                    'closed' => [
-                        'failures' => 2,
-                        'timeout' => 0.1,
-                        'threshold' => 0,
-                    ],
-                    'open' => [
-                        'failures' => 0,
-                        'timeout' => 0,
-                        'threshold' => 10,
-                    ],
-                    'half_open' => [
-                        'failures' => 1,
-                        'timeout' => 0.2,
-                        'threshold' => 0,
-                    ],
-                    'client' => ['proxy' => '192.168.16.1:10'],
-                ],
+                (new FactorySettings(2, 0.1, 10, 0.2))
+                    ->setStrippedFailures(1)
+                    ->setClientSettings(['proxy' => '192.168.16.1:10']),
             ],
         ];
     }

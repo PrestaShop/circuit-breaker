@@ -77,7 +77,7 @@ interface FactorySettingsInterface
     /**
      * @return array
      */
-    public function getClientSettings();
+    public function getClientOptions();
 
     /**
      * @return ClientInterface|null

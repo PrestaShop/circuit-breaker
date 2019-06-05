@@ -27,7 +27,7 @@ final class SimpleCircuitBreakerFactory implements FactoryInterface
         if (null !== $settings->getClient()) {
             $client = $settings->getClient();
         } else {
-            $client = new GuzzleClient($settings->getClientSettings());
+            $client = new GuzzleClient($settings->getClientOptions());
         }
 
         return new SimpleCircuitBreaker(

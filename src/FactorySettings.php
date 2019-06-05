@@ -59,7 +59,7 @@ class FactorySettings implements FactorySettingsInterface
     private $dispatcher;
 
     /** @var array */
-    private $clientSettings;
+    private $clientOptions;
 
     /** @var ClientInterface */
     private $client;
@@ -77,7 +77,7 @@ class FactorySettings implements FactorySettingsInterface
         $this->failures = $this->strippedFailures = $failures;
         $this->timeout = $this->strippedTimeout = $timeout;
         $this->threshold = $threshold;
-        $this->clientSettings = [];
+        $this->clientOptions = [];
     }
 
     /**
@@ -95,9 +95,9 @@ class FactorySettings implements FactorySettingsInterface
             ->setStrippedTimeout($settingsB->getStrippedTimeout())
         ;
 
-        $mergedSettings->setClientSettings(array_merge(
-            $settingsA->getClientSettings(),
-            $settingsB->getClientSettings()
+        $mergedSettings->setClientOptions(array_merge(
+            $settingsA->getClientOptions(),
+            $settingsB->getClientOptions()
         ));
 
         if (null !== $settingsB->getClient()) {
@@ -252,19 +252,19 @@ class FactorySettings implements FactorySettingsInterface
     /**
      * {@inheritdoc}
      */
-    public function getClientSettings()
+    public function getClientOptions()
     {
-        return $this->clientSettings;
+        return $this->clientOptions;
     }
 
     /**
-     * @param array $clientSettings
+     * @param array $clientOptions
      *
      * @return FactorySettings
      */
-    public function setClientSettings(array $clientSettings)
+    public function setClientOptions(array $clientOptions)
     {
-        $this->clientSettings = $clientSettings;
+        $this->clientOptions = $clientOptions;
 
         return $this;
     }

@@ -31,7 +31,7 @@ final class AdvancedCircuitBreakerFactory implements FactoryInterface
         if (null !== $settings->getClient()) {
             $client = $settings->getClient();
         } else {
-            $client = new GuzzleClient($settings->getClientSettings());
+            $client = new GuzzleClient($settings->getClientOptions());
         }
 
         $storage = null !== $settings->getStorage() ? $settings->getStorage() : new SimpleArray();

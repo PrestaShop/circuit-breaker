@@ -121,7 +121,7 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
             [
                 (new FactorySettings(2, 0.1, 10))
                     ->setStrippedTimeout(0.2)
-                    ->setClientSettings(['proxy' => '192.168.16.1:10']),
+                    ->setClientOptions(['proxy' => '192.168.16.1:10']),
             ],
             [
                 (new FactorySettings(2, 0.1, 10))

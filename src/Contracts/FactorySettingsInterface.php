@@ -65,12 +65,12 @@ interface FactorySettingsInterface
     public function getStrippedFailures();
 
     /**
-     * @return Storage|null
+     * @return StorageInterface|null
      */
     public function getStorage();
 
     /**
-     * @return TransitionDispatcher|null
+     * @return TransitionDispatcherInterface|null
      */
     public function getDispatcher();
 
@@ -80,7 +80,7 @@ interface FactorySettingsInterface
     public function getClientSettings();
 
     /**
-     * @return Client|null
+     * @return ClientInterface|null
      */
     public function getClient();
 }

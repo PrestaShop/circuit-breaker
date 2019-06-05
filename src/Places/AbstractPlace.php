@@ -2,11 +2,11 @@
 
 namespace PrestaShop\CircuitBreaker\Places;
 
-use PrestaShop\CircuitBreaker\Contracts\Place;
+use PrestaShop\CircuitBreaker\Contracts\PlaceInterface;
 use PrestaShop\CircuitBreaker\Exceptions\InvalidPlaceException;
 use PrestaShop\CircuitBreaker\Utils\Assert;
 
-abstract class AbstractPlace implements Place
+abstract class AbstractPlace implements PlaceInterface
 {
     /**
      * @var int the Place failures

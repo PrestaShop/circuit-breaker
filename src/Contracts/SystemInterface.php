@@ -6,15 +6,15 @@ namespace PrestaShop\CircuitBreaker\Contracts;
  * The System define the places available
  * for the Circuit Breaker and the initial Place.
  */
-interface System
+interface SystemInterface
 {
     /**
-     * @return Place[] the list of places of the system
+     * @return PlaceInterface[] the list of places of the system
      */
     public function getPlaces();
 
     /**
-     * @return Place the initial place of the system
+     * @return PlaceInterface the initial place of the system
      */
     public function getInitialPlace();
 }

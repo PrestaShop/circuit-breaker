@@ -4,7 +4,7 @@ namespace Tests\PrestaShop\CircuitBreaker;
 
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
 use PrestaShop\CircuitBreaker\Clients\GuzzleClient;
-use PrestaShop\CircuitBreaker\Contracts\CircuitBreaker;
+use PrestaShop\CircuitBreaker\Contracts\CircuitBreakerInterface;
 use PrestaShop\CircuitBreaker\Exceptions\UnavailableServiceException;
 use PrestaShop\CircuitBreaker\States;
 use PrestaShop\CircuitBreaker\Storages\SimpleArray;
@@ -41,7 +41,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
      *
      * @dataProvider getCircuitBreakers
      *
-     * @param CircuitBreaker $circuitBreaker
+     * @param CircuitBreakerInterface $circuitBreaker
      */
     public function testCircuitBreakerIsInClosedStateAtStart($circuitBreaker)
     {
@@ -54,7 +54,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
      *
      * @dataProvider getCircuitBreakers
      *
-     * @param CircuitBreaker $circuitBreaker
+     * @param CircuitBreakerInterface $circuitBreaker
      */
     public function testCircuitBreakerWillBeOpenInCaseOfFailures($circuitBreaker)
     {
@@ -80,7 +80,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
      *
      * @dataProvider getCircuitBreakers
      *
-     * @param CircuitBreaker $circuitBreaker
+     * @param CircuitBreakerInterface $circuitBreaker
      */
     public function testOnceInHalfOpenModeServiceIsFinallyReachable($circuitBreaker)
     {

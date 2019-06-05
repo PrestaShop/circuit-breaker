@@ -7,7 +7,7 @@ namespace PrestaShop\CircuitBreaker\Contracts;
  * closed, half open or open. Each place have its
  * own properties and behaviors.
  */
-interface Place
+interface PlaceInterface
 {
     /**
      * Return the current state of the Circuit Breaker.

@@ -2,9 +2,9 @@
 
 namespace PrestaShop\CircuitBreaker;
 
-use PrestaShop\CircuitBreaker\Contracts\Client;
-use PrestaShop\CircuitBreaker\Contracts\System;
-use PrestaShop\CircuitBreaker\Contracts\Storage;
+use PrestaShop\CircuitBreaker\Contracts\ClientInterface;
+use PrestaShop\CircuitBreaker\Contracts\SystemInterface;
+use PrestaShop\CircuitBreaker\Contracts\StorageInterface;
 use PrestaShop\CircuitBreaker\Transitions\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -19,15 +19,15 @@ final class SymfonyCircuitBreaker extends AdvancedCircuitBreaker
     private $eventDispatcher;
 
     /**
-     * @param System $system
-     * @param Client $client
-     * @param Storage $storage
+     * @param SystemInterface $system
+     * @param ClientInterface $client
+     * @param StorageInterface $storage
      * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
-        System $system,
-        Client $client,
-        Storage $storage,
+        SystemInterface $system,
+        ClientInterface $client,
+        StorageInterface $storage,
         EventDispatcherInterface $eventDispatcher
     ) {
         $this->eventDispatcher = $eventDispatcher;

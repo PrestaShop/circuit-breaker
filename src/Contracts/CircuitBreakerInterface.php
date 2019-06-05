@@ -7,7 +7,7 @@ namespace PrestaShop\CircuitBreaker\Contracts;
  * an alternative response when a tiers service
  * is unreachable.
  */
-interface CircuitBreaker
+interface CircuitBreakerInterface
 {
     /**
      * @return string the circuit breaker state

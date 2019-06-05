@@ -3,7 +3,7 @@
 namespace Tests\PrestaShop\CircuitBreaker\Storages;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\CircuitBreaker\Contracts\Transaction;
+use PrestaShop\CircuitBreaker\Contracts\TransactionInterface;
 use PrestaShop\CircuitBreaker\Exceptions\TransactionNotFoundException;
 use PrestaShop\CircuitBreaker\Storages\SimpleArray;
 
@@ -39,7 +39,7 @@ class SimpleArrayTest extends TestCase
         $simpleArray = new SimpleArray();
         $operation = $simpleArray->saveTransaction(
             'http://test.com',
-            $this->createMock(Transaction::class)
+            $this->createMock(TransactionInterface::class)
         );
         $this->assertTrue($operation);
         $this->assertCount(1, $simpleArray::$transactions);
@@ -54,7 +54,7 @@ class SimpleArrayTest extends TestCase
     public function testHasTransaction()
     {
         $simpleArray = new SimpleArray();
-        $simpleArray->saveTransaction('http://test.com', $this->createMock(Transaction::class));
+        $simpleArray->saveTransaction('http://test.com', $this->createMock(TransactionInterface::class));
 
         $this->assertTrue($simpleArray->hasTransaction('http://test.com'));
     }
@@ -69,7 +69,7 @@ class SimpleArrayTest extends TestCase
     public function testGetTransaction()
     {
         $simpleArray = new SimpleArray();
-        $translationStub = $this->createMock(Transaction::class);
+        $translationStub = $this->createMock(TransactionInterface::class);
         $simpleArray->saveTransaction('http://test.com', $translationStub);
 
         $transaction = $simpleArray->getTransaction('http://test.com');
@@ -101,7 +101,7 @@ class SimpleArrayTest extends TestCase
     public function testClear()
     {
         $simpleArray = new SimpleArray();
-        $translationStub = $this->createMock(Transaction::class);
+        $translationStub = $this->createMock(TransactionInterface::class);
         $simpleArray->saveTransaction('http://a.com', $translationStub);
         $simpleArray->saveTransaction('http://b.com', $translationStub);
 

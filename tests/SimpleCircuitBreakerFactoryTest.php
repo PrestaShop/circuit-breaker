@@ -43,11 +43,13 @@ class SimpleCircuitBreakerFactoryTest extends TestCase
     {
         return [
             [
-                (new FactorySettings(2, 0.1, 10, 0.2))
+                (new FactorySettings(2, 0.1, 10))
+                    ->setStrippedTimeout(0.2)
                     ->setStrippedFailures(1),
             ],
             [
-                (new FactorySettings(2, 0.1, 10, 0.2))
+                (new FactorySettings(2, 0.1, 10))
+                    ->setStrippedTimeout(0.2)
                     ->setStrippedFailures(1)
                     ->setClientSettings(['proxy' => '192.168.16.1:10']),
             ],

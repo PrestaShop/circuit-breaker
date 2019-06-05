@@ -3,7 +3,7 @@
 namespace Tests\PrestaShop\CircuitBreaker\Storages;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\CircuitBreaker\Contracts\Transaction;
+use PrestaShop\CircuitBreaker\Contracts\TransactionInterface;
 use PrestaShop\CircuitBreaker\Exceptions\TransactionNotFoundException;
 use PrestaShop\CircuitBreaker\Storages\SymfonyCache;
 use Symfony\Component\Cache\Simple\FilesystemCache;
@@ -50,7 +50,7 @@ class SymfonyCacheTest extends TestCase
     {
         $operation = $this->symfonyCache->saveTransaction(
             'http://test.com',
-            $this->createMock(Transaction::class)
+            $this->createMock(TransactionInterface::class)
         );
 
         $this->assertTrue($operation);
@@ -62,7 +62,7 @@ class SymfonyCacheTest extends TestCase
      */
     public function testHasTransaction()
     {
-        $this->symfonyCache->saveTransaction('http://test.com', $this->createMock(Transaction::class));
+        $this->symfonyCache->saveTransaction('http://test.com', $this->createMock(TransactionInterface::class));
 
         $this->assertTrue($this->symfonyCache->hasTransaction('http://test.com'));
     }
@@ -74,7 +74,7 @@ class SymfonyCacheTest extends TestCase
      */
     public function testGetTransaction()
     {
-        $translationStub = $this->createMock(Transaction::class);
+        $translationStub = $this->createMock(TransactionInterface::class);
         $this->symfonyCache->saveTransaction('http://test.com', $translationStub);
 
         $transaction = $this->symfonyCache->getTransaction('http://test.com');
@@ -100,7 +100,7 @@ class SymfonyCacheTest extends TestCase
      */
     public function testClear()
     {
-        $translationStub = $this->createMock(Transaction::class);
+        $translationStub = $this->createMock(TransactionInterface::class);
         $this->symfonyCache->saveTransaction('http://a.com', $translationStub);
         $this->symfonyCache->saveTransaction('http://b.com', $translationStub);
 

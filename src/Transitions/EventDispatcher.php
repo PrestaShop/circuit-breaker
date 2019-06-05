@@ -26,17 +26,17 @@
 
 namespace PrestaShop\CircuitBreaker\Transitions;
 
-use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcher;
+use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcherInterface;
 use PrestaShop\CircuitBreaker\Events\TransitionEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class EventDispatcher implements the TransitionDispatcher using the Symfony EventDispatcherInterface
  */
-class EventDispatcher implements TransitionDispatcher
+class EventDispatcher implements TransitionDispatcherInterface
 {
     /**
-     * @var EventDispatcherInterface the Symfony Event Dispatcher
+     * @var EventDispatcher the Symfony Event Dispatcher
      */
     private $eventDispatcher;
 

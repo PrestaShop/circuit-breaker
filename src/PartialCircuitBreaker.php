@@ -3,25 +3,25 @@
 namespace PrestaShop\CircuitBreaker;
 
 use PrestaShop\CircuitBreaker\Transactions\SimpleTransaction;
-use PrestaShop\CircuitBreaker\Contracts\CircuitBreaker;
-use PrestaShop\CircuitBreaker\Contracts\Transaction;
-use PrestaShop\CircuitBreaker\Contracts\Storage;
-use PrestaShop\CircuitBreaker\Contracts\System;
-use PrestaShop\CircuitBreaker\Contracts\Client;
-use PrestaShop\CircuitBreaker\Contracts\Place;
+use PrestaShop\CircuitBreaker\Contracts\CircuitBreakerInterface;
+use PrestaShop\CircuitBreaker\Contracts\TransactionInterface;
+use PrestaShop\CircuitBreaker\Contracts\StorageInterface;
+use PrestaShop\CircuitBreaker\Contracts\SystemInterface;
+use PrestaShop\CircuitBreaker\Contracts\ClientInterface;
+use PrestaShop\CircuitBreaker\Contracts\PlaceInterface;
 use DateTime;
 
-abstract class PartialCircuitBreaker implements CircuitBreaker
+abstract class PartialCircuitBreaker implements CircuitBreakerInterface
 {
     /**
-     * @param System $system
-     * @param Client $client
-     * @param Storage $storage
+     * @param SystemInterface $system
+     * @param ClientInterface $client
+     * @param StorageInterface $storage
      */
     public function __construct(
-        System $system,
-        Client $client,
-        Storage $storage
+        SystemInterface $system,
+        ClientInterface $client,
+        StorageInterface $storage
     ) {
         $this->currentPlace = $system->getInitialPlace();
         $this->places = $system->getPlaces();
@@ -30,22 +30,22 @@ abstract class PartialCircuitBreaker implements CircuitBreaker
     }
 
     /**
-     * @var Client the Client that consumes the service URI
+     * @var ClientInterface the Client that consumes the service URI
      */
     protected $client;
 
     /**
-     * @var Place the current Place of the Circuit Breaker
+     * @var PlaceInterface the current Place of the Circuit Breaker
      */
     protected $currentPlace;
 
     /**
-     * @var Place[] the Circuit Breaker places
+     * @var PlaceInterface[] the Circuit Breaker places
      */
     protected $places = [];
 
     /**
-     * @var Storage the Circuit Breaker storage
+     * @var StorageInterface the Circuit Breaker storage
      */
     protected $storage;
 
@@ -106,7 +106,7 @@ abstract class PartialCircuitBreaker implements CircuitBreaker
     /**
      * @param string $service the service URI
      *
-     * @return Transaction
+     * @return TransactionInterface
      */
     protected function initTransaction($service)
     {
@@ -129,21 +129,21 @@ abstract class PartialCircuitBreaker implements CircuitBreaker
     }
 
     /**
-     * @param Transaction $transaction the Transaction
+     * @param TransactionInterface $transaction the Transaction
      *
      * @return bool
      */
-    protected function isAllowedToRetry(Transaction $transaction)
+    protected function isAllowedToRetry(TransactionInterface $transaction)
     {
         return $transaction->getFailures() < $this->currentPlace->getFailures();
     }
 
     /**
-     * @param Transaction $transaction the Transaction
+     * @param TransactionInterface $transaction the Transaction
      *
      * @return bool
      */
-    protected function canAccessService(Transaction $transaction)
+    protected function canAccessService(TransactionInterface $transaction)
     {
         return $transaction->getThresholdDateTime() < new DateTime();
     }

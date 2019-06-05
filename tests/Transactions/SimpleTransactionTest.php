@@ -5,7 +5,7 @@ namespace Tests\PrestaShop\CircuitBreaker\Transactions;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
-use PrestaShop\CircuitBreaker\Contracts\Place;
+use PrestaShop\CircuitBreaker\Contracts\PlaceInterface;
 use PrestaShop\CircuitBreaker\Transactions\SimpleTransaction;
 
 class SimpleTransactionTest extends TestCase
@@ -119,11 +119,11 @@ class SimpleTransactionTest extends TestCase
      * Returns an instance of Place with State equals to "FAKE_STATE"
      * and threshold equals to 2.
      *
-     * @return Place&PHPUnit_Framework_MockObject_MockObject
+     * @return PlaceInterface&PHPUnit_Framework_MockObject_MockObject
      */
     private function createPlaceStub()
     {
-        $placeStub = $this->createMock(Place::class);
+        $placeStub = $this->createMock(PlaceInterface::class);
 
         $placeStub->expects($this->any())
             ->method('getState')

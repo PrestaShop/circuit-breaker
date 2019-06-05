@@ -3,15 +3,15 @@
 namespace PrestaShop\CircuitBreaker\Transactions;
 
 use DateTime;
-use PrestaShop\CircuitBreaker\Contracts\Place;
-use PrestaShop\CircuitBreaker\Contracts\Transaction;
+use PrestaShop\CircuitBreaker\Contracts\PlaceInterface;
+use PrestaShop\CircuitBreaker\Contracts\TransactionInterface;
 use PrestaShop\CircuitBreaker\Exceptions\InvalidTransactionException;
 use PrestaShop\CircuitBreaker\Utils\Assert;
 
 /**
  * Main implementation of Circuit Breaker transaction.
  */
-final class SimpleTransaction implements Transaction
+final class SimpleTransaction implements TransactionInterface
 {
     /**
      * @var string the URI of the service
@@ -94,12 +94,12 @@ final class SimpleTransaction implements Transaction
     /**
      * Helper to create a transaction from the Place.
      *
-     * @param Place $place the Circuit Breaker place
+     * @param PlaceInterface $place the Circuit Breaker place
      * @param string $service the service URI
      *
      * @return self
      */
-    public static function createFromPlace(Place $place, $service)
+    public static function createFromPlace(PlaceInterface $place, $service)
     {
         $threshold = $place->getThreshold();
 

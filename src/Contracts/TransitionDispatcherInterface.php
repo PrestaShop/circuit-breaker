@@ -29,7 +29,7 @@ namespace PrestaShop\CircuitBreaker\Contracts;
 /**
  * This interface is used for a circuit breaker to dispatch its state transitions.
  */
-interface TransitionDispatcher
+interface TransitionDispatcherInterface
 {
     /**
      * @param string $transition the transition name

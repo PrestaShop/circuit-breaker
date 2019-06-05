@@ -7,7 +7,7 @@ use PrestaShop\CircuitBreaker\States;
 use PrestaShop\CircuitBreaker\Places\OpenPlace;
 use PrestaShop\CircuitBreaker\Places\HalfOpenPlace;
 use PrestaShop\CircuitBreaker\Places\ClosedPlace;
-use PrestaShop\CircuitBreaker\Contracts\Place;
+use PrestaShop\CircuitBreaker\Contracts\PlaceInterface;
 use PrestaShop\CircuitBreaker\Systems\MainSystem;
 
 class MainSystemTest extends TestCase
@@ -35,7 +35,7 @@ class MainSystemTest extends TestCase
         $mainSystem = $this->createMainSystem();
         $initialPlace = $mainSystem->getInitialPlace();
 
-        $this->assertInstanceOf(Place::class, $initialPlace);
+        $this->assertInstanceOf(PlaceInterface::class, $initialPlace);
         $this->assertSame(States::CLOSED_STATE, $initialPlace->getState());
     }
 
@@ -51,7 +51,7 @@ class MainSystemTest extends TestCase
         $this->assertCount(3, $places);
 
         foreach ($places as $place) {
-            $this->assertInstanceOf(Place::class, $place);
+            $this->assertInstanceOf(PlaceInterface::class, $place);
         }
     }
 

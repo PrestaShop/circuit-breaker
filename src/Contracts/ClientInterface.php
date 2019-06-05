@@ -6,7 +6,7 @@ namespace PrestaShop\CircuitBreaker\Contracts;
  * In charge of calling the resource and return a response.
  * Must throw UnavailableService exception if not reachable.
  */
-interface Client
+interface ClientInterface
 {
     /**
      * @param string $resource the URI of the service to be reached

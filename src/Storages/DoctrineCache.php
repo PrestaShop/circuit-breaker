@@ -27,14 +27,14 @@
 namespace PrestaShop\CircuitBreaker\Storages;
 
 use Doctrine\Common\Cache\CacheProvider;
-use PrestaShop\CircuitBreaker\Contracts\Storage;
-use PrestaShop\CircuitBreaker\Contracts\Transaction;
+use PrestaShop\CircuitBreaker\Contracts\StorageInterface;
+use PrestaShop\CircuitBreaker\Contracts\TransactionInterface;
 use PrestaShop\CircuitBreaker\Exceptions\TransactionNotFoundException;
 
 /**
  * Implementation of Storage using the Doctrine Cache.
  */
-class DoctrineCache implements Storage
+class DoctrineCache implements StorageInterface
 {
     /** @var CacheProvider */
     private $cacheProvider;
@@ -50,7 +50,7 @@ class DoctrineCache implements Storage
     /**
      * {@inheritdoc}
      */
-    public function saveTransaction($service, Transaction $transaction)
+    public function saveTransaction($service, TransactionInterface $transaction)
     {
         $key = $this->getKey($service);
 

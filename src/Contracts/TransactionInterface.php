@@ -8,7 +8,7 @@ use DateTime;
  * Once the circuit breaker call a service,
  * a transaction is initialized and stored.
  */
-interface Transaction
+interface TransactionInterface
 {
     /**
      * @return string the service name

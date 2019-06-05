@@ -35,7 +35,7 @@ use GuzzleHttp\Subscriber\Mock;
 use PHPUnit_Framework_MockObject_MockObject;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
 use PrestaShop\CircuitBreaker\Clients\GuzzleClient;
-use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcher;
+use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcherInterface;
 use PrestaShop\CircuitBreaker\Places\ClosedPlace;
 use PrestaShop\CircuitBreaker\Places\HalfOpenPlace;
 use PrestaShop\CircuitBreaker\Places\OpenPlace;
@@ -230,8 +230,8 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
         );
 
         $symfonyCache = new SymfonyCache(new ArrayCache());
-        /** @var PHPUnit_Framework_MockObject_MockObject|TransitionDispatcher $dispatcher */
-        $dispatcher = $this->createMock(TransitionDispatcher::class);
+        /** @var PHPUnit_Framework_MockObject_MockObject|TransitionDispatcherInterface $dispatcher */
+        $dispatcher = $this->createMock(TransitionDispatcherInterface::class);
         $dispatcher->expects($this->spy = $this->any())
             ->method('dispatchTransition')
         ;

@@ -31,8 +31,8 @@ use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory;
 use PrestaShop\CircuitBreaker\Clients\GuzzleClient;
 use PrestaShop\CircuitBreaker\Contracts\FactorySettingsInterface;
-use PrestaShop\CircuitBreaker\Contracts\Storage;
-use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcher;
+use PrestaShop\CircuitBreaker\Contracts\StorageInterface;
+use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcherInterface;
 use PrestaShop\CircuitBreaker\FactorySettings;
 use PrestaShop\CircuitBreaker\Transitions;
 
@@ -55,7 +55,7 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
 
     public function testCircuitBreakerWithDispatcher()
     {
-        $dispatcher = $this->getMockBuilder(TransitionDispatcher::class)
+        $dispatcher = $this->getMockBuilder(TransitionDispatcherInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -83,10 +83,12 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
         ;
 
         $factory = new AdvancedCircuitBreakerFactory();
-        $circuitBreaker = $factory->create(
-            (new FactorySettings(2, 0.1, 10, 0.2))
+        $settings = new FactorySettings(2, 0.1, 10);
+        $settings
+            ->setStrippedTimeout(0.2)
             ->setDispatcher($dispatcher)
-        );
+        ;
+        $circuitBreaker = $factory->create($settings);
 
         $this->assertInstanceOf(AdvancedCircuitBreaker::class, $circuitBreaker);
         $circuitBreaker->call($localeService, function () {}, $expectedParameters);
@@ -94,26 +96,20 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
 
     public function testCircuitBreakerWithStorage()
     {
-        $storage = $this->getMockBuilder(Storage::class)
+        $storage = $this->getMockBuilder(StorageInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
         $factory = new AdvancedCircuitBreakerFactory();
-        $circuitBreaker = $factory->create(
-            (new FactorySettings(2, 0.1, 10, 0.2))
+        $settings = new FactorySettings(2, 0.1, 10);
+        $settings
+            ->setStrippedTimeout(0.2)
             ->setStorage($storage)
-        );
+        ;
+        $circuitBreaker = $factory->create($settings);
 
         $this->assertInstanceOf(AdvancedCircuitBreaker::class, $circuitBreaker);
-    }
-
-    public function testFactoryDefaultSettings()
-    {
-        $defaultSettings = new FactorySettings(2, 0.1, 0, 0.1);
-        $factory = new AdvancedCircuitBreakerFactory($defaultSettings);
-        $circuitBreaker = $factory->create(new FactorySettings(2, 0.1, 10, 0.2));
-        $this->assertNotNull($circuitBreaker);
     }
 
     /**
@@ -123,11 +119,13 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
     {
         return [
             [
-                (new FactorySettings(2, 0.1, 10, 0.2))
+                (new FactorySettings(2, 0.1, 10))
+                    ->setStrippedTimeout(0.2)
                     ->setClientSettings(['proxy' => '192.168.16.1:10']),
             ],
             [
-                (new FactorySettings(2, 0.1, 10, 0.2))
+                (new FactorySettings(2, 0.1, 10))
+                    ->setStrippedTimeout(0.2)
                     ->setClient(new GuzzleClient(['proxy' => '192.168.16.1:10'])),
             ],
         ];

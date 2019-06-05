@@ -26,13 +26,13 @@
 
 namespace PrestaShop\CircuitBreaker\Transitions;
 
-use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcher;
+use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcherInterface;
 
 /**
  * Class NullDispatcher is used when you have no TransitionDispatcher to inject
  * because you don't need it.
  */
-class NullDispatcher implements TransitionDispatcher
+class NullDispatcher implements TransitionDispatcherInterface
 {
     /**
      * {@inheritdoc}

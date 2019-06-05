@@ -26,10 +26,10 @@
 
 namespace PrestaShop\CircuitBreaker;
 
-use PrestaShop\CircuitBreaker\Contracts\Client;
-use PrestaShop\CircuitBreaker\Contracts\Storage;
-use PrestaShop\CircuitBreaker\Contracts\System;
-use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcher;
+use PrestaShop\CircuitBreaker\Contracts\ClientInterface;
+use PrestaShop\CircuitBreaker\Contracts\StorageInterface;
+use PrestaShop\CircuitBreaker\Contracts\SystemInterface;
+use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcherInterface;
 use PrestaShop\CircuitBreaker\Exceptions\UnavailableServiceException;
 
 /**
@@ -38,16 +38,16 @@ use PrestaShop\CircuitBreaker\Exceptions\UnavailableServiceException;
  */
 class AdvancedCircuitBreaker extends PartialCircuitBreaker
 {
-    /** @var TransitionDispatcher */
+    /** @var TransitionDispatcherInterface */
     protected $dispatcher;
 
     /**
-     * @param System $system
-     * @param Client $client
-     * @param Storage $storage
-     * @param TransitionDispatcher $dispatcher
+     * @param SystemInterface $system
+     * @param ClientInterface $client
+     * @param StorageInterface $storage
+     * @param TransitionDispatcherInterface $dispatcher
      */
-    public function __construct(System $system, Client $client, Storage $storage, TransitionDispatcher $dispatcher)
+    public function __construct(SystemInterface $system, ClientInterface $client, StorageInterface $storage, TransitionDispatcherInterface $dispatcher)
     {
         parent::__construct($system, $client, $storage);
         $this->dispatcher = $dispatcher;

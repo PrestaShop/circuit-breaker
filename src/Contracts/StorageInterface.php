@@ -8,24 +8,24 @@ use PrestaShop\CircuitBreaker\Exceptions\TransactionNotFoundException;
  * Store the transaction between the Circuit Breaker
  * and the tiers service.
  */
-interface Storage
+interface StorageInterface
 {
     /**
      * Save the CircuitBreaker transaction.
      *
      * @param string $service The service name
-     * @param Transaction $transaction the transaction
+     * @param TransactionInterface $transaction the transaction
      *
      * @return bool
      */
-    public function saveTransaction($service, Transaction $transaction);
+    public function saveTransaction($service, TransactionInterface $transaction);
 
     /**
      * Retrieve the CircuitBreaker transaction for a specific service.
      *
      * @param string $service the service name
      *
-     * @return Transaction
+     * @return TransactionInterface
      *
      * @throws TransactionNotFoundException
      */

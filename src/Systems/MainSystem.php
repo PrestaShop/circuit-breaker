@@ -2,8 +2,8 @@
 
 namespace PrestaShop\CircuitBreaker\Systems;
 
-use PrestaShop\CircuitBreaker\Contracts\Place;
-use PrestaShop\CircuitBreaker\Contracts\System;
+use PrestaShop\CircuitBreaker\Contracts\PlaceInterface;
+use PrestaShop\CircuitBreaker\Contracts\SystemInterface;
 use PrestaShop\CircuitBreaker\States;
 
 /**
@@ -13,17 +13,17 @@ use PrestaShop\CircuitBreaker\States;
  * - A Half Open Place
  * - An Open Place
  */
-final class MainSystem implements System
+final class MainSystem implements SystemInterface
 {
     /**
-     * @var Place[]
+     * @var PlaceInterface[]
      */
     private $places;
 
     public function __construct(
-        Place $closedPlace,
-        Place $halfOpenPlace,
-        Place $openPlace
+        PlaceInterface $closedPlace,
+        PlaceInterface $halfOpenPlace,
+        PlaceInterface $openPlace
     ) {
         $this->places = [
             $closedPlace->getState() => $closedPlace,

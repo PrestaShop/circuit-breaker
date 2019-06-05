@@ -2,14 +2,14 @@
 
 namespace PrestaShop\CircuitBreaker\Storages;
 
-use PrestaShop\CircuitBreaker\Contracts\Storage;
-use PrestaShop\CircuitBreaker\Contracts\Transaction;
+use PrestaShop\CircuitBreaker\Contracts\StorageInterface;
+use PrestaShop\CircuitBreaker\Contracts\TransactionInterface;
 use PrestaShop\CircuitBreaker\Exceptions\TransactionNotFoundException;
 
 /**
  * Very simple implementation of Storage using a simple PHP array.
  */
-final class SimpleArray implements Storage
+final class SimpleArray implements StorageInterface
 {
     /**
      * @var array the circuit breaker transactions
@@ -19,7 +19,7 @@ final class SimpleArray implements Storage
     /**
      * {@inheritdoc}
      */
-    public function saveTransaction($service, Transaction $transaction)
+    public function saveTransaction($service, TransactionInterface $transaction)
     {
         $key = $this->getKey($service);
 

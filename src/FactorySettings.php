@@ -26,10 +26,10 @@
 
 namespace PrestaShop\CircuitBreaker;
 
-use PrestaShop\CircuitBreaker\Contracts\Client;
+use PrestaShop\CircuitBreaker\Contracts\ClientInterface;
 use PrestaShop\CircuitBreaker\Contracts\FactorySettingsInterface;
-use PrestaShop\CircuitBreaker\Contracts\Storage;
-use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcher;
+use PrestaShop\CircuitBreaker\Contracts\StorageInterface;
+use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcherInterface;
 
 /**
  * Class FactorySettings is a simple implementation of FactorySettingsInterface, it is mainly
@@ -52,16 +52,16 @@ class FactorySettings implements FactorySettingsInterface
     /** @var int */
     private $strippedFailures;
 
-    /** @var Storage */
+    /** @var StorageInterface */
     private $storage;
 
-    /** @var TransitionDispatcher */
+    /** @var TransitionDispatcherInterface */
     private $dispatcher;
 
     /** @var array */
     private $clientSettings;
 
-    /** @var Client */
+    /** @var ClientInterface */
     private $client;
 
     /**
@@ -218,11 +218,11 @@ class FactorySettings implements FactorySettingsInterface
     }
 
     /**
-     * @param Storage $storage
+     * @param StorageInterface $storage
      *
      * @return FactorySettings
      */
-    public function setStorage(Storage $storage)
+    public function setStorage(StorageInterface $storage)
     {
         $this->storage = $storage;
 
@@ -238,11 +238,11 @@ class FactorySettings implements FactorySettingsInterface
     }
 
     /**
-     * @param TransitionDispatcher $dispatcher
+     * @param TransitionDispatcherInterface $dispatcher
      *
      * @return FactorySettings
      */
-    public function setDispatcher(TransitionDispatcher $dispatcher)
+    public function setDispatcher(TransitionDispatcherInterface $dispatcher)
     {
         $this->dispatcher = $dispatcher;
 
@@ -278,11 +278,11 @@ class FactorySettings implements FactorySettingsInterface
     }
 
     /**
-     * @param Client $client
+     * @param ClientInterface $client
      *
      * @return FactorySettings
      */
-    public function setClient(Client $client)
+    public function setClient(ClientInterface $client)
     {
         $this->client = $client;
 

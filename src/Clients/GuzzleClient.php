@@ -5,7 +5,7 @@ namespace PrestaShop\CircuitBreaker\Clients;
 use Exception;
 use GuzzleHttp\Client as OriginalGuzzleClient;
 use GuzzleHttp\Subscriber\Mock;
-use PrestaShop\CircuitBreaker\Contracts\Client;
+use PrestaShop\CircuitBreaker\Contracts\ClientInterface;
 use PrestaShop\CircuitBreaker\Exceptions\UnavailableServiceException;
 use PrestaShop\CircuitBreaker\Exceptions\UnsupportedMethodException;
 
@@ -13,7 +13,7 @@ use PrestaShop\CircuitBreaker\Exceptions\UnsupportedMethodException;
  * Guzzle implementation of client.
  * The possibility of extending this client is intended.
  */
-class GuzzleClient implements Client
+class GuzzleClient implements ClientInterface
 {
     /**
      * @var string by default, calls are sent using GET method

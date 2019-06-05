@@ -4,15 +4,15 @@ namespace Tests\PrestaShop\CircuitBreaker\Storages;
 
 use Doctrine\Common\Cache\FilesystemCache;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\CircuitBreaker\Contracts\Storage;
-use PrestaShop\CircuitBreaker\Contracts\Transaction;
+use PrestaShop\CircuitBreaker\Contracts\StorageInterface;
+use PrestaShop\CircuitBreaker\Contracts\TransactionInterface;
 use PrestaShop\CircuitBreaker\Exceptions\TransactionNotFoundException;
 use PrestaShop\CircuitBreaker\Storages\DoctrineCache;
 
 class DoctrineCacheTest extends TestCase
 {
     /**
-     * @var Storage the Doctrine Cache storage
+     * @var StorageInterface the Doctrine Cache storage
      */
     private $doctrineCache;
 
@@ -51,7 +51,7 @@ class DoctrineCacheTest extends TestCase
     {
         $operation = $this->doctrineCache->saveTransaction(
             'http://test.com',
-            $this->createMock(Transaction::class)
+            $this->createMock(TransactionInterface::class)
         );
 
         $this->assertTrue($operation);
@@ -63,7 +63,7 @@ class DoctrineCacheTest extends TestCase
      */
     public function testHasTransaction()
     {
-        $this->doctrineCache->saveTransaction('http://test.com', $this->createMock(Transaction::class));
+        $this->doctrineCache->saveTransaction('http://test.com', $this->createMock(TransactionInterface::class));
 
         $this->assertTrue($this->doctrineCache->hasTransaction('http://test.com'));
     }
@@ -75,7 +75,7 @@ class DoctrineCacheTest extends TestCase
      */
     public function testGetTransaction()
     {
-        $translationStub = $this->createMock(Transaction::class);
+        $translationStub = $this->createMock(TransactionInterface::class);
         $this->doctrineCache->saveTransaction('http://test.com', $translationStub);
 
         $transaction = $this->doctrineCache->getTransaction('http://test.com');
@@ -101,7 +101,7 @@ class DoctrineCacheTest extends TestCase
      */
     public function testClear()
     {
-        $translationStub = $this->createMock(Transaction::class);
+        $translationStub = $this->createMock(TransactionInterface::class);
         $this->doctrineCache->saveTransaction('http://a.com', $translationStub);
         $this->doctrineCache->saveTransaction('http://b.com', $translationStub);
 

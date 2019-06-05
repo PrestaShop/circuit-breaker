@@ -2,8 +2,8 @@
 
 namespace PrestaShop\CircuitBreaker;
 
-use PrestaShop\CircuitBreaker\Contracts\Place;
-use PrestaShop\CircuitBreaker\Contracts\Client;
+use PrestaShop\CircuitBreaker\Contracts\PlaceInterface;
+use PrestaShop\CircuitBreaker\Contracts\ClientInterface;
 use PrestaShop\CircuitBreaker\Systems\MainSystem;
 use PrestaShop\CircuitBreaker\Storages\SimpleArray;
 use PrestaShop\CircuitBreaker\Exceptions\UnavailableServiceException;
@@ -14,10 +14,10 @@ use PrestaShop\CircuitBreaker\Exceptions\UnavailableServiceException;
 final class SimpleCircuitBreaker extends PartialCircuitBreaker
 {
     public function __construct(
-        Place $openPlace,
-        Place $halfOpenPlace,
-        Place $closedPlace,
-        Client $client
+        PlaceInterface $openPlace,
+        PlaceInterface $halfOpenPlace,
+        PlaceInterface $closedPlace,
+        ClientInterface $client
     ) {
         $system = new MainSystem($closedPlace, $halfOpenPlace, $openPlace);
 

@@ -2,15 +2,15 @@
 
 namespace PrestaShop\CircuitBreaker\Storages;
 
-use PrestaShop\CircuitBreaker\Contracts\Storage;
-use PrestaShop\CircuitBreaker\Contracts\Transaction;
+use PrestaShop\CircuitBreaker\Contracts\StorageInterface;
+use PrestaShop\CircuitBreaker\Contracts\TransactionInterface;
 use PrestaShop\CircuitBreaker\Exceptions\TransactionNotFoundException;
 use Psr\SimpleCache\CacheInterface;
 
 /**
  * Implementation of Storage using the Symfony Cache Component.
  */
-final class SymfonyCache implements Storage
+final class SymfonyCache implements StorageInterface
 {
     /**
      * @var CacheInterface the Symfony Cache
@@ -25,7 +25,7 @@ final class SymfonyCache implements Storage
     /**
      * {@inheritdoc}
      */
-    public function saveTransaction($service, Transaction $transaction)
+    public function saveTransaction($service, TransactionInterface $transaction)
     {
         $key = $this->getKey($service);
 

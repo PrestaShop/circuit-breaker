@@ -33,13 +33,13 @@ class GuzzleClient implements ClientInterface
     ];
 
     /**
-     * @var array the Client main options
+     * @var array the Client default options
      */
-    private $mainOptions;
+    private $defaultOptions;
 
-    public function __construct(array $mainOptions = [])
+    public function __construct(array $defaultOptions = [])
     {
-        $this->mainOptions = $mainOptions;
+        $this->defaultOptions = $defaultOptions;
     }
 
     /**
@@ -50,12 +50,13 @@ class GuzzleClient implements ClientInterface
     public function request($resource, array $options)
     {
         try {
-            $client = $this->buildClient();
+            $options = array_merge($this->defaultOptions, $options);
+            $client = $this->buildClient($options);
             $method = $this->getHttpMethod($options);
             $options['exceptions'] = true;
 
             // prevents unhandled method errors in Guzzle 5
-            unset($options['method']);
+            unset($options['method'], $options['mock']);
 
             $request = $client->createRequest($method, $resource, $options);
 
@@ -74,10 +75,6 @@ class GuzzleClient implements ClientInterface
      */
     private function getHttpMethod(array $options)
     {
-        if (isset($this->mainOptions['method'])) {
-            return $this->mainOptions['method'];
-        }
-
         if (isset($options['method'])) {
             if (!array_key_exists($options['method'], self::SUPPORTED_METHODS)) {
                 throw UnsupportedMethodException::unsupportedMethod($options['method']);
@@ -90,25 +87,30 @@ class GuzzleClient implements ClientInterface
     }
 
     /**
+     * @param array $options
+     *
      * @return OriginalGuzzleClient
      */
-    private function buildClient()
+    private function buildClient(array $options)
     {
-        if (isset($this->mainOptions['mock']) && $this->mainOptions['mock'] instanceof Mock) {
-            return $this->buildMockClient($this->mainOptions['mock']);
+        if (isset($options['mock']) && $options['mock'] instanceof Mock) {
+            return $this->buildMockClient($options);
         }
 
-        return new OriginalGuzzleClient($this->mainOptions);
+        return new OriginalGuzzleClient($options);
     }
 
     /**
      * Builds a client with a mock
      *
+     * @param array $options
+     *
      * @return OriginalGuzzleClient
      */
-    private function buildMockClient(Mock $mock)
+    private function buildMockClient(array $options)
     {
-        $options = $this->mainOptions;
+        /** @var Mock $mock */
+        $mock = $options['mock'];
         unset($options['mock']);
 
         $client = new OriginalGuzzleClient($options);

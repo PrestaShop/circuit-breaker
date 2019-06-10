@@ -58,7 +58,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
      */
     public function call(
         $service,
-        callable $fallback,
+        callable $fallback = null,
         array $serviceParameters = []
     ) {
         $transaction = $this->initTransaction($service);
@@ -66,7 +66,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
         try {
             if ($this->isOpened()) {
                 if (!$this->canAccessService($transaction)) {
-                    return call_user_func($fallback);
+                    return $this->callFallback($fallback);
                 }
 
                 $this->moveStateTo(States::HALF_OPEN_STATE, $service);
@@ -97,7 +97,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
                 }
                 $this->dispatchTransition($transition, $service, $serviceParameters);
 
-                return call_user_func($fallback);
+                return $this->callFallback($fallback);
             }
 
             return $this->call(

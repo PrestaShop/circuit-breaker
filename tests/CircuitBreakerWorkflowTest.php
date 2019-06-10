@@ -75,6 +75,32 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
     }
 
     /**
+     * Once the number of failures is reached, the circuit breaker
+     * is open. This time no calls to the services are done.
+     *
+     * @dataProvider getCircuitBreakers
+     *
+     * @param CircuitBreakerInterface $circuitBreaker
+     */
+    public function testCircuitBreakerWillBeOpenWithoutFallback($circuitBreaker)
+    {
+        // CLOSED
+        $this->assertSame(States::CLOSED_STATE, $circuitBreaker->getState());
+        $response = $circuitBreaker->call('https://httpbin.org/get/foo');
+        $this->assertSame('', $response);
+
+        //After two failed calls switch to OPEN state
+        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
+        $this->assertSame(
+            '{}',
+            $circuitBreaker->call(
+                'https://httpbin.org/get/foo',
+                $this->createFallbackResponse()
+            )
+        );
+    }
+
+    /**
      * In HalfOpen state, if the service is back we can
      * close the CircuitBreaker.
      *

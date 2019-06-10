@@ -52,7 +52,7 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
     /**
      * {@inheritdoc}
      */
-    abstract public function call($service, callable $fallback, array $serviceParameters = []);
+    abstract public function call($service, callable $fallback = null, array $serviceParameters = []);
 
     /**
      * {@inheritdoc}
@@ -84,6 +84,20 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
     public function isClosed()
     {
         return States::CLOSED_STATE === $this->currentPlace->getState();
+    }
+
+    /**
+     * @param callable|null $fallback
+     *
+     * @return string
+     */
+    protected function callFallback(callable $fallback = null)
+    {
+        if (null === $fallback) {
+            return '';
+        }
+
+        return call_user_func($fallback);
     }
 
     /**

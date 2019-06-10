@@ -136,6 +136,33 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
         $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
     }
 
+    public function testNoFallback()
+    {
+        $system = new MainSystem(
+            new ClosedPlace(2, 0.2, 0),
+            new HalfOpenPlace(0, 0.2, 0),
+            new OpenPlace(0, 0, 1)
+        );
+        $symfonyCache = new SymfonyCache(new ArrayCache());
+        $mock = new Mock([
+            new RequestException('Service unavailable', new Request('GET', 'test')),
+            new RequestException('Service unavailable', new Request('GET', 'test')),
+        ]);
+        $client = new GuzzleClient(['mock' => $mock]);
+
+        $circuitBreaker = new AdvancedCircuitBreaker(
+            $system,
+            $client,
+            $symfonyCache,
+            new NullDispatcher()
+        );
+
+        $response = $circuitBreaker->call('anything');
+        $this->assertEquals(0, $mock->count());
+        $this->assertEquals('', $response);
+        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
+    }
+
     public function testBackToClosedStateAfterSuccess()
     {
         $system = new MainSystem(

@@ -26,10 +26,10 @@
 
 namespace PrestaShop\CircuitBreaker;
 
-use PrestaShop\CircuitBreaker\Contracts\ClientInterface;
-use PrestaShop\CircuitBreaker\Contracts\FactorySettingsInterface;
-use PrestaShop\CircuitBreaker\Contracts\StorageInterface;
-use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcherInterface;
+use PrestaShop\CircuitBreaker\Contract\ClientInterface;
+use PrestaShop\CircuitBreaker\Contract\FactorySettingsInterface;
+use PrestaShop\CircuitBreaker\Contract\StorageInterface;
+use PrestaShop\CircuitBreaker\Contract\TransitionDispatcherInterface;
 
 /**
  * Class FactorySettings is a simple implementation of FactorySettingsInterface, it is mainly

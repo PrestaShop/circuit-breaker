@@ -3,20 +3,20 @@
 namespace Tests\PrestaShop\CircuitBreaker;
 
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
-use PrestaShop\CircuitBreaker\Clients\GuzzleClient;
-use PrestaShop\CircuitBreaker\Contracts\CircuitBreakerInterface;
-use PrestaShop\CircuitBreaker\Exceptions\UnavailableServiceException;
-use PrestaShop\CircuitBreaker\States;
-use PrestaShop\CircuitBreaker\Storages\SimpleArray;
-use PrestaShop\CircuitBreaker\Transitions\NullDispatcher;
+use PrestaShop\CircuitBreaker\Client\GuzzleClient;
+use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
+use PrestaShop\CircuitBreaker\Exception\UnavailableServiceException;
+use PrestaShop\CircuitBreaker\State;
+use PrestaShop\CircuitBreaker\Storage\SimpleArray;
+use PrestaShop\CircuitBreaker\Transition\NullDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use PrestaShop\CircuitBreaker\Storages\SymfonyCache;
+use PrestaShop\CircuitBreaker\Storage\SymfonyCache;
 use PrestaShop\CircuitBreaker\SymfonyCircuitBreaker;
 use PrestaShop\CircuitBreaker\SimpleCircuitBreaker;
-use PrestaShop\CircuitBreaker\Places\HalfOpenPlace;
-use PrestaShop\CircuitBreaker\Places\ClosedPlace;
-use PrestaShop\CircuitBreaker\Systems\MainSystem;
-use PrestaShop\CircuitBreaker\Places\OpenPlace;
+use PrestaShop\CircuitBreaker\Place\HalfOpenPlace;
+use PrestaShop\CircuitBreaker\Place\ClosedPlace;
+use PrestaShop\CircuitBreaker\System\MainSystem;
+use PrestaShop\CircuitBreaker\Place\OpenPlace;
 use Symfony\Component\Cache\Simple\ArrayCache;
 
 class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
@@ -45,7 +45,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
      */
     public function testCircuitBreakerIsInClosedStateAtStart($circuitBreaker)
     {
-        $this->assertSame(States::CLOSED_STATE, $circuitBreaker->getState());
+        $this->assertSame(State::CLOSED_STATE, $circuitBreaker->getState());
     }
 
     /**
@@ -59,12 +59,12 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
     public function testCircuitBreakerWillBeOpenInCaseOfFailures($circuitBreaker)
     {
         // CLOSED
-        $this->assertSame(States::CLOSED_STATE, $circuitBreaker->getState());
+        $this->assertSame(State::CLOSED_STATE, $circuitBreaker->getState());
         $response = $circuitBreaker->call('https://httpbin.org/get/foo', [], $this->createFallbackResponse());
         $this->assertSame('{}', $response);
 
         //After two failed calls switch to OPEN state
-        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
+        $this->assertSame(State::OPEN_STATE, $circuitBreaker->getState());
         $this->assertSame(
             '{}',
             $circuitBreaker->call(
@@ -86,12 +86,12 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
     public function testCircuitBreakerWillBeOpenWithoutFallback($circuitBreaker)
     {
         // CLOSED
-        $this->assertSame(States::CLOSED_STATE, $circuitBreaker->getState());
+        $this->assertSame(State::CLOSED_STATE, $circuitBreaker->getState());
         $response = $circuitBreaker->call('https://httpbin.org/get/foo');
         $this->assertSame('', $response);
 
         //After two failed calls switch to OPEN state
-        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
+        $this->assertSame(State::OPEN_STATE, $circuitBreaker->getState());
         $this->assertSame(
             '{}',
             $circuitBreaker->call(
@@ -113,15 +113,15 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
     public function testOnceInHalfOpenModeServiceIsFinallyReachable($circuitBreaker)
     {
         // CLOSED - first call fails (twice)
-        $this->assertSame(States::CLOSED_STATE, $circuitBreaker->getState());
+        $this->assertSame(State::CLOSED_STATE, $circuitBreaker->getState());
         $response = $circuitBreaker->call('https://httpbin.org/get/foo', [], $this->createFallbackResponse());
         $this->assertSame('{}', $response);
-        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
+        $this->assertSame(State::OPEN_STATE, $circuitBreaker->getState());
 
         // OPEN - no call to client
         $response = $circuitBreaker->call('https://httpbin.org/get/foo', [], $this->createFallbackResponse());
         $this->assertSame('{}', $response);
-        $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
+        $this->assertSame(State::OPEN_STATE, $circuitBreaker->getState());
 
         sleep(2 * self::OPEN_THRESHOLD);
         // SWITCH TO HALF OPEN - retry to call the service
@@ -133,7 +133,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
                 $this->createFallbackResponse()
             )
         );
-        $this->assertSame(States::CLOSED_STATE, $circuitBreaker->getState());
+        $this->assertSame(State::CLOSED_STATE, $circuitBreaker->getState());
         $this->assertTrue($circuitBreaker->isClosed());
     }
 
@@ -161,9 +161,9 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
             $storage,
             new NullDispatcher()
         );
-        $this->assertEquals(States::CLOSED_STATE, $firstCircuitBreaker->getState());
+        $this->assertEquals(State::CLOSED_STATE, $firstCircuitBreaker->getState());
         $firstCircuitBreaker->call('fake_service', [], function () { return false; });
-        $this->assertEquals(States::OPEN_STATE, $firstCircuitBreaker->getState());
+        $this->assertEquals(State::OPEN_STATE, $firstCircuitBreaker->getState());
         $this->assertTrue($storage->hasTransaction('fake_service'));
 
         $secondCircuitBreaker = new AdvancedCircuitBreaker(
@@ -172,9 +172,9 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
             $storage,
             new NullDispatcher()
         );
-        $this->assertEquals(States::CLOSED_STATE, $secondCircuitBreaker->getState());
+        $this->assertEquals(State::CLOSED_STATE, $secondCircuitBreaker->getState());
         $secondCircuitBreaker->call('fake_service', [], function () { return false; });
-        $this->assertEquals(States::OPEN_STATE, $secondCircuitBreaker->getState());
+        $this->assertEquals(State::OPEN_STATE, $secondCircuitBreaker->getState());
     }
 
     /**

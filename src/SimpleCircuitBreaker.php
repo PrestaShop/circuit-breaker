@@ -2,11 +2,11 @@
 
 namespace PrestaShop\CircuitBreaker;
 
-use PrestaShop\CircuitBreaker\Contracts\PlaceInterface;
-use PrestaShop\CircuitBreaker\Contracts\ClientInterface;
-use PrestaShop\CircuitBreaker\Systems\MainSystem;
-use PrestaShop\CircuitBreaker\Storages\SimpleArray;
-use PrestaShop\CircuitBreaker\Exceptions\UnavailableServiceException;
+use PrestaShop\CircuitBreaker\Contract\PlaceInterface;
+use PrestaShop\CircuitBreaker\Contract\ClientInterface;
+use PrestaShop\CircuitBreaker\System\MainSystem;
+use PrestaShop\CircuitBreaker\Storage\SimpleArray;
+use PrestaShop\CircuitBreaker\Exception\UnavailableServiceException;
 
 /**
  * Main implementation of Circuit Breaker.
@@ -39,17 +39,17 @@ final class SimpleCircuitBreaker extends PartialCircuitBreaker
                     return $this->callFallback($fallback);
                 }
 
-                $this->moveStateTo(States::HALF_OPEN_STATE, $service);
+                $this->moveStateTo(State::HALF_OPEN_STATE, $service);
             }
             $response = $this->request($service, $serviceParameters);
-            $this->moveStateTo(States::CLOSED_STATE, $service);
+            $this->moveStateTo(State::CLOSED_STATE, $service);
 
             return $response;
         } catch (UnavailableServiceException $exception) {
             $transaction->incrementFailures();
             $this->storage->saveTransaction($service, $transaction);
             if (!$this->isAllowedToRetry($transaction)) {
-                $this->moveStateTo(States::OPEN_STATE, $service);
+                $this->moveStateTo(State::OPEN_STATE, $service);
 
                 return $this->callFallback($fallback);
             }

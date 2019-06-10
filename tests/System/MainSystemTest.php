@@ -3,12 +3,12 @@
 namespace Tests\PrestaShop\CircuitBreaker\System;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\CircuitBreaker\States;
-use PrestaShop\CircuitBreaker\Places\OpenPlace;
-use PrestaShop\CircuitBreaker\Places\HalfOpenPlace;
-use PrestaShop\CircuitBreaker\Places\ClosedPlace;
-use PrestaShop\CircuitBreaker\Contracts\PlaceInterface;
-use PrestaShop\CircuitBreaker\Systems\MainSystem;
+use PrestaShop\CircuitBreaker\State;
+use PrestaShop\CircuitBreaker\Place\OpenPlace;
+use PrestaShop\CircuitBreaker\Place\HalfOpenPlace;
+use PrestaShop\CircuitBreaker\Place\ClosedPlace;
+use PrestaShop\CircuitBreaker\Contract\PlaceInterface;
+use PrestaShop\CircuitBreaker\System\MainSystem;
 
 class MainSystemTest extends TestCase
 {
@@ -36,7 +36,7 @@ class MainSystemTest extends TestCase
         $initialPlace = $mainSystem->getInitialPlace();
 
         $this->assertInstanceOf(PlaceInterface::class, $initialPlace);
-        $this->assertSame(States::CLOSED_STATE, $initialPlace->getState());
+        $this->assertSame(State::CLOSED_STATE, $initialPlace->getState());
     }
 
     /**

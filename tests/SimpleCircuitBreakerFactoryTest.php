@@ -3,7 +3,7 @@
 namespace Tests\PrestaShop\CircuitBreaker;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\CircuitBreaker\Contracts\FactorySettingsInterface;
+use PrestaShop\CircuitBreaker\Contract\FactorySettingsInterface;
 use PrestaShop\CircuitBreaker\FactorySettings;
 use PrestaShop\CircuitBreaker\SimpleCircuitBreaker;
 use PrestaShop\CircuitBreaker\SimpleCircuitBreakerFactory;

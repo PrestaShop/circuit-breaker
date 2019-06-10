@@ -26,11 +26,11 @@
 
 namespace PrestaShop\CircuitBreaker;
 
-use PrestaShop\CircuitBreaker\Contracts\ClientInterface;
-use PrestaShop\CircuitBreaker\Contracts\StorageInterface;
-use PrestaShop\CircuitBreaker\Contracts\SystemInterface;
-use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcherInterface;
-use PrestaShop\CircuitBreaker\Exceptions\UnavailableServiceException;
+use PrestaShop\CircuitBreaker\Contract\ClientInterface;
+use PrestaShop\CircuitBreaker\Contract\StorageInterface;
+use PrestaShop\CircuitBreaker\Contract\SystemInterface;
+use PrestaShop\CircuitBreaker\Contract\TransitionDispatcherInterface;
+use PrestaShop\CircuitBreaker\Exception\UnavailableServiceException;
 
 /**
  * This implementation of the CircuitBreaker is a bit more advanced than the SimpleCircuitBreaker,
@@ -72,18 +72,18 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
                     return $this->callFallback($fallback);
                 }
 
-                $this->moveStateTo(States::HALF_OPEN_STATE, $service);
+                $this->moveStateTo(State::HALF_OPEN_STATE, $service);
                 $this->dispatchTransition(
-                    Transitions::CHECKING_AVAILABILITY_TRANSITION,
+                    Transition::CHECKING_AVAILABILITY_TRANSITION,
                     $service,
                     $serviceParameters
                 );
             }
 
             $response = $this->request($service, $serviceParameters);
-            $this->moveStateTo(States::CLOSED_STATE, $service);
+            $this->moveStateTo(State::CLOSED_STATE, $service);
             $this->dispatchTransition(
-                Transitions::CLOSING_TRANSITION,
+                Transition::CLOSING_TRANSITION,
                 $service,
                 $serviceParameters
             );
@@ -93,10 +93,10 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
             $transaction->incrementFailures();
             $this->storage->saveTransaction($service, $transaction);
             if (!$this->isAllowedToRetry($transaction)) {
-                $this->moveStateTo(States::OPEN_STATE, $service);
-                $transition = Transitions::OPENING_TRANSITION;
+                $this->moveStateTo(State::OPEN_STATE, $service);
+                $transition = Transition::OPENING_TRANSITION;
                 if ($this->isHalfOpened()) {
-                    $transition = Transitions::REOPENING_TRANSITION;
+                    $transition = Transition::REOPENING_TRANSITION;
                 }
                 $this->dispatchTransition($transition, $service, $serviceParameters);
 
@@ -155,7 +155,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
     protected function initTransaction($service)
     {
         if (!$this->storage->hasTransaction($service)) {
-            $this->dispatchTransition(Transitions::INITIATING_TRANSITION, $service, []);
+            $this->dispatchTransition(Transition::INITIATING_TRANSITION, $service, []);
         }
 
         return parent::initTransaction($service);
@@ -166,7 +166,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
      */
     protected function request($service, array $parameters = [])
     {
-        $this->dispatchTransition(Transitions::TRIAL_TRANSITION, $service, $parameters);
+        $this->dispatchTransition(Transition::TRIAL_TRANSITION, $service, $parameters);
 
         return parent::request($service, $parameters);
     }

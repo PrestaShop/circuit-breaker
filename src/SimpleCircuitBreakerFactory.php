@@ -2,12 +2,12 @@
 
 namespace PrestaShop\CircuitBreaker;
 
-use PrestaShop\CircuitBreaker\Contracts\FactoryInterface;
-use PrestaShop\CircuitBreaker\Contracts\FactorySettingsInterface;
-use PrestaShop\CircuitBreaker\Places\ClosedPlace;
-use PrestaShop\CircuitBreaker\Places\HalfOpenPlace;
-use PrestaShop\CircuitBreaker\Places\OpenPlace;
-use PrestaShop\CircuitBreaker\Clients\GuzzleClient;
+use PrestaShop\CircuitBreaker\Contract\FactoryInterface;
+use PrestaShop\CircuitBreaker\Contract\FactorySettingsInterface;
+use PrestaShop\CircuitBreaker\Place\ClosedPlace;
+use PrestaShop\CircuitBreaker\Place\HalfOpenPlace;
+use PrestaShop\CircuitBreaker\Place\OpenPlace;
+use PrestaShop\CircuitBreaker\Client\GuzzleClient;
 
 /**
  * Main implementation of Circuit Breaker Factory

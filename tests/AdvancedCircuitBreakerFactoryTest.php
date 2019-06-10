@@ -29,13 +29,13 @@ namespace Tests\PrestaShop\CircuitBreaker;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory;
-use PrestaShop\CircuitBreaker\Clients\GuzzleClient;
-use PrestaShop\CircuitBreaker\Contracts\FactorySettingsInterface;
-use PrestaShop\CircuitBreaker\Contracts\StorageInterface;
-use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcherInterface;
+use PrestaShop\CircuitBreaker\Client\GuzzleClient;
+use PrestaShop\CircuitBreaker\Contract\FactorySettingsInterface;
+use PrestaShop\CircuitBreaker\Contract\StorageInterface;
+use PrestaShop\CircuitBreaker\Contract\TransitionDispatcherInterface;
 use PrestaShop\CircuitBreaker\FactorySettings;
-use PrestaShop\CircuitBreaker\States;
-use PrestaShop\CircuitBreaker\Transitions;
+use PrestaShop\CircuitBreaker\State;
+use PrestaShop\CircuitBreaker\Transition;
 
 class AdvancedCircuitBreakerFactoryTest extends TestCase
 {
@@ -68,7 +68,7 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
             ->expects($this->at(0))
             ->method('dispatchTransition')
             ->with(
-                $this->equalTo(Transitions::INITIATING_TRANSITION),
+                $this->equalTo(Transition::INITIATING_TRANSITION),
                 $this->equalTo($localeService),
                 $this->equalTo([])
             )
@@ -77,7 +77,7 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
             ->expects($this->at(1))
             ->method('dispatchTransition')
             ->with(
-                $this->equalTo(Transitions::TRIAL_TRANSITION),
+                $this->equalTo(Transition::TRIAL_TRANSITION),
                 $this->equalTo($localeService),
                 $this->equalTo($expectedParameters)
             )
@@ -122,7 +122,7 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
 
         $this->assertInstanceOf(AdvancedCircuitBreaker::class, $circuitBreaker);
         $response = $circuitBreaker->call('unknown_service');
-        $this->assertEquals(States::OPEN_STATE, $circuitBreaker->getState());
+        $this->assertEquals(State::OPEN_STATE, $circuitBreaker->getState());
         $this->assertEquals('default_fallback', $response);
     }
 

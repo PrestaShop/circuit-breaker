@@ -2,13 +2,13 @@
 
 namespace PrestaShop\CircuitBreaker;
 
-use PrestaShop\CircuitBreaker\Transactions\SimpleTransaction;
-use PrestaShop\CircuitBreaker\Contracts\CircuitBreakerInterface;
-use PrestaShop\CircuitBreaker\Contracts\TransactionInterface;
-use PrestaShop\CircuitBreaker\Contracts\StorageInterface;
-use PrestaShop\CircuitBreaker\Contracts\SystemInterface;
-use PrestaShop\CircuitBreaker\Contracts\ClientInterface;
-use PrestaShop\CircuitBreaker\Contracts\PlaceInterface;
+use PrestaShop\CircuitBreaker\Transaction\SimpleTransaction;
+use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
+use PrestaShop\CircuitBreaker\Contract\TransactionInterface;
+use PrestaShop\CircuitBreaker\Contract\StorageInterface;
+use PrestaShop\CircuitBreaker\Contract\SystemInterface;
+use PrestaShop\CircuitBreaker\Contract\ClientInterface;
+use PrestaShop\CircuitBreaker\Contract\PlaceInterface;
 use DateTime;
 
 abstract class PartialCircuitBreaker implements CircuitBreakerInterface
@@ -67,7 +67,7 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
      */
     public function isOpened()
     {
-        return States::OPEN_STATE === $this->currentPlace->getState();
+        return State::OPEN_STATE === $this->currentPlace->getState();
     }
 
     /**
@@ -75,7 +75,7 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
      */
     public function isHalfOpened()
     {
-        return States::HALF_OPEN_STATE === $this->currentPlace->getState();
+        return State::HALF_OPEN_STATE === $this->currentPlace->getState();
     }
 
     /**
@@ -83,7 +83,7 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
      */
     public function isClosed()
     {
-        return States::CLOSED_STATE === $this->currentPlace->getState();
+        return State::CLOSED_STATE === $this->currentPlace->getState();
     }
 
     /**

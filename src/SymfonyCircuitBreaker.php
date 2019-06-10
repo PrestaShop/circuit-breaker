@@ -2,10 +2,10 @@
 
 namespace PrestaShop\CircuitBreaker;
 
-use PrestaShop\CircuitBreaker\Contracts\ClientInterface;
-use PrestaShop\CircuitBreaker\Contracts\SystemInterface;
-use PrestaShop\CircuitBreaker\Contracts\StorageInterface;
-use PrestaShop\CircuitBreaker\Transitions\EventDispatcher;
+use PrestaShop\CircuitBreaker\Contract\ClientInterface;
+use PrestaShop\CircuitBreaker\Contract\SystemInterface;
+use PrestaShop\CircuitBreaker\Contract\StorageInterface;
+use PrestaShop\CircuitBreaker\Transition\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**

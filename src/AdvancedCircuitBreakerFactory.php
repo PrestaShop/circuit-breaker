@@ -37,11 +37,16 @@ final class AdvancedCircuitBreakerFactory implements FactoryInterface
         $storage = null !== $settings->getStorage() ? $settings->getStorage() : new SimpleArray();
         $dispatcher = null !== $settings->getDispatcher() ? $settings->getDispatcher() : new NullDispatcher();
 
-        return new AdvancedCircuitBreaker(
+        $circuitBreaker = new AdvancedCircuitBreaker(
             $system,
             $client,
             $storage,
             $dispatcher
         );
+        if (null !== $settings->getDefaultFallback()) {
+            $circuitBreaker->setDefaultFallback($settings->getDefaultFallback());
+        }
+
+        return $circuitBreaker;
     }
 }

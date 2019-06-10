@@ -41,6 +41,9 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
     /** @var TransitionDispatcherInterface */
     protected $dispatcher;
 
+    /** @var callable|null */
+    protected $defaultFallback;
+
     /**
      * @param SystemInterface $system
      * @param ClientInterface $client
@@ -106,6 +109,34 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
                 $fallback
             );
         }
+    }
+
+    /**
+     * @return callable|null
+     */
+    public function getDefaultFallback()
+    {
+        return $this->defaultFallback;
+    }
+
+    /**
+     * @param callable $defaultFallback
+     *
+     * @return AdvancedCircuitBreaker
+     */
+    public function setDefaultFallback(callable $defaultFallback)
+    {
+        $this->defaultFallback = $defaultFallback;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function callFallback(callable $fallback = null)
+    {
+        return parent::callFallback(null !== $fallback ? $fallback : $this->defaultFallback);
     }
 
     /**

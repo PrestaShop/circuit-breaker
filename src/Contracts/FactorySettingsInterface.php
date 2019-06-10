@@ -83,4 +83,9 @@ interface FactorySettingsInterface
      * @return ClientInterface|null
      */
     public function getClient();
+
+    /**
+     * @return callable|null
+     */
+    public function getDefaultFallback();
 }

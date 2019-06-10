@@ -52,17 +52,20 @@ class FactorySettings implements FactorySettingsInterface
     /** @var int */
     private $strippedFailures;
 
-    /** @var StorageInterface */
+    /** @var StorageInterface|null */
     private $storage;
 
-    /** @var TransitionDispatcherInterface */
+    /** @var TransitionDispatcherInterface|null */
     private $dispatcher;
 
     /** @var array */
     private $clientOptions;
 
-    /** @var ClientInterface */
+    /** @var ClientInterface|null */
     private $client;
+
+    /** @var callable|null */
+    private $defaultFallback;
 
     /**
      * @param int $failures
@@ -285,6 +288,26 @@ class FactorySettings implements FactorySettingsInterface
     public function setClient(ClientInterface $client)
     {
         $this->client = $client;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultFallback()
+    {
+        return $this->defaultFallback;
+    }
+
+    /**
+     * @param callable $defaultFallback
+     *
+     * @return FactorySettings
+     */
+    public function setDefaultFallback(callable $defaultFallback)
+    {
+        $this->defaultFallback = $defaultFallback;
 
         return $this;
     }

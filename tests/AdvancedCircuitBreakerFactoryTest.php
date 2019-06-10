@@ -34,6 +34,7 @@ use PrestaShop\CircuitBreaker\Contracts\FactorySettingsInterface;
 use PrestaShop\CircuitBreaker\Contracts\StorageInterface;
 use PrestaShop\CircuitBreaker\Contracts\TransitionDispatcherInterface;
 use PrestaShop\CircuitBreaker\FactorySettings;
+use PrestaShop\CircuitBreaker\States;
 use PrestaShop\CircuitBreaker\Transitions;
 
 class AdvancedCircuitBreakerFactoryTest extends TestCase
@@ -110,6 +111,19 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
         $circuitBreaker = $factory->create($settings);
 
         $this->assertInstanceOf(AdvancedCircuitBreaker::class, $circuitBreaker);
+    }
+
+    public function testCircuitBreakerWithDefaultFallback()
+    {
+        $factory = new AdvancedCircuitBreakerFactory();
+        $settings = new FactorySettings(2, 0.1, 10);
+        $settings->setDefaultFallback(function () { return 'default_fallback'; });
+        $circuitBreaker = $factory->create($settings);
+
+        $this->assertInstanceOf(AdvancedCircuitBreaker::class, $circuitBreaker);
+        $response = $circuitBreaker->call('unknown_service');
+        $this->assertEquals(States::OPEN_STATE, $circuitBreaker->getState());
+        $this->assertEquals('default_fallback', $response);
     }
 
     /**

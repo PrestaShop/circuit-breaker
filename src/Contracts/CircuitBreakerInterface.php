@@ -18,12 +18,12 @@ interface CircuitBreakerInterface
      * The function that execute the service.
      *
      * @param string $service the service to call
-     * @param callable|null $fallback if the service is unavailable, rely on the fallback
      * @param array $parameters the parameters for the request
+     * @param callable|null $fallback if the service is unavailable, rely on the fallback
      *
      * @return string
      */
-    public function call($service, callable $fallback = null, array $parameters = []);
+    public function call($service, array $parameters = [], callable $fallback = null);
 
     /**
      * @return bool checks if the circuit breaker is open

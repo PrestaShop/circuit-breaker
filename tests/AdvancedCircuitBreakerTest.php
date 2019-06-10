@@ -64,10 +64,10 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
 
         $circuitBreaker->call(
             'https://httpbin.org/get/foo',
+            ['toto' => 'titi'],
             function () {
                 return '{}';
-            },
-            ['toto' => 'titi']
+            }
         );
 
         /**
@@ -103,7 +103,7 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
             new NullDispatcher()
         );
 
-        $response = $circuitBreaker->call('anything', function () { return false; });
+        $response = $circuitBreaker->call('anything', [], function () { return false; });
         $this->assertSame(States::CLOSED_STATE, $circuitBreaker->getState());
         $this->assertEquals(0, $mock->count());
         $this->assertEquals('{"hello": "world"}', $response);
@@ -130,7 +130,7 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
             new NullDispatcher()
         );
 
-        $response = $circuitBreaker->call('anything', function () { return false; });
+        $response = $circuitBreaker->call('anything', [], function () { return false; });
         $this->assertEquals(0, $mock->count());
         $this->assertEquals(false, $response);
         $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
@@ -185,20 +185,20 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
             new NullDispatcher()
         );
 
-        $response = $circuitBreaker->call('anything', function () { return false; });
+        $response = $circuitBreaker->call('anything', [], function () { return false; });
         $this->assertEquals(1, $mock->count());
         $this->assertEquals(false, $response);
         $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
 
         //Stay in OPEN state
-        $response = $circuitBreaker->call('anything', function () { return false; });
+        $response = $circuitBreaker->call('anything', [], function () { return false; });
         $this->assertEquals(1, $mock->count());
         $this->assertEquals(false, $response);
         $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
 
         sleep(2);
         //Switch to CLOSED state on success
-        $response = $circuitBreaker->call('anything', function () { return false; });
+        $response = $circuitBreaker->call('anything', [], function () { return false; });
         $this->assertEquals(0, $mock->count());
         $this->assertEquals('{"hello": "world"}', $response);
         $this->assertSame(States::CLOSED_STATE, $circuitBreaker->getState());
@@ -226,20 +226,20 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
             new NullDispatcher()
         );
 
-        $response = $circuitBreaker->call('anything', function () { return false; });
+        $response = $circuitBreaker->call('anything', [], function () { return false; });
         $this->assertEquals(1, $mock->count());
         $this->assertEquals(false, $response);
         $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
 
         //Stay in OPEN state
-        $response = $circuitBreaker->call('anything', function () { return false; });
+        $response = $circuitBreaker->call('anything', [], function () { return false; });
         $this->assertEquals(1, $mock->count());
         $this->assertEquals(false, $response);
         $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
 
         sleep(2);
         //Switch to OPEN state on failure
-        $response = $circuitBreaker->call('anything', function () { return false; });
+        $response = $circuitBreaker->call('anything', [], function () { return false; });
         $this->assertEquals(0, $mock->count());
         $this->assertEquals(false, $response);
         $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());

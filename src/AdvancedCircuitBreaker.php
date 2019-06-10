@@ -58,8 +58,8 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
      */
     public function call(
         $service,
-        callable $fallback = null,
-        array $serviceParameters = []
+        array $serviceParameters = [],
+        callable $fallback = null
     ) {
         $transaction = $this->initTransaction($service);
 
@@ -102,8 +102,8 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
 
             return $this->call(
                 $service,
-                $fallback,
-                $serviceParameters
+                $serviceParameters,
+                $fallback
             );
         }
     }

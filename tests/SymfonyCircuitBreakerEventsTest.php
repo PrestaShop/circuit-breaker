@@ -31,6 +31,7 @@ class SymfonyCircuitBreakerEventsTest extends CircuitBreakerTestCase
 
         $circuitBreaker->call(
             'https://httpbin.org/get/foo',
+            [],
             function () {
                 return '{}';
             }

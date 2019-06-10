@@ -60,7 +60,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
     {
         // CLOSED
         $this->assertSame(States::CLOSED_STATE, $circuitBreaker->getState());
-        $response = $circuitBreaker->call('https://httpbin.org/get/foo', $this->createFallbackResponse());
+        $response = $circuitBreaker->call('https://httpbin.org/get/foo', [], $this->createFallbackResponse());
         $this->assertSame('{}', $response);
 
         //After two failed calls switch to OPEN state
@@ -69,6 +69,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
             '{}',
             $circuitBreaker->call(
                 'https://httpbin.org/get/foo',
+                [],
                 $this->createFallbackResponse()
             )
         );
@@ -95,6 +96,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
             '{}',
             $circuitBreaker->call(
                 'https://httpbin.org/get/foo',
+                [],
                 $this->createFallbackResponse()
             )
         );
@@ -112,12 +114,12 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
     {
         // CLOSED - first call fails (twice)
         $this->assertSame(States::CLOSED_STATE, $circuitBreaker->getState());
-        $response = $circuitBreaker->call('https://httpbin.org/get/foo', $this->createFallbackResponse());
+        $response = $circuitBreaker->call('https://httpbin.org/get/foo', [], $this->createFallbackResponse());
         $this->assertSame('{}', $response);
         $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
 
         // OPEN - no call to client
-        $response = $circuitBreaker->call('https://httpbin.org/get/foo', $this->createFallbackResponse());
+        $response = $circuitBreaker->call('https://httpbin.org/get/foo', [], $this->createFallbackResponse());
         $this->assertSame('{}', $response);
         $this->assertSame(States::OPEN_STATE, $circuitBreaker->getState());
 
@@ -127,6 +129,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
             '{"hello": "world"}',
             $circuitBreaker->call(
                 'https://httpbin.org/get/foo',
+                [],
                 $this->createFallbackResponse()
             )
         );
@@ -159,7 +162,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
             new NullDispatcher()
         );
         $this->assertEquals(States::CLOSED_STATE, $firstCircuitBreaker->getState());
-        $firstCircuitBreaker->call('fake_service', function () { return false; });
+        $firstCircuitBreaker->call('fake_service', [], function () { return false; });
         $this->assertEquals(States::OPEN_STATE, $firstCircuitBreaker->getState());
         $this->assertTrue($storage->hasTransaction('fake_service'));
 
@@ -170,7 +173,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
             new NullDispatcher()
         );
         $this->assertEquals(States::CLOSED_STATE, $secondCircuitBreaker->getState());
-        $secondCircuitBreaker->call('fake_service', function () { return false; });
+        $secondCircuitBreaker->call('fake_service', [], function () { return false; });
         $this->assertEquals(States::OPEN_STATE, $secondCircuitBreaker->getState());
     }
 

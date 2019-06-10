@@ -52,7 +52,7 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
     /**
      * {@inheritdoc}
      */
-    abstract public function call($service, callable $fallback = null, array $serviceParameters = []);
+    abstract public function call($service, array $serviceParameters = [], callable $fallback = null);
 
     /**
      * {@inheritdoc}

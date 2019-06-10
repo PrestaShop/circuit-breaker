@@ -29,8 +29,8 @@ final class SimpleCircuitBreaker extends PartialCircuitBreaker
      */
     public function call(
         $service,
-        callable $fallback = null,
-        array $serviceParameters = []
+        array $serviceParameters = [],
+        callable $fallback = null
     ) {
         $transaction = $this->initTransaction($service);
         try {
@@ -54,7 +54,7 @@ final class SimpleCircuitBreaker extends PartialCircuitBreaker
                 return $this->callFallback($fallback);
             }
 
-            return $this->call($service, $fallback);
+            return $this->call($service, $serviceParameters, $fallback);
         }
     }
 }

@@ -51,7 +51,7 @@ $fallbackResponse = function () {
     return '{}';
 };
 
-$circuitBreaker->call('https://api.domain.com', $fallbackResponse);
+$circuitBreaker->call('https://api.domain.com', [], $fallbackResponse);
 ```
 
 > For the Guzzle implementation, the Client options are described

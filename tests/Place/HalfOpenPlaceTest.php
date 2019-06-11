@@ -38,30 +38,6 @@ class HalfOpenPlaceTest extends PlaceTestCase
         new HalfOpenPlace($failures, $timeout, $threshold);
     }
 
-    /**
-     * @dataProvider getArrayFixtures
-     *
-     * @param array $settings
-     */
-    public function testFromArrayWith(array $settings)
-    {
-        $halfOpenPlace = HalfOpenPlace::fromArray($settings);
-
-        $this->assertNotNull($halfOpenPlace);
-    }
-
-    /**
-     * @dataProvider getInvalidArrayFixtures
-     *
-     * @param array $settings
-     */
-    public function testFromArrayWithInvalidValues(array $settings)
-    {
-        $this->expectException(InvalidPlaceException::class);
-
-        HalfOpenPlace::fromArray($settings);
-    }
-
     public function testGetExpectedState()
     {
         $halfOpenPlace = new HalfOpenPlace(1, 1, 1);

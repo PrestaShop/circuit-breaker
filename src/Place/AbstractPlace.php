@@ -27,6 +27,8 @@ abstract class AbstractPlace implements PlaceInterface
      * @param int $failures the Place failures
      * @param float $timeout the Place timeout
      * @param int $threshold the Place threshold
+     *
+     * @throws InvalidPlaceException
      */
     public function __construct($failures, $timeout, $threshold)
     {
@@ -64,28 +66,6 @@ abstract class AbstractPlace implements PlaceInterface
     public function getThreshold()
     {
         return $this->threshold;
-    }
-
-    /**
-     * Helper: create a Place from an array.
-     *
-     * @var array the failures, timeout and treshold
-     *
-     * @return self
-     *
-     * @throws InvalidPlaceException
-     */
-    public static function fromArray(array $settings)
-    {
-        if (!isset($settings['failures']) || !isset($settings['timeout']) || !isset($settings['threshold'])) {
-            throw InvalidPlaceException::invalidArraySettings($settings);
-        }
-
-        return new static(
-            $settings['failures'],
-            $settings['timeout'],
-            $settings['threshold']
-        );
     }
 
     /**

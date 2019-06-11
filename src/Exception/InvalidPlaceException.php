@@ -23,19 +23,4 @@ final class InvalidPlaceException extends CircuitBreakerException
 
         return new self($exceptionMessage);
     }
-
-    /**
-     * @param array $settings
-     *
-     * @return InvalidPlaceException
-     */
-    public static function invalidArraySettings(array $settings)
-    {
-        $exceptionMessage = 'Invalid settings for Place::fromArray: ' .
-            var_export($settings, true) . '. The expected format is:' . PHP_EOL .
-            '[\'failures\' => {failures}, \'timeout\' => {timeout}, \'threshold\' => {threshold}]' . PHP_EOL
-        ;
-
-        return new self($exceptionMessage);
-    }
 }

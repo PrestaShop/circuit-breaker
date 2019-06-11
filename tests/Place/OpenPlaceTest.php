@@ -38,30 +38,6 @@ class OpenPlaceTest extends PlaceTestCase
         new OpenPlace($failures, $timeout, $threshold);
     }
 
-    /**
-     * @dataProvider getArrayFixtures
-     *
-     * @param array $settings
-     */
-    public function testFromArrayWith(array $settings)
-    {
-        $openPlace = OpenPlace::fromArray($settings);
-
-        $this->assertNotNull($openPlace);
-    }
-
-    /**
-     * @dataProvider getInvalidArrayFixtures
-     *
-     * @param array $settings
-     */
-    public function testFromArrayWithInvalidValues(array $settings)
-    {
-        $this->expectException(InvalidPlaceException::class);
-
-        OpenPlace::fromArray($settings);
-    }
-
     public function testGetExpectedState()
     {
         $openPlace = new OpenPlace(1, 1, 1);

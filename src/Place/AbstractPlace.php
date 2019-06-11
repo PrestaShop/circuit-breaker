@@ -77,31 +77,15 @@ abstract class AbstractPlace implements PlaceInterface
      */
     public static function fromArray(array $settings)
     {
-        static::validateSettings($settings);
+        if (!isset($settings['failures']) || !isset($settings['timeout']) || !isset($settings['threshold'])) {
+            throw InvalidPlaceException::invalidArraySettings($settings);
+        }
 
         return new static(
             $settings['failures'],
             $settings['timeout'],
             $settings['threshold']
         );
-    }
-
-    /**
-     * Ensure the array settings is correctly formatted.
-     *
-     * @param array $settings
-     *
-     * @return bool true if valid
-     *
-     * @throws InvalidPlaceException
-     */
-    private static function validateSettings(array $settings)
-    {
-        if (isset($settings['failures']) && isset($settings['timeout']) && isset($settings['threshold'])) {
-            return true;
-        }
-
-        throw InvalidPlaceException::invalidArraySettings($settings);
     }
 
     /**

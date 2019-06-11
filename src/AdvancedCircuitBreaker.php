@@ -50,8 +50,12 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
      * @param StorageInterface $storage
      * @param TransitionDispatcherInterface $dispatcher
      */
-    public function __construct(SystemInterface $system, ClientInterface $client, StorageInterface $storage, TransitionDispatcherInterface $dispatcher)
-    {
+    public function __construct(
+        SystemInterface $system,
+        ClientInterface $client,
+        StorageInterface $storage,
+        TransitionDispatcherInterface $dispatcher
+    ) {
         parent::__construct($system, $client, $storage);
         $this->dispatcher = $dispatcher;
     }
@@ -94,10 +98,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
             $this->storage->saveTransaction($service, $transaction);
             if (!$this->isAllowedToRetry($transaction)) {
                 $this->moveStateTo(State::OPEN_STATE, $service);
-                $transition = Transition::OPENING_TRANSITION;
-                if ($this->isHalfOpened()) {
-                    $transition = Transition::REOPENING_TRANSITION;
-                }
+                $transition = $this->isHalfOpened() ? Transition::REOPENING_TRANSITION : Transition::OPENING_TRANSITION;
                 $this->dispatchTransition($transition, $service, $serviceParameters);
 
                 return $this->callFallback($fallback);

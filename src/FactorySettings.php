@@ -59,7 +59,7 @@ class FactorySettings implements FactorySettingsInterface
     private $dispatcher;
 
     /** @var array */
-    private $clientOptions;
+    private $clientOptions = [];
 
     /** @var ClientInterface|null */
     private $client;
@@ -80,7 +80,6 @@ class FactorySettings implements FactorySettingsInterface
         $this->failures = $this->strippedFailures = $failures;
         $this->timeout = $this->strippedTimeout = $timeout;
         $this->threshold = $threshold;
-        $this->clientOptions = [];
     }
 
     /**

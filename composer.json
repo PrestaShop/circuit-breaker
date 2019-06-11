@@ -42,13 +42,11 @@
         }
     },
     "scripts": {
-        "phpstan": "@php ./vendor/bin/phpstan analyse src tests -l 7 -c extension.neon",
-        "psalm": "@php ./vendor/bin/psalm --find-dead-code --threads=8 --diff --diff-methods",
+        "psalm": "@php ./vendor/bin/psalm --find-dead-code --threads=8 --diff",
         "cs-fix": "@php ./vendor/bin/php-cs-fixer fix",
         "test": "@php ./vendor/bin/phpunit"
     },
     "scripts-descriptions": {
-        "phpstan": "Execute PHPStan on PHP7.0+, you need to install it",
         "psalm": "Execute Psalm on PHP7.0+, you need to install it",
         "cs-fix": "Check and fix coding styles using PHP CS Fixer",
         "test": "Launch PHPUnit test suite"

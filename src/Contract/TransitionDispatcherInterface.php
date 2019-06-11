@@ -35,8 +35,6 @@ interface TransitionDispatcherInterface
      * @param string $transition the transition name
      * @param string $service the Service URI
      * @param array $serviceParameters the Service parameters
-     *
-     * @return mixed
      */
     public function dispatchTransition($transition, $service, array $serviceParameters);
 }

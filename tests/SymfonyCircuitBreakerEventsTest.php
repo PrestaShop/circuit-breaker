@@ -5,11 +5,11 @@ namespace Tests\PrestaShop\CircuitBreaker;
 use PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use PrestaShop\CircuitBreaker\SymfonyCircuitBreaker;
-use PrestaShop\CircuitBreaker\Storages\SymfonyCache;
-use PrestaShop\CircuitBreaker\Places\HalfOpenPlace;
-use PrestaShop\CircuitBreaker\Systems\MainSystem;
-use PrestaShop\CircuitBreaker\Places\ClosedPlace;
-use PrestaShop\CircuitBreaker\Places\OpenPlace;
+use PrestaShop\CircuitBreaker\Storage\SymfonyCache;
+use PrestaShop\CircuitBreaker\Place\HalfOpenPlace;
+use PrestaShop\CircuitBreaker\System\MainSystem;
+use PrestaShop\CircuitBreaker\Place\ClosedPlace;
+use PrestaShop\CircuitBreaker\Place\OpenPlace;
 use Symfony\Component\Cache\Simple\ArrayCache;
 
 class SymfonyCircuitBreakerEventsTest extends CircuitBreakerTestCase
@@ -31,6 +31,7 @@ class SymfonyCircuitBreakerEventsTest extends CircuitBreakerTestCase
 
         $circuitBreaker->call(
             'https://httpbin.org/get/foo',
+            [],
             function () {
                 return '{}';
             }

@@ -3,6 +3,8 @@
 namespace Tests\PrestaShop\CircuitBreaker;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\CircuitBreaker\Contract\FactorySettingsInterface;
+use PrestaShop\CircuitBreaker\FactorySettings;
 use PrestaShop\CircuitBreaker\SimpleCircuitBreaker;
 use PrestaShop\CircuitBreaker\SimpleCircuitBreakerFactory;
 
@@ -22,11 +24,11 @@ class SimpleCircuitBreakerFactoryTest extends TestCase
      * @depends testCreation
      * @dataProvider getSettings
      *
-     * @param array $settings the Circuit Breaker settings
+     * @param FactorySettingsInterface $settings the Circuit Breaker settings
      *
      * @return void
      */
-    public function testCircuitBreakerCreation(array $settings)
+    public function testCircuitBreakerCreation(FactorySettingsInterface $settings)
     {
         $factory = new SimpleCircuitBreakerFactory();
         $circuitBreaker = $factory->create($settings);
@@ -41,19 +43,15 @@ class SimpleCircuitBreakerFactoryTest extends TestCase
     {
         return [
             [
-                [
-                    'closed' => [2, 0.1, 0],
-                    'open' => [0, 0, 10],
-                    'half_open' => [1, 0.2, 0],
-                ],
+                (new FactorySettings(2, 0.1, 10))
+                    ->setStrippedTimeout(0.2)
+                    ->setStrippedFailures(1),
             ],
             [
-                [
-                    'closed' => [2, 0.1, 0],
-                    'open' => [0, 0, 10],
-                    'half_open' => [1, 0.2, 0],
-                    'client' => ['proxy' => '192.168.16.1:10'],
-                ],
+                (new FactorySettings(2, 0.1, 10))
+                    ->setStrippedTimeout(0.2)
+                    ->setStrippedFailures(1)
+                    ->setClientOptions(['proxy' => '192.168.16.1:10']),
             ],
         ];
     }

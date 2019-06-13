@@ -92,7 +92,8 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
         $circuitBreaker = $factory->create($settings);
 
         $this->assertInstanceOf(AdvancedCircuitBreaker::class, $circuitBreaker);
-        $circuitBreaker->call($localeService, $expectedParameters, function () {});
+        $circuitBreaker->call($localeService, $expectedParameters, function () {
+        });
     }
 
     public function testCircuitBreakerWithStorage()
@@ -117,7 +118,9 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
     {
         $factory = new AdvancedCircuitBreakerFactory();
         $settings = new FactorySettings(2, 0.1, 10);
-        $settings->setDefaultFallback(function () { return 'default_fallback'; });
+        $settings->setDefaultFallback(function () {
+            return 'default_fallback';
+        });
         $circuitBreaker = $factory->create($settings);
 
         $this->assertInstanceOf(AdvancedCircuitBreaker::class, $circuitBreaker);

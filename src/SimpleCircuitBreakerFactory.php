@@ -26,7 +26,7 @@ final class SimpleCircuitBreakerFactory implements FactoryInterface
         $halfOpenPlace = new HalfOpenPlace($settings->getFailures(), $settings->getStrippedTimeout(), 0);
 
         /** @var ClientInterface $client */
-        $client = null !== $settings->getClient() ? $settings->getClient() : new GuzzleClient($settings->getClientOptions());
+        $client = $settings->getClient() ?: new GuzzleClient($settings->getClientOptions());
 
         return new SimpleCircuitBreaker(
             $openPlace,

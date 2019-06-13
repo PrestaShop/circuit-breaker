@@ -280,11 +280,11 @@ class FactorySettings implements FactorySettingsInterface
     }
 
     /**
-     * @param ClientInterface $client
+     * @param ClientInterface|null $client
      *
      * @return FactorySettings
      */
-    public function setClient(ClientInterface $client)
+    public function setClient(ClientInterface $client = null)
     {
         $this->client = $client;
 

@@ -1,0 +1,11 @@
+change-template: '- $TITLE (#$NUMBER)'
+branches:
+    - master
+template: |
+    ## Changelog
+
+    $CHANGES
+
+    ### Contributors
+
+    $CONTRIBUTORS

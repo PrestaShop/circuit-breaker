@@ -2,8 +2,11 @@
 
 namespace PrestaShop\CircuitBreaker;
 
+use PrestaShop\CircuitBreaker\Contract\ClientInterface;
 use PrestaShop\CircuitBreaker\Contract\FactoryInterface;
 use PrestaShop\CircuitBreaker\Contract\FactorySettingsInterface;
+use PrestaShop\CircuitBreaker\Contract\StorageInterface;
+use PrestaShop\CircuitBreaker\Contract\TransitionDispatcherInterface;
 use PrestaShop\CircuitBreaker\Place\ClosedPlace;
 use PrestaShop\CircuitBreaker\Place\HalfOpenPlace;
 use PrestaShop\CircuitBreaker\Place\OpenPlace;
@@ -28,13 +31,11 @@ final class AdvancedCircuitBreakerFactory implements FactoryInterface
         $halfOpenPlace = new HalfOpenPlace($settings->getFailures(), $settings->getStrippedTimeout(), 0);
         $system = new MainSystem($closedPlace, $halfOpenPlace, $openPlace);
 
-        if (null !== $settings->getClient()) {
-            $client = $settings->getClient();
-        } else {
-            $client = new GuzzleClient($settings->getClientOptions());
-        }
-
+        /** @var ClientInterface $client */
+        $client = null !== $settings->getClient() ? $settings->getClient() : new GuzzleClient($settings->getClientOptions());
+        /** @var StorageInterface $storage */
         $storage = null !== $settings->getStorage() ? $settings->getStorage() : new SimpleArray();
+        /** @var TransitionDispatcherInterface $dispatcher */
         $dispatcher = null !== $settings->getDispatcher() ? $settings->getDispatcher() : new NullDispatcher();
 
         $circuitBreaker = new AdvancedCircuitBreaker(

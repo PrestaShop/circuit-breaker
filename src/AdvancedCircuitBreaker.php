@@ -121,11 +121,11 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
     }
 
     /**
-     * @param callable $defaultFallback
+     * @param callable $defaultFallback|null
      *
      * @return AdvancedCircuitBreaker
      */
-    public function setDefaultFallback(callable $defaultFallback)
+    public function setDefaultFallback(callable $defaultFallback = null)
     {
         $this->defaultFallback = $defaultFallback;
 
@@ -144,6 +144,8 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
      * @param string $transition
      * @param string $service
      * @param array $serviceParameters
+     *
+     * @return void
      */
     protected function dispatchTransition($transition, $service, array $serviceParameters)
     {

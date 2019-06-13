@@ -2,6 +2,7 @@
 
 namespace PrestaShop\CircuitBreaker;
 
+use PrestaShop\CircuitBreaker\Contract\ClientInterface;
 use PrestaShop\CircuitBreaker\Contract\FactoryInterface;
 use PrestaShop\CircuitBreaker\Contract\FactorySettingsInterface;
 use PrestaShop\CircuitBreaker\Place\ClosedPlace;
@@ -24,11 +25,8 @@ final class SimpleCircuitBreakerFactory implements FactoryInterface
         $openPlace = new OpenPlace(0, 0, $settings->getThreshold());
         $halfOpenPlace = new HalfOpenPlace($settings->getFailures(), $settings->getStrippedTimeout(), 0);
 
-        if (null !== $settings->getClient()) {
-            $client = $settings->getClient();
-        } else {
-            $client = new GuzzleClient($settings->getClientOptions());
-        }
+        /** @var ClientInterface $client */
+        $client = null !== $settings->getClient() ? $settings->getClient() : new GuzzleClient($settings->getClientOptions());
 
         return new SimpleCircuitBreaker(
             $openPlace,

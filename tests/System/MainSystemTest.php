@@ -3,12 +3,12 @@
 namespace Tests\PrestaShop\CircuitBreaker\System;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\CircuitBreaker\States;
-use PrestaShop\CircuitBreaker\Places\OpenPlace;
-use PrestaShop\CircuitBreaker\Places\HalfOpenPlace;
-use PrestaShop\CircuitBreaker\Places\ClosedPlace;
-use PrestaShop\CircuitBreaker\Contracts\Place;
-use PrestaShop\CircuitBreaker\Systems\MainSystem;
+use PrestaShop\CircuitBreaker\State;
+use PrestaShop\CircuitBreaker\Place\OpenPlace;
+use PrestaShop\CircuitBreaker\Place\HalfOpenPlace;
+use PrestaShop\CircuitBreaker\Place\ClosedPlace;
+use PrestaShop\CircuitBreaker\Contract\PlaceInterface;
+use PrestaShop\CircuitBreaker\System\MainSystem;
 
 class MainSystemTest extends TestCase
 {
@@ -35,8 +35,8 @@ class MainSystemTest extends TestCase
         $mainSystem = $this->createMainSystem();
         $initialPlace = $mainSystem->getInitialPlace();
 
-        $this->assertInstanceOf(Place::class, $initialPlace);
-        $this->assertSame(States::CLOSED_STATE, $initialPlace->getState());
+        $this->assertInstanceOf(PlaceInterface::class, $initialPlace);
+        $this->assertSame(State::CLOSED_STATE, $initialPlace->getState());
     }
 
     /**
@@ -51,7 +51,7 @@ class MainSystemTest extends TestCase
         $this->assertCount(3, $places);
 
         foreach ($places as $place) {
-            $this->assertInstanceOf(Place::class, $place);
+            $this->assertInstanceOf(PlaceInterface::class, $place);
         }
     }
 

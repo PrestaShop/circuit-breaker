@@ -23,6 +23,7 @@ before_script:
 
 script:
   - composer test -- --coverage-clover=coverage.xml
+  - composer phpcs
   - composer psalm
 
 after_success:

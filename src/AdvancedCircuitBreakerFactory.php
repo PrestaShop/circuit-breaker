@@ -32,11 +32,11 @@ final class AdvancedCircuitBreakerFactory implements FactoryInterface
         $system = new MainSystem($closedPlace, $halfOpenPlace, $openPlace);
 
         /** @var ClientInterface $client */
-        $client = null !== $settings->getClient() ? $settings->getClient() : new GuzzleClient($settings->getClientOptions());
+        $client = $settings->getClient() ?: new GuzzleClient($settings->getClientOptions());
         /** @var StorageInterface $storage */
-        $storage = null !== $settings->getStorage() ? $settings->getStorage() : new SimpleArray();
+        $storage = $settings->getStorage() ?: new SimpleArray();
         /** @var TransitionDispatcherInterface $dispatcher */
-        $dispatcher = null !== $settings->getDispatcher() ? $settings->getDispatcher() : new NullDispatcher();
+        $dispatcher = $settings->getDispatcher() ?: new NullDispatcher();
 
         $circuitBreaker = new AdvancedCircuitBreaker(
             $system,

@@ -162,7 +162,9 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
             new NullDispatcher()
         );
         $this->assertEquals(State::CLOSED_STATE, $firstCircuitBreaker->getState());
-        $firstCircuitBreaker->call('fake_service', [], function () { return false; });
+        $firstCircuitBreaker->call('fake_service', [], function () {
+            return false;
+        });
         $this->assertEquals(State::OPEN_STATE, $firstCircuitBreaker->getState());
         $this->assertTrue($storage->hasTransaction('fake_service'));
 
@@ -173,7 +175,9 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
             new NullDispatcher()
         );
         $this->assertEquals(State::CLOSED_STATE, $secondCircuitBreaker->getState());
-        $secondCircuitBreaker->call('fake_service', [], function () { return false; });
+        $secondCircuitBreaker->call('fake_service', [], function () {
+            return false;
+        });
         $this->assertEquals(State::OPEN_STATE, $secondCircuitBreaker->getState());
     }
 

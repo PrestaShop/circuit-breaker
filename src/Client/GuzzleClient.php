@@ -62,7 +62,7 @@ class GuzzleClient implements ClientInterface
 
             return (string) $client->send($request)->getBody();
         } catch (Exception $e) {
-            throw new UnavailableServiceException($e->getMessage(), $e->getCode(), $e);
+            throw new UnavailableServiceException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 

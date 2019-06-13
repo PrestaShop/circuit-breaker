@@ -36,7 +36,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class EventDispatcher implements TransitionDispatcherInterface
 {
     /**
-     * @var EventDispatcher the Symfony Event Dispatcher
+     * @var EventDispatcherInterface the Symfony Event Dispatcher
      */
     private $eventDispatcher;
 

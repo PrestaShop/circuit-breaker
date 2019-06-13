@@ -42,7 +42,10 @@
         }
     },
     "scripts": {
-        "psalm": "@php ./vendor/bin/psalm --find-dead-code --threads=8 --diff",
+        "psalm": [
+            "@php ./vendor/bin/psalm --init",
+            "@php ./vendor/bin/psalm --find-dead-code --threads=8 --diff"
+        ],
         "cs-fix": "@php ./vendor/bin/php-cs-fixer fix",
         "test": "@php ./vendor/bin/phpunit"
     },

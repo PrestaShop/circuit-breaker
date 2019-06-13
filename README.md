@@ -140,12 +140,6 @@ composer test
 composer cs-fix && composer psalm
 ```
 
-To use Psalm you forst need to init the configuration using:
-
-```
-./vendor/bin/psalm --init
-```
-
 We also use [PHPQA](https://github.com/EdgedesignCZ/phpqa#phpqa) to check the Code quality
 during the CI management of the contributions.
 

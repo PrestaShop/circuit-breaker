@@ -22,9 +22,7 @@
         "phpunit/phpunit": "^5.7.0",
         "doctrine/cache": "^1.6.0",
         "symfony/cache": "^3.4.0",
-        "symfony/event-dispatcher": "^3.4",
-        "vimeo/psalm": "^1.1",
-        "squizlabs/php_codesniffer": "3.*"
+        "symfony/event-dispatcher": "^3.4"
     },
     "suggest": {
         "symfony/cache": "Allows use of Symfony Cache adapters to store transactions",
@@ -43,17 +41,10 @@
         }
     },
     "scripts": {
-        "psalm": [
-            "@php ./vendor/bin/psalm --init",
-            "@php ./vendor/bin/psalm --find-dead-code --threads=8 --diff"
-        ],
-        "phpcs": "@php ./vendor/bin/phpcs -p --standard=PSR2  --ignore=\"vendor/*\" \"./\" --extensions=php",
-        "phpcbf": "@php ./vendor/bin/phpcbf -p --standard=PSR2  --ignore=\"vendor/*\" \"./\" --extensions=php",
         "cs-fix": "@php ./vendor/bin/php-cs-fixer fix",
         "test": "@php ./vendor/bin/phpunit"
     },
     "scripts-descriptions": {
-        "psalm": "Execute Psalm on PHP7.0+, you need to install it",
         "cs-fix": "Check and fix coding styles using PHP CS Fixer",
         "test": "Launch PHPUnit test suite"
     },

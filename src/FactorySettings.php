@@ -220,8 +220,6 @@ class FactorySettings implements FactorySettingsInterface
     }
 
     /**
-     * @param StorageInterface $storage
-     *
      * @return FactorySettings
      */
     public function setStorage(StorageInterface $storage)
@@ -240,8 +238,6 @@ class FactorySettings implements FactorySettingsInterface
     }
 
     /**
-     * @param TransitionDispatcherInterface $dispatcher
-     *
      * @return FactorySettings
      */
     public function setDispatcher(TransitionDispatcherInterface $dispatcher)
@@ -260,8 +256,6 @@ class FactorySettings implements FactorySettingsInterface
     }
 
     /**
-     * @param array $clientOptions
-     *
      * @return FactorySettings
      */
     public function setClientOptions(array $clientOptions)
@@ -280,8 +274,6 @@ class FactorySettings implements FactorySettingsInterface
     }
 
     /**
-     * @param ClientInterface|null $client
-     *
      * @return FactorySettings
      */
     public function setClient(ClientInterface $client = null)
@@ -300,8 +292,6 @@ class FactorySettings implements FactorySettingsInterface
     }
 
     /**
-     * @param callable $defaultFallback
-     *
      * @return FactorySettings
      */
     public function setDefaultFallback(callable $defaultFallback)

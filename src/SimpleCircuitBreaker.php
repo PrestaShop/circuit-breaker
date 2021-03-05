@@ -2,11 +2,11 @@
 
 namespace PrestaShop\CircuitBreaker;
 
-use PrestaShop\CircuitBreaker\Contract\PlaceInterface;
 use PrestaShop\CircuitBreaker\Contract\ClientInterface;
-use PrestaShop\CircuitBreaker\System\MainSystem;
-use PrestaShop\CircuitBreaker\Storage\SimpleArray;
+use PrestaShop\CircuitBreaker\Contract\PlaceInterface;
 use PrestaShop\CircuitBreaker\Exception\UnavailableServiceException;
+use PrestaShop\CircuitBreaker\Storage\SimpleArray;
+use PrestaShop\CircuitBreaker\System\MainSystem;
 
 /**
  * Main implementation of Circuit Breaker.

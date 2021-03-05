@@ -2,22 +2,17 @@
 
 namespace PrestaShop\CircuitBreaker;
 
-use PrestaShop\CircuitBreaker\Transaction\SimpleTransaction;
+use DateTime;
 use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
-use PrestaShop\CircuitBreaker\Contract\TransactionInterface;
-use PrestaShop\CircuitBreaker\Contract\StorageInterface;
-use PrestaShop\CircuitBreaker\Contract\SystemInterface;
 use PrestaShop\CircuitBreaker\Contract\ClientInterface;
 use PrestaShop\CircuitBreaker\Contract\PlaceInterface;
-use DateTime;
+use PrestaShop\CircuitBreaker\Contract\StorageInterface;
+use PrestaShop\CircuitBreaker\Contract\SystemInterface;
+use PrestaShop\CircuitBreaker\Contract\TransactionInterface;
+use PrestaShop\CircuitBreaker\Transaction\SimpleTransaction;
 
 abstract class PartialCircuitBreaker implements CircuitBreakerInterface
 {
-    /**
-     * @param SystemInterface $system
-     * @param ClientInterface $client
-     * @param StorageInterface $storage
-     */
     public function __construct(
         SystemInterface $system,
         ClientInterface $client,
@@ -87,8 +82,6 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
     }
 
     /**
-     * @param callable|null $fallback
-     *
      * @return string
      */
     protected function callFallback(callable $fallback = null)

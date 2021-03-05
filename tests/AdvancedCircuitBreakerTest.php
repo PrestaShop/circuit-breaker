@@ -28,10 +28,10 @@ namespace Tests\PrestaShop\CircuitBreaker;
 
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Message\Request;
-use PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Subscriber\Mock;
+use PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount;
 use PHPUnit_Framework_MockObject_MockObject;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
 use PrestaShop\CircuitBreaker\Client\GuzzleClient;

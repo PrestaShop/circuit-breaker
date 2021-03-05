@@ -2,13 +2,13 @@
 
 namespace Tests\PrestaShop\CircuitBreaker;
 
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Message\Request;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Subscriber\Mock;
-use PrestaShop\CircuitBreaker\Client\GuzzleClient;
-use GuzzleHttp\Exception\RequestException;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\CircuitBreaker\Client\GuzzleClient;
 
 /**
  * Helper to get a fake Guzzle client.

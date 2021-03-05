@@ -3,11 +3,11 @@
 namespace Tests\PrestaShop\CircuitBreaker\System;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\CircuitBreaker\State;
-use PrestaShop\CircuitBreaker\Place\OpenPlace;
-use PrestaShop\CircuitBreaker\Place\HalfOpenPlace;
-use PrestaShop\CircuitBreaker\Place\ClosedPlace;
 use PrestaShop\CircuitBreaker\Contract\PlaceInterface;
+use PrestaShop\CircuitBreaker\Place\ClosedPlace;
+use PrestaShop\CircuitBreaker\Place\HalfOpenPlace;
+use PrestaShop\CircuitBreaker\Place\OpenPlace;
+use PrestaShop\CircuitBreaker\State;
 use PrestaShop\CircuitBreaker\System\MainSystem;
 
 class MainSystemTest extends TestCase

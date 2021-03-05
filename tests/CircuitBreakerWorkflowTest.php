@@ -6,18 +6,18 @@ use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
 use PrestaShop\CircuitBreaker\Client\GuzzleClient;
 use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
 use PrestaShop\CircuitBreaker\Exception\UnavailableServiceException;
+use PrestaShop\CircuitBreaker\Place\ClosedPlace;
+use PrestaShop\CircuitBreaker\Place\HalfOpenPlace;
+use PrestaShop\CircuitBreaker\Place\OpenPlace;
+use PrestaShop\CircuitBreaker\SimpleCircuitBreaker;
 use PrestaShop\CircuitBreaker\State;
 use PrestaShop\CircuitBreaker\Storage\SimpleArray;
-use PrestaShop\CircuitBreaker\Transition\NullDispatcher;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use PrestaShop\CircuitBreaker\Storage\SymfonyCache;
 use PrestaShop\CircuitBreaker\SymfonyCircuitBreaker;
-use PrestaShop\CircuitBreaker\SimpleCircuitBreaker;
-use PrestaShop\CircuitBreaker\Place\HalfOpenPlace;
-use PrestaShop\CircuitBreaker\Place\ClosedPlace;
 use PrestaShop\CircuitBreaker\System\MainSystem;
-use PrestaShop\CircuitBreaker\Place\OpenPlace;
+use PrestaShop\CircuitBreaker\Transition\NullDispatcher;
 use Symfony\Component\Cache\Simple\ArrayCache;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
 {

@@ -87,8 +87,6 @@ class GuzzleClient implements ClientInterface
     }
 
     /**
-     * @param array $options
-     *
      * @return OriginalGuzzleClient
      */
     private function buildClient(array $options)
@@ -102,8 +100,6 @@ class GuzzleClient implements ClientInterface
 
     /**
      * Builds a client with a mock
-     *
-     * @param array $options
      *
      * @return OriginalGuzzleClient
      */

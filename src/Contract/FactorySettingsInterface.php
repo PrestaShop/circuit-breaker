@@ -32,9 +32,6 @@ namespace PrestaShop\CircuitBreaker\Contract;
 interface FactorySettingsInterface
 {
     /**
-     * @param FactorySettingsInterface $settingsA
-     * @param FactorySettingsInterface $settingsB
-     *
      * @return FactorySettingsInterface
      */
     public static function merge(FactorySettingsInterface $settingsA, FactorySettingsInterface $settingsB);

@@ -3,14 +3,14 @@
 namespace Tests\PrestaShop\CircuitBreaker;
 
 use PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use PrestaShop\CircuitBreaker\SymfonyCircuitBreaker;
-use PrestaShop\CircuitBreaker\Storage\SymfonyCache;
-use PrestaShop\CircuitBreaker\Place\HalfOpenPlace;
-use PrestaShop\CircuitBreaker\System\MainSystem;
 use PrestaShop\CircuitBreaker\Place\ClosedPlace;
+use PrestaShop\CircuitBreaker\Place\HalfOpenPlace;
 use PrestaShop\CircuitBreaker\Place\OpenPlace;
+use PrestaShop\CircuitBreaker\Storage\SymfonyCache;
+use PrestaShop\CircuitBreaker\SymfonyCircuitBreaker;
+use PrestaShop\CircuitBreaker\System\MainSystem;
 use Symfony\Component\Cache\Simple\ArrayCache;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SymfonyCircuitBreakerEventsTest extends CircuitBreakerTestCase
 {

@@ -3,8 +3,8 @@
 namespace PrestaShop\CircuitBreaker;
 
 use PrestaShop\CircuitBreaker\Contract\ClientInterface;
-use PrestaShop\CircuitBreaker\Contract\SystemInterface;
 use PrestaShop\CircuitBreaker\Contract\StorageInterface;
+use PrestaShop\CircuitBreaker\Contract\SystemInterface;
 use PrestaShop\CircuitBreaker\Transition\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -18,12 +18,6 @@ final class SymfonyCircuitBreaker extends AdvancedCircuitBreaker
      */
     private $eventDispatcher;
 
-    /**
-     * @param SystemInterface $system
-     * @param ClientInterface $client
-     * @param StorageInterface $storage
-     * @param EventDispatcherInterface $eventDispatcher
-     */
     public function __construct(
         SystemInterface $system,
         ClientInterface $client,

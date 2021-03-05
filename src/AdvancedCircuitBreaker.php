@@ -44,12 +44,6 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
     /** @var callable|null */
     protected $defaultFallback;
 
-    /**
-     * @param SystemInterface $system
-     * @param ClientInterface $client
-     * @param StorageInterface $storage
-     * @param TransitionDispatcherInterface $dispatcher
-     */
     public function __construct(
         SystemInterface $system,
         ClientInterface $client,
@@ -143,7 +137,6 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
     /**
      * @param string $transition
      * @param string $service
-     * @param array $serviceParameters
      *
      * @return void
      */

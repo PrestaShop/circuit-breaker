@@ -1,6 +1,9 @@
 # Circuit Breaker, an implementation for resilient PHP applications
 
-[![codecov](https://codecov.io/gh/PrestaShop/circuit-breaker/branch/master/graph/badge.svg)](https://codecov.io/gh/PrestaShop/circuit-breaker) [![PHPStan](https://img.shields.io/badge/PHPStan-Level%207-brightgreen.svg?style=flat&logo=php)](https://shields.io/#/) [![Psalm](https://img.shields.io/badge/Psalm-Level%20Max-brightgreen.svg?style=flat&logo=php)](https://shields.io/#/) [![Build Status](https://travis-ci.com/PrestaShop/circuit-breaker.svg?branch=master)](https://travis-ci.com/PrestaShop/circuit-breaker) 
+[![codecov](https://codecov.io/gh/PrestaShop/circuit-breaker/branch/master/graph/badge.svg)](https://codecov.io/gh/PrestaShop/circuit-breaker)
+[![PHPStan](https://img.shields.io/badge/PHPStan-Level%207-brightgreen.svg?style=flat&logo=php)](https://shields.io/#/)
+[![Psalm](https://img.shields.io/badge/Psalm-Level%20Max-brightgreen.svg?style=flat&logo=php)](https://shields.io/#/)
+[![Build](https://github.com/PrestaShop/circuit-breaker/actions/workflows/php.yml/badge.svg)](https://github.com/PrestaShop/circuit-breaker/actions/workflows/php.yml)
 
 ## Main principles
 

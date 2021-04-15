@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace PrestaShop\CircuitBreaker\Util;
 
@@ -42,8 +42,6 @@ final class ErrorFormatter
      * @param mixed $value the value to format
      * @param string $function the validation function
      * @param string $expectedType the expected type
-     *
-     * @return string
      */
     public static function format(string $parameter, $value, string $function, string $expectedType): string
     {

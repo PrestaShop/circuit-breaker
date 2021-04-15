@@ -24,13 +24,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace PrestaShop\CircuitBreaker\Client;
 
 use Exception;
 use GuzzleHttp\Client as OriginalGuzzleClient;
-use GuzzleHttp\Handler\MockHandler;
 use PrestaShop\CircuitBreaker\Contract\ClientInterface;
 use PrestaShop\CircuitBreaker\Exception\UnavailableServiceException;
 use PrestaShop\CircuitBreaker\Exception\UnsupportedMethodException;

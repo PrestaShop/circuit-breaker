@@ -27,15 +27,16 @@ declare(strict_types=1);
 
 namespace Tests\PrestaShop\CircuitBreaker;
 
-use ReflectionClass;
-use ReflectionException;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Utils;
-use GuzzleHttp\Handler\MockHandler;
+use PHPUnit\Framework\MockObject\Rule\AnyInvokedCount;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\Client\GuzzleClient;
+use ReflectionClass;
+use ReflectionException;
 
 /**
  * Helper to get a fake Guzzle client.
@@ -45,8 +46,6 @@ abstract class CircuitBreakerTestCase extends TestCase
     /**
      * Returns an instance of Client able to emulate
      * available and not available services.
-     *
-     * @return GuzzleClient
      */
     protected function getTestClient(): GuzzleClient
     {

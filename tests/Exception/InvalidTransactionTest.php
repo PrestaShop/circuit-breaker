@@ -31,7 +31,7 @@ use PrestaShop\CircuitBreaker\Exception\InvalidTransactionException;
 
 class InvalidTransactionTest extends TestCase
 {
-    public function testCreation()
+    public function testCreation(): void
     {
         $invalidPlace = new InvalidTransactionException();
 
@@ -44,7 +44,7 @@ class InvalidTransactionTest extends TestCase
      * @param array $parameters
      * @param string $expectedExceptionMessage
      */
-    public function testInvalidParameters($parameters, $expectedExceptionMessage)
+    public function testInvalidParameters($parameters, $expectedExceptionMessage): void
     {
         $invalidPlace = InvalidTransactionException::invalidParameters(
             $parameters[0], // service
@@ -56,10 +56,7 @@ class InvalidTransactionTest extends TestCase
         $this->assertSame($invalidPlace->getMessage(), $expectedExceptionMessage);
     }
 
-    /**
-     * @return array
-     */
-    public function getParameters()
+    public function getParameters(): array
     {
         return [
             'all_invalid_parameters' => [

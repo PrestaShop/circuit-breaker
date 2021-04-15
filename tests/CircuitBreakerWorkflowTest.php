@@ -207,8 +207,6 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
 
     /**
      * Return the list of supported circuit breakers
-     *
-     * @return array
      */
     public function getCircuitBreakers(): array
     {

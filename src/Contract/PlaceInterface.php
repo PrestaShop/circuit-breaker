@@ -35,8 +35,6 @@ interface PlaceInterface
 {
     /**
      * Return the current state of the Circuit Breaker.
-     *
-     * @return string
      */
     public function getState(): string;
 

@@ -39,8 +39,6 @@ interface StorageInterface
      *
      * @param string $service The service name
      * @param TransactionInterface $transaction the transaction
-     *
-     * @return bool
      */
     public function saveTransaction(string $service, TransactionInterface $transaction): bool;
 
@@ -48,8 +46,6 @@ interface StorageInterface
      * Retrieve the CircuitBreaker transaction for a specific service.
      *
      * @param string $service the service name
-     *
-     * @return TransactionInterface
      *
      * @throws TransactionNotFoundException
      */
@@ -59,15 +55,11 @@ interface StorageInterface
      * Checks if the transaction exists.
      *
      * @param string $service the service name
-     *
-     * @return bool
      */
     public function hasTransaction(string $service): bool;
 
     /**
      * Clear the Circuit Breaker storage.
-     *
-     * @return bool
      */
     public function clear(): bool;
 }

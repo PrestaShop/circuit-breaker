@@ -24,13 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace PrestaShop\CircuitBreaker;
 
 use PrestaShop\CircuitBreaker\Client\GuzzleClient;
-use PrestaShop\CircuitBreaker\Contract\ClientInterface;
 use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
+use PrestaShop\CircuitBreaker\Contract\ClientInterface;
 use PrestaShop\CircuitBreaker\Contract\FactoryInterface;
 use PrestaShop\CircuitBreaker\Contract\FactorySettingsInterface;
 use PrestaShop\CircuitBreaker\Contract\StorageInterface;

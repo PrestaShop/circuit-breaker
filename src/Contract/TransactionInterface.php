@@ -57,8 +57,6 @@ interface TransactionInterface
 
     /**
      * Everytime the service call fails, increment the number of failures.
-     *
-     * @return bool
      */
     public function incrementFailures(): bool;
 }

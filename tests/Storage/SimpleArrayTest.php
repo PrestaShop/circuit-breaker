@@ -42,9 +42,6 @@ class SimpleArrayTest extends TestCase
         $simpleArray::$transactions = [];
     }
 
-    /**
-     * @return void
-     */
     public function testCreation(): void
     {
         $simpleArray = new SimpleArray();
@@ -55,8 +52,6 @@ class SimpleArrayTest extends TestCase
 
     /**
      * @depends testCreation
-     *
-     * @return void
      */
     public function testSaveTransaction(): void
     {
@@ -72,8 +67,6 @@ class SimpleArrayTest extends TestCase
     /**
      * @depends testCreation
      * @depends testSaveTransaction
-     *
-     * @return void
      */
     public function testHasTransaction(): void
     {
@@ -87,8 +80,6 @@ class SimpleArrayTest extends TestCase
      * @depends testCreation
      * @depends testSaveTransaction
      * @depends testHasTransaction
-     *
-     * @return void
      */
     public function testGetTransaction(): void
     {
@@ -105,8 +96,6 @@ class SimpleArrayTest extends TestCase
      * @depends testCreation
      * @depends testGetTransaction
      * @depends testHasTransaction
-     *
-     * @return void
      */
     public function testGetNotFoundTransactionThrowsAnException(): void
     {
@@ -119,8 +108,6 @@ class SimpleArrayTest extends TestCase
     /**
      * @depends testSaveTransaction
      * @depends testGetTransaction
-     *
-     * @return void
      */
     public function testClear(): void
     {

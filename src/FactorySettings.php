@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace PrestaShop\CircuitBreaker;
 
@@ -69,11 +69,6 @@ class FactorySettings implements FactorySettingsInterface
     /** @var callable|null */
     private $defaultFallback;
 
-    /**
-     * @param int $failures
-     * @param float $timeout
-     * @param int $threshold
-     */
     public function __construct(
         int $failures,
         float $timeout,
@@ -121,11 +116,6 @@ class FactorySettings implements FactorySettingsInterface
         return $this->failures;
     }
 
-    /**
-     * @param int $failures
-     *
-     * @return self
-     */
     public function setFailures(int $failures): self
     {
         $this->failures = $failures;
@@ -141,11 +131,6 @@ class FactorySettings implements FactorySettingsInterface
         return $this->timeout;
     }
 
-    /**
-     * @param float $timeout
-     *
-     * @return self
-     */
     public function setTimeout(float $timeout): self
     {
         $this->timeout = $timeout;
@@ -161,11 +146,6 @@ class FactorySettings implements FactorySettingsInterface
         return $this->threshold;
     }
 
-    /**
-     * @param int $threshold
-     *
-     * @return self
-     */
     public function setThreshold(int $threshold): self
     {
         $this->threshold = $threshold;
@@ -181,11 +161,6 @@ class FactorySettings implements FactorySettingsInterface
         return $this->strippedTimeout;
     }
 
-    /**
-     * @param float $strippedTimeout
-     *
-     * @return self
-     */
     public function setStrippedTimeout(float $strippedTimeout): self
     {
         $this->strippedTimeout = $strippedTimeout;
@@ -193,19 +168,11 @@ class FactorySettings implements FactorySettingsInterface
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getStrippedFailures(): int
     {
         return $this->strippedFailures;
     }
 
-    /**
-     * @param int $strippedFailures
-     *
-     * @return self
-     */
     public function setStrippedFailures(int $strippedFailures): self
     {
         $this->strippedFailures = $strippedFailures;
@@ -221,9 +188,6 @@ class FactorySettings implements FactorySettingsInterface
         return $this->storage;
     }
 
-    /**
-     * @return self
-     */
     public function setStorage(StorageInterface $storage): self
     {
         $this->storage = $storage;
@@ -234,14 +198,11 @@ class FactorySettings implements FactorySettingsInterface
     /**
      * {@inheritdoc}
      */
-    public function getDispatcher()
+    public function getDispatcher(): ?TransitionDispatcherInterface
     {
         return $this->dispatcher;
     }
 
-    /**
-     * @return self
-     */
     public function setDispatcher(TransitionDispatcherInterface $dispatcher): self
     {
         $this->dispatcher = $dispatcher;
@@ -257,9 +218,6 @@ class FactorySettings implements FactorySettingsInterface
         return $this->clientOptions;
     }
 
-    /**
-     * @return self
-     */
     public function setClientOptions(array $clientOptions): self
     {
         $this->clientOptions = $clientOptions;
@@ -275,9 +233,6 @@ class FactorySettings implements FactorySettingsInterface
         return $this->client;
     }
 
-    /**
-     * @return self
-     */
     public function setClient(?ClientInterface $client = null): self
     {
         $this->client = $client;
@@ -293,9 +248,6 @@ class FactorySettings implements FactorySettingsInterface
         return $this->defaultFallback;
     }
 
-    /**
-     * @return self
-     */
     public function setDefaultFallback(callable $defaultFallback): self
     {
         $this->defaultFallback = $defaultFallback;

@@ -31,58 +31,25 @@ namespace PrestaShop\CircuitBreaker\Contract;
  */
 interface FactorySettingsInterface
 {
-    /**
-     * @return FactorySettingsInterface
-     */
-    public static function merge(FactorySettingsInterface $settingsA, FactorySettingsInterface $settingsB);
+    public static function merge(FactorySettingsInterface $settingsA, FactorySettingsInterface $settingsB): FactorySettingsInterface;
 
-    /**
-     * @return int
-     */
-    public function getFailures();
+    public function getFailures(): int;
 
-    /**
-     * @return float
-     */
-    public function getTimeout();
+    public function getTimeout(): float;
 
-    /**
-     * @return int
-     */
-    public function getThreshold();
+    public function getThreshold(): int;
 
-    /**
-     * @return float
-     */
-    public function getStrippedTimeout();
+    public function getStrippedTimeout(): float;
 
-    /**
-     * @return int
-     */
-    public function getStrippedFailures();
+    public function getStrippedFailures(): int;
 
-    /**
-     * @return StorageInterface|null
-     */
-    public function getStorage();
+    public function getStorage(): ?StorageInterface;
 
-    /**
-     * @return TransitionDispatcherInterface|null
-     */
-    public function getDispatcher();
+    public function getDispatcher(): ?TransitionDispatcherInterface;
 
-    /**
-     * @return array
-     */
-    public function getClientOptions();
+    public function getClientOptions(): array;
 
-    /**
-     * @return ClientInterface|null
-     */
-    public function getClient();
+    public function getClient(): ?ClientInterface;
 
-    /**
-     * @return callable|null
-     */
-    public function getDefaultFallback();
+    public function getDefaultFallback(): ?callable;
 }

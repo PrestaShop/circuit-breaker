@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace PrestaShop\CircuitBreaker\Transaction;
 
@@ -122,8 +122,6 @@ final class SimpleTransaction implements TransactionInterface
      *
      * @param PlaceInterface $place the Circuit Breaker place
      * @param string $service the service URI
-     *
-     * @return self
      */
     public static function createFromPlace(PlaceInterface $place, string $service): self
     {
@@ -141,8 +139,6 @@ final class SimpleTransaction implements TransactionInterface
      * Set the right DateTime from the threshold value.
      *
      * @param int $threshold the Transaction threshold
-     *
-     * @return void
      */
     private function initThresholdDateTime(int $threshold): void
     {

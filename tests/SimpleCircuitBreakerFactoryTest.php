@@ -34,10 +34,7 @@ use PrestaShop\CircuitBreaker\SimpleCircuitBreakerFactory;
 
 class SimpleCircuitBreakerFactoryTest extends TestCase
 {
-    /**
-     * @return void
-     */
-    public function testCreation()
+    public function testCreation(): void
     {
         $factory = new SimpleCircuitBreakerFactory();
 
@@ -49,10 +46,8 @@ class SimpleCircuitBreakerFactoryTest extends TestCase
      * @dataProvider getSettings
      *
      * @param FactorySettingsInterface $settings the Circuit Breaker settings
-     *
-     * @return void
      */
-    public function testCircuitBreakerCreation(FactorySettingsInterface $settings)
+    public function testCircuitBreakerCreation(FactorySettingsInterface $settings): void
     {
         $factory = new SimpleCircuitBreakerFactory();
         $circuitBreaker = $factory->create($settings);
@@ -60,10 +55,7 @@ class SimpleCircuitBreakerFactoryTest extends TestCase
         $this->assertInstanceOf(SimpleCircuitBreaker::class, $circuitBreaker);
     }
 
-    /**
-     * @return array
-     */
-    public function getSettings()
+    public function getSettings(): array
     {
         return [
             [

@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace PrestaShop\CircuitBreaker;
 
@@ -98,7 +98,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
                 $transition = $this->isHalfOpened() ? Transition::REOPENING_TRANSITION : Transition::OPENING_TRANSITION;
                 $this->dispatchTransition($transition, $service, $serviceParameters);
 
-               return $this->callFallback($fallback);
+                return $this->callFallback($fallback);
             }
 
             return $this->call(
@@ -109,9 +109,6 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
         }
     }
 
-    /**
-     * @return callable|null
-     */
     public function getDefaultFallback(): ?callable
     {
         return $this->defaultFallback;
@@ -137,12 +134,6 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
         return parent::callFallback(null !== $fallback ? $fallback : $this->defaultFallback);
     }
 
-    /**
-     * @param string $transition
-     * @param string $service
-     *
-     * @return void
-     */
     protected function dispatchTransition(string $transition, string $service, array $serviceParameters): void
     {
         $this->dispatcher->dispatchTransition($transition, $service, $serviceParameters);

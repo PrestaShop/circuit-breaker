@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace PrestaShop\CircuitBreaker\Exception;
 
@@ -36,10 +36,8 @@ final class InvalidPlaceException extends CircuitBreakerException
      * @param mixed $failures the failures
      * @param mixed $timeout the timeout
      * @param mixed $threshold the threshold
-     *
-     * @return self
      */
-    public static function invalidSettings($failures, $timeout, $threshold)
+    public static function invalidSettings($failures, $timeout, $threshold): self
     {
         $exceptionMessage = 'Invalid settings for Place' . PHP_EOL .
             ErrorFormatter::format('failures', $failures, 'isPositiveInteger', 'a positive integer') .

@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace PrestaShop\CircuitBreaker\Util;
 
@@ -37,8 +37,6 @@ final class Assert
 {
     /**
      * @param mixed $value the value to evaluate
-     *
-     * @return bool
      */
     public static function isPositiveValue($value): bool
     {
@@ -47,8 +45,6 @@ final class Assert
 
     /**
      * @param mixed $value the value to evaluate
-     *
-     * @return bool
      */
     public static function isPositiveInteger($value): bool
     {
@@ -57,8 +53,6 @@ final class Assert
 
     /**
      * @param mixed $value the value to evaluate
-     *
-     * @return bool
      */
     public static function isURI($value): bool
     {
@@ -71,8 +65,6 @@ final class Assert
 
     /**
      * @param mixed $value the value to evaluate
-     *
-     * @return bool
      */
     public static function isString($value): bool
     {

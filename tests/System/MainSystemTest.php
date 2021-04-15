@@ -36,7 +36,7 @@ use PrestaShop\CircuitBreaker\System\MainSystem;
 
 class MainSystemTest extends TestCase
 {
-    public function testCreation()
+    public function testCreation(): void
     {
         $openPlace = new OpenPlace(1, 1, 1);
         $halfOpenPlace = new HalfOpenPlace(1, 1, 1);
@@ -54,7 +54,7 @@ class MainSystemTest extends TestCase
     /**
      * @depends testCreation
      */
-    public function testGetInitialPlace()
+    public function testGetInitialPlace(): void
     {
         $mainSystem = $this->createMainSystem();
         $initialPlace = $mainSystem->getInitialPlace();
@@ -66,7 +66,7 @@ class MainSystemTest extends TestCase
     /**
      * @depends testCreation
      */
-    public function testGetPlaces()
+    public function testGetPlaces(): void
     {
         $mainSystem = $this->createMainSystem();
         $places = $mainSystem->getPlaces();
@@ -81,10 +81,8 @@ class MainSystemTest extends TestCase
 
     /**
      * Returns an instance of MainSystem for tests.
-     *
-     * @return MainSystem
      */
-    private function createMainSystem()
+    private function createMainSystem(): MainSystem
     {
         $openPlace = new OpenPlace(1, 1, 1);
         $halfOpenPlace = new HalfOpenPlace(1, 1, 1);

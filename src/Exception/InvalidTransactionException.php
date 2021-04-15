@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace PrestaShop\CircuitBreaker\Exception;
 
@@ -37,10 +37,8 @@ final class InvalidTransactionException extends CircuitBreakerException
      * @param mixed $failures the failures
      * @param mixed $state the Circuit Breaker
      * @param mixed $threshold the threshold
-     *
-     * @return self
      */
-    public static function invalidParameters($service, $failures, $state, $threshold)
+    public static function invalidParameters($service, $failures, $state, $threshold): self
     {
         $exceptionMessage = 'Invalid parameters for Transaction' . PHP_EOL .
             ErrorFormatter::format('service', $service, 'isURI', 'an URI') .

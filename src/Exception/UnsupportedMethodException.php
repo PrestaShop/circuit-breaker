@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace PrestaShop\CircuitBreaker\Exception;
 
@@ -34,8 +34,6 @@ namespace PrestaShop\CircuitBreaker\Exception;
 class UnsupportedMethodException extends CircuitBreakerException
 {
     /**
-     * @param string $methodName
-     *
      * @return UnsupportedMethodException
      */
     public static function unsupportedMethod(string $methodName): self

@@ -34,9 +34,6 @@ use PHPUnit\Framework\TestCase;
  */
 class PlaceTestCase extends TestCase
 {
-    /**
-     * @return array
-     */
     public function getFixtures(): array
     {
         return [
@@ -46,9 +43,6 @@ class PlaceTestCase extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
     public function getArrayFixtures(): array
     {
         return [
@@ -60,9 +54,6 @@ class PlaceTestCase extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
     public function getInvalidFixtures(): array
     {
         return [
@@ -70,9 +61,6 @@ class PlaceTestCase extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
     public function getInvalidArrayFixtures(): array
     {
         return [

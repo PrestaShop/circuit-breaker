@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace PrestaShop\CircuitBreaker;
 
@@ -107,9 +107,6 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
         return State::CLOSED_STATE === $this->currentPlace->getState();
     }
 
-    /**
-     * @return string
-     */
     protected function callFallback(callable $fallback = null): string
     {
         if (null === $fallback) {
@@ -122,8 +119,6 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
     /**
      * @param string $state the Place state
      * @param string $service the service URI
-     *
-     * @return bool
      */
     protected function moveStateTo(string $state, string $service): bool
     {
@@ -138,8 +133,6 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
 
     /**
      * @param string $service the service URI
-     *
-     * @return TransactionInterface
      */
     protected function initTransaction(string $service): TransactionInterface
     {
@@ -163,8 +156,6 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
 
     /**
      * @param TransactionInterface $transaction the Transaction
-     *
-     * @return bool
      */
     protected function isAllowedToRetry(TransactionInterface $transaction): bool
     {
@@ -173,8 +164,6 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
 
     /**
      * @param TransactionInterface $transaction the Transaction
-     *
-     * @return bool
      */
     protected function canAccessService(TransactionInterface $transaction): bool
     {
@@ -186,8 +175,6 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
      *
      * @param string $service the service URI
      * @param array $parameters the service URI parameters
-     *
-     * @return string
      */
     protected function request(string $service, array $parameters = []): string
     {

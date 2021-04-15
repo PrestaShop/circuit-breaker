@@ -45,7 +45,7 @@ final class ErrorFormatter
      *
      * @return string
      */
-    public static function format($parameter, $value, $function, $expectedType)
+    public static function format(string $parameter, $value, string $function, string $expectedType): string
     {
         $errorMessage = '';
         $isValid = Assert::$function($value);

@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace Tests\PrestaShop\CircuitBreaker\Place;
 
@@ -36,11 +37,11 @@ class PlaceTestCase extends TestCase
     /**
      * @return array
      */
-    public function getFixtures()
+    public function getFixtures(): array
     {
         return [
-            '0_0_0' => [0, 0, 0],
-            '1_100_0' => [1, 100, 0],
+            '0_0_0' => [0, 0.0, 0],
+            '1_100_0' => [1, 100.0, 0],
             '3_0.6_3' => [3, 0.6, 3],
         ];
     }
@@ -48,7 +49,7 @@ class PlaceTestCase extends TestCase
     /**
      * @return array
      */
-    public function getArrayFixtures()
+    public function getArrayFixtures(): array
     {
         return [
             'assoc_array' => [[
@@ -62,18 +63,17 @@ class PlaceTestCase extends TestCase
     /**
      * @return array
      */
-    public function getInvalidFixtures()
+    public function getInvalidFixtures(): array
     {
         return [
-            'minus1_null_false' => [-1, null, false],
-            '3_0.6_3.14' => [3, 0.6, 3.14],
+            'minus1_minus1.0_minus2' => [-1, -1.0, -2],
         ];
     }
 
     /**
      * @return array
      */
-    public function getInvalidArrayFixtures()
+    public function getInvalidArrayFixtures(): array
     {
         return [
             'invalid_indexes' => [[

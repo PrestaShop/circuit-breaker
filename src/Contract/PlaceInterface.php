@@ -38,20 +38,20 @@ interface PlaceInterface
      *
      * @return string
      */
-    public function getState();
+    public function getState(): string;
 
     /**
      * @return int the number of failures
      */
-    public function getFailures();
+    public function getFailures(): int;
 
     /**
      * @return int the allowed number of trials
      */
-    public function getThreshold();
+    public function getThreshold(): int;
 
     /**
      * @return float the allowed timeout
      */
-    public function getTimeout();
+    public function getTimeout(): float;
 }

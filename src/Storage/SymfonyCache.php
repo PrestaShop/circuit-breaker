@@ -51,7 +51,7 @@ final class SymfonyCache implements StorageInterface
     /**
      * {@inheritdoc}
      */
-    public function saveTransaction($service, TransactionInterface $transaction)
+    public function saveTransaction(string $service, TransactionInterface $transaction): bool
     {
         $key = $this->getKey($service);
 
@@ -61,7 +61,7 @@ final class SymfonyCache implements StorageInterface
     /**
      * {@inheritdoc}
      */
-    public function getTransaction($service)
+    public function getTransaction(string $service): TransactionInterface
     {
         $key = $this->getKey($service);
 
@@ -75,7 +75,7 @@ final class SymfonyCache implements StorageInterface
     /**
      * {@inheritdoc}
      */
-    public function hasTransaction($service)
+    public function hasTransaction(string $service): bool
     {
         $key = $this->getKey($service);
 
@@ -85,7 +85,7 @@ final class SymfonyCache implements StorageInterface
     /**
      * {@inheritdoc}
      */
-    public function clear()
+    public function clear(): bool
     {
         return $this->symfonyCache->clear();
     }
@@ -97,7 +97,7 @@ final class SymfonyCache implements StorageInterface
      *
      * @return string the transaction unique identifier
      */
-    private function getKey($service)
+    private function getKey($service): string
     {
         return md5($service);
     }

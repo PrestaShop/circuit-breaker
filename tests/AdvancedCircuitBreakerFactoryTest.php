@@ -24,9 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types = 1);
+
 namespace Tests\PrestaShop\CircuitBreaker;
 
 use PHPUnit\Framework\TestCase;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Utils;
+use GuzzleHttp\Handler\MockHandler;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory;
 use PrestaShop\CircuitBreaker\Client\GuzzleClient;
@@ -65,21 +71,19 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
         $expectedParameters = ['toto' => 'titi', 42 => 51];
 
         $dispatcher
-            ->expects($this->at(0))
+            ->expects($this->exactly(3))
             ->method('dispatchTransition')
-            ->with(
-                $this->equalTo(Transition::INITIATING_TRANSITION),
-                $this->equalTo($localeService),
-                $this->equalTo([])
-            )
-        ;
-        $dispatcher
-            ->expects($this->at(1))
-            ->method('dispatchTransition')
-            ->with(
-                $this->equalTo(Transition::TRIAL_TRANSITION),
-                $this->equalTo($localeService),
-                $this->equalTo($expectedParameters)
+            ->withConsecutive(
+                [
+                    $this->equalTo(Transition::INITIATING_TRANSITION),
+                    $this->equalTo($localeService),
+                    $this->equalTo([]),
+                ],
+                [
+                    $this->equalTo(Transition::TRIAL_TRANSITION),
+                    $this->equalTo($localeService),
+                    $this->equalTo($expectedParameters)
+                ]
             )
         ;
 
@@ -89,10 +93,18 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
             ->setStrippedTimeout(0.2)
             ->setDispatcher($dispatcher)
         ;
+
+        $mock = new MockHandler([
+            new Response(200, [], Utils::streamFor('{"hello": "world"}')),
+        ]);
+        $client = new GuzzleClient(['handler' => $mock]);
+        $settings->setClient($client);
+
         $circuitBreaker = $factory->create($settings);
 
         $this->assertInstanceOf(AdvancedCircuitBreaker::class, $circuitBreaker);
         $circuitBreaker->call($localeService, $expectedParameters, function () {
+            return false;
         });
     }
 

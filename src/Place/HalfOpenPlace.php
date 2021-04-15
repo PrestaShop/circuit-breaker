@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types = 1);
+
 namespace PrestaShop\CircuitBreaker\Place;
 
 use PrestaShop\CircuitBreaker\State;
@@ -33,7 +35,7 @@ final class HalfOpenPlace extends AbstractPlace
     /**
      * {@inheritdoc}
      */
-    public function getState()
+    public function getState(): string
     {
         return State::HALF_OPEN_STATE;
     }

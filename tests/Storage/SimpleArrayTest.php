@@ -36,7 +36,7 @@ class SimpleArrayTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $simpleArray = new SimpleArray();
         $simpleArray::$transactions = [];
@@ -45,7 +45,7 @@ class SimpleArrayTest extends TestCase
     /**
      * @return void
      */
-    public function testCreation()
+    public function testCreation(): void
     {
         $simpleArray = new SimpleArray();
 
@@ -58,7 +58,7 @@ class SimpleArrayTest extends TestCase
      *
      * @return void
      */
-    public function testSaveTransaction()
+    public function testSaveTransaction(): void
     {
         $simpleArray = new SimpleArray();
         $operation = $simpleArray->saveTransaction(
@@ -75,7 +75,7 @@ class SimpleArrayTest extends TestCase
      *
      * @return void
      */
-    public function testHasTransaction()
+    public function testHasTransaction(): void
     {
         $simpleArray = new SimpleArray();
         $simpleArray->saveTransaction('http://test.com', $this->createMock(TransactionInterface::class));
@@ -90,7 +90,7 @@ class SimpleArrayTest extends TestCase
      *
      * @return void
      */
-    public function testGetTransaction()
+    public function testGetTransaction(): void
     {
         $simpleArray = new SimpleArray();
         $translationStub = $this->createMock(TransactionInterface::class);
@@ -108,7 +108,7 @@ class SimpleArrayTest extends TestCase
      *
      * @return void
      */
-    public function testGetNotFoundTransactionThrowsAnException()
+    public function testGetNotFoundTransactionThrowsAnException(): void
     {
         $this->expectException(TransactionNotFoundException::class);
 
@@ -122,7 +122,7 @@ class SimpleArrayTest extends TestCase
      *
      * @return void
      */
-    public function testClear()
+    public function testClear(): void
     {
         $simpleArray = new SimpleArray();
         $translationStub = $this->createMock(TransactionInterface::class);

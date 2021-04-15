@@ -71,7 +71,7 @@ class MainSystemTest extends TestCase
         $mainSystem = $this->createMainSystem();
         $places = $mainSystem->getPlaces();
 
-        $this->assertInternalType('array', $places);
+        $this->assertIsArray($places);
         $this->assertCount(3, $places);
 
         foreach ($places as $place) {

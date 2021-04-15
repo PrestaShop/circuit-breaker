@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace Tests\PrestaShop\CircuitBreaker\Place;
 
@@ -39,7 +40,7 @@ class ClosedPlaceTest extends PlaceTestCase
      * @param mixed $timeout
      * @param mixed $threshold
      */
-    public function testCreationWith($failures, $timeout, $threshold)
+    public function testCreationWith($failures, $timeout, $threshold): void
     {
         $closedPlace = new ClosedPlace($failures, $timeout, $threshold);
 
@@ -55,14 +56,14 @@ class ClosedPlaceTest extends PlaceTestCase
      * @param mixed $timeout
      * @param mixed $threshold
      */
-    public function testCreationWithInvalidValues($failures, $timeout, $threshold)
+    public function testCreationWithInvalidValues($failures, $timeout, $threshold): void
     {
         $this->expectException(InvalidPlaceException::class);
 
         new ClosedPlace($failures, $timeout, $threshold);
     }
 
-    public function testGetExpectedState()
+    public function testGetExpectedState(): void
     {
         $closedPlace = new ClosedPlace(1, 1, 1);
 

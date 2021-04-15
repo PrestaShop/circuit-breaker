@@ -54,10 +54,10 @@ final class SimpleCircuitBreaker extends PartialCircuitBreaker
      * {@inheritdoc}
      */
     public function call(
-        $service,
+        string $service,
         array $serviceParameters = [],
         callable $fallback = null
-    ) {
+    ): string {
         $transaction = $this->initTransaction($service);
         try {
             if ($this->isOpened()) {

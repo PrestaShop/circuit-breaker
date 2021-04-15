@@ -52,7 +52,7 @@ class TransitionEvent extends Event
      * @param string $service the Service URI
      * @param array $parameters the Service parameters
      */
-    public function __construct($eventName, $service, array $parameters)
+    public function __construct(string $eventName, string $service, array $parameters)
     {
         $this->eventName = $eventName;
         $this->service = $service;
@@ -62,7 +62,7 @@ class TransitionEvent extends Event
     /**
      * @return string the Transition name
      */
-    public function getEvent()
+    public function getEvent(): string
     {
         return $this->eventName;
     }
@@ -70,7 +70,7 @@ class TransitionEvent extends Event
     /**
      * @return string the Service URI
      */
-    public function getService()
+    public function getService(): string
     {
         return $this->service;
     }
@@ -78,7 +78,7 @@ class TransitionEvent extends Event
     /**
      * @return array the Service parameters
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         return $this->parameters;
     }

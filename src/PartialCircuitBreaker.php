@@ -73,12 +73,12 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
     /**
      * {@inheritdoc}
      */
-    abstract public function call($service, array $serviceParameters = [], callable $fallback = null);
+    abstract public function call(string $service, array $serviceParameters = [], callable $fallback = null): string;
 
     /**
      * {@inheritdoc}
      */
-    public function getState()
+    public function getState(): string
     {
         return $this->currentPlace->getState();
     }
@@ -86,7 +86,7 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
     /**
      * {@inheritdoc}
      */
-    public function isOpened()
+    public function isOpened(): bool
     {
         return State::OPEN_STATE === $this->currentPlace->getState();
     }
@@ -94,7 +94,7 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
     /**
      * {@inheritdoc}
      */
-    public function isHalfOpened()
+    public function isHalfOpened(): bool
     {
         return State::HALF_OPEN_STATE === $this->currentPlace->getState();
     }
@@ -102,7 +102,7 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
     /**
      * {@inheritdoc}
      */
-    public function isClosed()
+    public function isClosed(): bool
     {
         return State::CLOSED_STATE === $this->currentPlace->getState();
     }
@@ -110,13 +110,13 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
     /**
      * @return string
      */
-    protected function callFallback(callable $fallback = null)
+    protected function callFallback(callable $fallback = null): string
     {
         if (null === $fallback) {
             return '';
         }
 
-        return call_user_func($fallback);
+        return (string) call_user_func($fallback);
     }
 
     /**
@@ -125,7 +125,7 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
      *
      * @return bool
      */
-    protected function moveStateTo($state, $service)
+    protected function moveStateTo(string $state, string $service): bool
     {
         $this->currentPlace = $this->places[$state];
         $transaction = SimpleTransaction::createFromPlace(
@@ -141,7 +141,7 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
      *
      * @return TransactionInterface
      */
-    protected function initTransaction($service)
+    protected function initTransaction(string $service): TransactionInterface
     {
         if ($this->storage->hasTransaction($service)) {
             $transaction = $this->storage->getTransaction($service);
@@ -166,7 +166,7 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
      *
      * @return bool
      */
-    protected function isAllowedToRetry(TransactionInterface $transaction)
+    protected function isAllowedToRetry(TransactionInterface $transaction): bool
     {
         return $transaction->getFailures() < $this->currentPlace->getFailures();
     }
@@ -176,7 +176,7 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
      *
      * @return bool
      */
-    protected function canAccessService(TransactionInterface $transaction)
+    protected function canAccessService(TransactionInterface $transaction): bool
     {
         return $transaction->getThresholdDateTime() < new DateTime();
     }
@@ -189,7 +189,7 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
      *
      * @return string
      */
-    protected function request($service, array $parameters = [])
+    protected function request(string $service, array $parameters = []): string
     {
         return $this->client->request(
             $service,

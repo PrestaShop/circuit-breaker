@@ -49,7 +49,7 @@ class DoctrineCache implements StorageInterface
     /**
      * {@inheritdoc}
      */
-    public function saveTransaction($service, TransactionInterface $transaction)
+    public function saveTransaction(string $service, TransactionInterface $transaction): bool
     {
         $key = $this->getKey($service);
 
@@ -59,7 +59,7 @@ class DoctrineCache implements StorageInterface
     /**
      * {@inheritdoc}
      */
-    public function getTransaction($service)
+    public function getTransaction(string $service): TransactionInterface
     {
         $key = $this->getKey($service);
 
@@ -73,7 +73,7 @@ class DoctrineCache implements StorageInterface
     /**
      * {@inheritdoc}
      */
-    public function hasTransaction($service)
+    public function hasTransaction(string $service): bool
     {
         $key = $this->getKey($service);
 
@@ -83,7 +83,7 @@ class DoctrineCache implements StorageInterface
     /**
      * {@inheritdoc}
      */
-    public function clear()
+    public function clear(): bool
     {
         return $this->cacheProvider->deleteAll();
     }
@@ -95,7 +95,7 @@ class DoctrineCache implements StorageInterface
      *
      * @return string the transaction unique identifier
      */
-    private function getKey($service)
+    private function getKey(string $service): string
     {
         return md5($service);
     }

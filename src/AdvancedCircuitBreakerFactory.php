@@ -30,6 +30,7 @@ namespace PrestaShop\CircuitBreaker;
 
 use PrestaShop\CircuitBreaker\Client\GuzzleClient;
 use PrestaShop\CircuitBreaker\Contract\ClientInterface;
+use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
 use PrestaShop\CircuitBreaker\Contract\FactoryInterface;
 use PrestaShop\CircuitBreaker\Contract\FactorySettingsInterface;
 use PrestaShop\CircuitBreaker\Contract\StorageInterface;
@@ -50,7 +51,7 @@ final class AdvancedCircuitBreakerFactory implements FactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function create(FactorySettingsInterface $settings)
+    public function create(FactorySettingsInterface $settings): CircuitBreakerInterface
     {
         $closedPlace = new ClosedPlace($settings->getFailures(), $settings->getTimeout(), 0);
         $openPlace = new OpenPlace(0, 0, $settings->getThreshold());

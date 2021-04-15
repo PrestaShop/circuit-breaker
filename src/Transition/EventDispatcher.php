@@ -50,7 +50,7 @@ class EventDispatcher implements TransitionDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function dispatchTransition($transition, $service, array $serviceParameters)
+    public function dispatchTransition(string $transition, string $service, array $serviceParameters): void
     {
         $event = new TransitionEvent($transition, $service, $serviceParameters);
 

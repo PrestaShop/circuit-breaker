@@ -42,7 +42,7 @@ class SymfonyCacheTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->symfonyCache = new SymfonyCache(
             new FilesystemCache('ps__circuit_breaker', 20)
@@ -52,13 +52,13 @@ class SymfonyCacheTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $filesystemAdapter = new FilesystemCache('ps__circuit_breaker', 20);
         $filesystemAdapter->clear();
     }
 
-    public function testCreation()
+    public function testCreation(): void
     {
         $symfonyCache = new SymfonyCache(
             new FilesystemCache('ps__circuit_breaker')
@@ -70,7 +70,7 @@ class SymfonyCacheTest extends TestCase
     /**
      * @depends testCreation
      */
-    public function testSaveTransaction()
+    public function testSaveTransaction(): void
     {
         $operation = $this->symfonyCache->saveTransaction(
             'http://test.com',
@@ -84,7 +84,7 @@ class SymfonyCacheTest extends TestCase
      * @depends testCreation
      * @depends testSaveTransaction
      */
-    public function testHasTransaction()
+    public function testHasTransaction(): void
     {
         $this->symfonyCache->saveTransaction('http://test.com', $this->createMock(TransactionInterface::class));
 
@@ -96,7 +96,7 @@ class SymfonyCacheTest extends TestCase
      * @depends testSaveTransaction
      * @depends testHasTransaction
      */
-    public function testGetTransaction()
+    public function testGetTransaction(): void
     {
         $translationStub = $this->createMock(TransactionInterface::class);
         $this->symfonyCache->saveTransaction('http://test.com', $translationStub);
@@ -111,7 +111,7 @@ class SymfonyCacheTest extends TestCase
      * @depends testGetTransaction
      * @depends testHasTransaction
      */
-    public function testGetNotFoundTransactionThrowsAnException()
+    public function testGetNotFoundTransactionThrowsAnException(): void
     {
         $this->expectException(TransactionNotFoundException::class);
 
@@ -122,7 +122,7 @@ class SymfonyCacheTest extends TestCase
      * @depends testSaveTransaction
      * @depends testGetTransaction
      */
-    public function testClear()
+    public function testClear(): void
     {
         $translationStub = $this->createMock(TransactionInterface::class);
         $this->symfonyCache->saveTransaction('http://a.com', $translationStub);

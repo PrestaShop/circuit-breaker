@@ -40,7 +40,7 @@ final class Assert
      *
      * @return bool
      */
-    public static function isPositiveValue($value)
+    public static function isPositiveValue($value): bool
     {
         return !is_string($value) && is_numeric($value) && $value >= 0;
     }
@@ -50,7 +50,7 @@ final class Assert
      *
      * @return bool
      */
-    public static function isPositiveInteger($value)
+    public static function isPositiveInteger($value): bool
     {
         return self::isPositiveValue($value) && is_int($value);
     }
@@ -60,7 +60,7 @@ final class Assert
      *
      * @return bool
      */
-    public static function isURI($value)
+    public static function isURI($value): bool
     {
         return null !== $value
             && !is_numeric($value)
@@ -74,7 +74,7 @@ final class Assert
      *
      * @return bool
      */
-    public static function isString($value)
+    public static function isString($value): bool
     {
         return !empty($value) && is_string($value);
     }

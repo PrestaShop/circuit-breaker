@@ -36,5 +36,5 @@ interface FactoryInterface
      *
      * @return CircuitBreakerInterface
      */
-    public function create(FactorySettingsInterface $settings);
+    public function create(FactorySettingsInterface $settings): CircuitBreakerInterface;
 }

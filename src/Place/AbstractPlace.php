@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShop\CircuitBreaker\Place;
 
@@ -54,7 +55,7 @@ abstract class AbstractPlace implements PlaceInterface
      *
      * @throws InvalidPlaceException
      */
-    public function __construct($failures, $timeout, $threshold)
+    public function __construct(int $failures, float $timeout, int $threshold)
     {
         $this->validate($failures, $timeout, $threshold);
 
@@ -66,12 +67,12 @@ abstract class AbstractPlace implements PlaceInterface
     /**
      * {@inheritdoc}
      */
-    abstract public function getState();
+    abstract public function getstate(): string;
 
     /**
      * {@inheritdoc}
      */
-    public function getFailures()
+    public function getfailures(): int
     {
         return $this->failures;
     }
@@ -79,7 +80,7 @@ abstract class AbstractPlace implements PlaceInterface
     /**
      * {@inheritdoc}
      */
-    public function getTimeout()
+    public function gettimeout(): float
     {
         return $this->timeout;
     }
@@ -87,13 +88,13 @@ abstract class AbstractPlace implements PlaceInterface
     /**
      * {@inheritdoc}
      */
-    public function getThreshold()
+    public function getthreshold(): int
     {
         return $this->threshold;
     }
 
     /**
-     * Ensure the place is valid (PHP5 is permissive).
+     * ensure the place is valid (php5 is permissive).
      *
      * @param int $failures the failures should be a positive value
      * @param float $timeout the timeout should be a positive value
@@ -101,9 +102,9 @@ abstract class AbstractPlace implements PlaceInterface
      *
      * @return bool true if valid
      *
-     * @throws InvalidPlaceException
+     * @throws invalidplaceexception
      */
-    private function validate($failures, $timeout, $threshold)
+    private function validate(int $failures, float $timeout, int $threshold): bool
     {
         $assertionsAreValid = Assert::isPositiveInteger($failures)
             && Assert::isPositiveValue($timeout)

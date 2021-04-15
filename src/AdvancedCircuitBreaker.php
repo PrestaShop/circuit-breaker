@@ -17,19 +17,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+
+declare(strict_types = 1);
 
 namespace PrestaShop\CircuitBreaker;
 
 use PrestaShop\CircuitBreaker\Contract\ClientInterface;
 use PrestaShop\CircuitBreaker\Contract\StorageInterface;
 use PrestaShop\CircuitBreaker\Contract\SystemInterface;
+use PrestaShop\CircuitBreaker\Contract\TransactionInterface;
 use PrestaShop\CircuitBreaker\Contract\TransitionDispatcherInterface;
 use PrestaShop\CircuitBreaker\Exception\UnavailableServiceException;
 
@@ -62,7 +64,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
         $service,
         array $serviceParameters = [],
         callable $fallback = null
-    ) {
+    ): string {
         $transaction = $this->initTransaction($service);
 
         try {
@@ -96,7 +98,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
                 $transition = $this->isHalfOpened() ? Transition::REOPENING_TRANSITION : Transition::OPENING_TRANSITION;
                 $this->dispatchTransition($transition, $service, $serviceParameters);
 
-                return $this->callFallback($fallback);
+               return $this->callFallback($fallback);
             }
 
             return $this->call(
@@ -110,7 +112,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
     /**
      * @return callable|null
      */
-    public function getDefaultFallback()
+    public function getDefaultFallback(): ?callable
     {
         return $this->defaultFallback;
     }
@@ -120,7 +122,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
      *
      * @return AdvancedCircuitBreaker
      */
-    public function setDefaultFallback(callable $defaultFallback = null)
+    public function setDefaultFallback(?callable $defaultFallback = null): self
     {
         $this->defaultFallback = $defaultFallback;
 
@@ -130,7 +132,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
     /**
      * {@inheritdoc}
      */
-    protected function callFallback(callable $fallback = null)
+    protected function callFallback(callable $fallback = null): string
     {
         return parent::callFallback(null !== $fallback ? $fallback : $this->defaultFallback);
     }
@@ -141,7 +143,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
      *
      * @return void
      */
-    protected function dispatchTransition($transition, $service, array $serviceParameters)
+    protected function dispatchTransition(string $transition, string $service, array $serviceParameters): void
     {
         $this->dispatcher->dispatchTransition($transition, $service, $serviceParameters);
     }
@@ -149,7 +151,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
     /**
      * {@inheritdoc}
      */
-    protected function initTransaction($service)
+    protected function initTransaction(string $service): TransactionInterface
     {
         if (!$this->storage->hasTransaction($service)) {
             $this->dispatchTransition(Transition::INITIATING_TRANSITION, $service, []);
@@ -161,7 +163,7 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
     /**
      * {@inheritdoc}
      */
-    protected function request($service, array $parameters = [])
+    protected function request(string $service, array $parameters = []): string
     {
         $this->dispatchTransition(Transition::TRIAL_TRANSITION, $service, $parameters);
 

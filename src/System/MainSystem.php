@@ -61,7 +61,7 @@ final class MainSystem implements SystemInterface
     /**
      * {@inheritdoc}
      */
-    public function getInitialPlace()
+    public function getInitialPlace(): PlaceInterface
     {
         return $this->places[State::CLOSED_STATE];
     }
@@ -69,7 +69,7 @@ final class MainSystem implements SystemInterface
     /**
      * {@inheritdoc}
      */
-    public function getPlaces()
+    public function getPlaces(): array
     {
         return $this->places;
     }

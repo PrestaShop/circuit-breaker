@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types = 1);
+
 namespace PrestaShop\CircuitBreaker\Transition;
 
 use PrestaShop\CircuitBreaker\Contract\TransitionDispatcherInterface;
@@ -37,7 +39,7 @@ class NullDispatcher implements TransitionDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function dispatchTransition($transition, $service, array $serviceParameters)
+    public function dispatchTransition(string $transition, string $service, array $serviceParameters): void
     {
         // Simply does nothing
     }

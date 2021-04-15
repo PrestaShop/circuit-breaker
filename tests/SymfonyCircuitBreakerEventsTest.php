@@ -35,13 +35,14 @@ use PrestaShop\CircuitBreaker\SymfonyCircuitBreaker;
 use PrestaShop\CircuitBreaker\System\MainSystem;
 use Symfony\Component\Cache\Simple\ArrayCache;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use PHPUnit\Framework\MockObject\Rule\AnyInvokedCount;
 
 class SymfonyCircuitBreakerEventsTest extends CircuitBreakerTestCase
 {
     /**
      * Used to track the dispatched events.
      *
-     * @var PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount
+     * @var AnyInvokedCount
      */
     private $spy;
 
@@ -49,7 +50,7 @@ class SymfonyCircuitBreakerEventsTest extends CircuitBreakerTestCase
      * We should see the circuit breaker initialized,
      * a call being done and then the circuit breaker closed.
      */
-    public function testCircuitBreakerEventsOnFirstFailedCall()
+    public function testCircuitBreakerEventsOnFirstFailedCall(): void
     {
         $circuitBreaker = $this->createCircuitBreaker();
 
@@ -66,18 +67,19 @@ class SymfonyCircuitBreakerEventsTest extends CircuitBreakerTestCase
          * the 2 failed trials are done
          * then the conditions are met to open the circuit breaker
          */
-        $invocations = $this->spy->getInvocations();
+        $invocations = self::invocations($this->spy);
+
         $this->assertCount(4, $invocations);
-        $this->assertSame('INITIATING', $invocations[0]->parameters[0]);
-        $this->assertSame('TRIAL', $invocations[1]->parameters[0]);
-        $this->assertSame('TRIAL', $invocations[2]->parameters[0]);
-        $this->assertSame('OPENING', $invocations[3]->parameters[0]);
+        $this->assertSame('INITIATING', $invocations[0]->getParameters()[0]);
+        $this->assertSame('TRIAL', $invocations[1]->getParameters()[0]);
+        $this->assertSame('TRIAL', $invocations[2]->getParameters()[0]);
+        $this->assertSame('OPENING', $invocations[3]->getParameters()[0]);
     }
 
     /**
      * @return SymfonyCircuitBreaker the circuit breaker for testing purposes
      */
-    private function createCircuitBreaker()
+    private function createCircuitBreaker(): SymfonyCircuitBreaker
     {
         $system = new MainSystem(
             new ClosedPlace(2, 0.2, 0),

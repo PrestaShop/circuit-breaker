@@ -35,10 +35,10 @@ interface SystemInterface
     /**
      * @return PlaceInterface[] the list of places of the system
      */
-    public function getPlaces();
+    public function getPlaces(): array;
 
     /**
      * @return PlaceInterface the initial place of the system
      */
-    public function getInitialPlace();
+    public function getInitialPlace(): PlaceInterface;
 }

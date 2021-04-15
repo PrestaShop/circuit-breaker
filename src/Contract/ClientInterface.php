@@ -38,5 +38,5 @@ interface ClientInterface
      *
      * @return string
      */
-    public function request($resource, array $options);
+    public function request(string $resource, array $options): string;
 }

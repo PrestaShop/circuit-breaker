@@ -23,16 +23,16 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace Tests\PrestaShop\CircuitBreaker;
 
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Message\Request;
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Stream\Stream;
-use GuzzleHttp\Subscriber\Mock;
-use PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount;
-use PHPUnit_Framework_MockObject_MockObject;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Utils;
+use GuzzleHttp\Handler\MockHandler;
+use PHPUnit\Framework\MockObject\Rule\AnyInvokedCount;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
 use PrestaShop\CircuitBreaker\Client\GuzzleClient;
 use PrestaShop\CircuitBreaker\Contract\TransitionDispatcherInterface;
@@ -50,7 +50,7 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
     /**
      * Used to track the dispatched events.
      *
-     * @var PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount
+     * @var AnyInvokedCount
      */
     private $spy;
 
@@ -58,7 +58,7 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
      * We should see the circuit breaker initialized,
      * a call being done and then the circuit breaker closed.
      */
-    public function testCircuitBreakerEventsOnFirstFailedCall()
+    public function testCircuitBreakerEventsOnFirstFailedCall(): void
     {
         $circuitBreaker = $this->createCircuitBreaker();
 
@@ -75,15 +75,16 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
          * the 2 failed trials are done
          * then the conditions are met to open the circuit breaker
          */
-        $invocations = $this->spy->getInvocations();
+        $invocations = self::invocations($this->spy);
+
         $this->assertCount(4, $invocations);
-        $this->assertSame('INITIATING', $invocations[0]->parameters[0]);
-        $this->assertSame('TRIAL', $invocations[1]->parameters[0]);
-        $this->assertSame('TRIAL', $invocations[2]->parameters[0]);
-        $this->assertSame('OPENING', $invocations[3]->parameters[0]);
+        $this->assertSame('INITIATING', $invocations[0]->getParameters()[0]);
+        $this->assertSame('TRIAL', $invocations[1]->getParameters()[0]);
+        $this->assertSame('TRIAL', $invocations[2]->getParameters()[0]);
+        $this->assertSame('OPENING', $invocations[3]->getParameters()[0]);
     }
 
-    public function testSimpleCall()
+    public function testSimpleCall(): void
     {
         $system = new MainSystem(
             new ClosedPlace(2, 0.2, 0),
@@ -91,10 +92,10 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
             new OpenPlace(0, 0, 1)
         );
         $symfonyCache = new SymfonyCache(new ArrayCache());
-        $mock = new Mock([
-            new Response(200, [], Stream::factory('{"hello": "world"}')),
+        $mock = new MockHandler([
+            new Response(200, [], Utils::streamFor('{"hello": "world"}')),
         ]);
-        $client = new GuzzleClient(['mock' => $mock]);
+        $client = new GuzzleClient(['handler' => $mock]);
 
         $circuitBreaker = new AdvancedCircuitBreaker(
             $system,
@@ -111,7 +112,7 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
         $this->assertEquals('{"hello": "world"}', $response);
     }
 
-    public function testOpenStateAfterTooManyFailures()
+    public function testOpenStateAfterTooManyFailures(): void
     {
         $system = new MainSystem(
             new ClosedPlace(2, 0.2, 0),
@@ -119,11 +120,11 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
             new OpenPlace(0, 0, 1)
         );
         $symfonyCache = new SymfonyCache(new ArrayCache());
-        $mock = new Mock([
+        $mock = new MockHandler([
             new RequestException('Service unavailable', new Request('GET', 'test')),
             new RequestException('Service unavailable', new Request('GET', 'test')),
         ]);
-        $client = new GuzzleClient(['mock' => $mock]);
+        $client = new GuzzleClient(['handler' => $mock]);
 
         $circuitBreaker = new AdvancedCircuitBreaker(
             $system,
@@ -132,9 +133,8 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
             new NullDispatcher()
         );
 
-        $response = $circuitBreaker->call('anything', [], function () {
-            return false;
-        });
+        $response = $circuitBreaker->call('anything');
+
         $this->assertEquals(0, $mock->count());
         $this->assertEquals(false, $response);
         $this->assertSame(State::OPEN_STATE, $circuitBreaker->getState());
@@ -148,11 +148,11 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
             new OpenPlace(0, 0, 1)
         );
         $symfonyCache = new SymfonyCache(new ArrayCache());
-        $mock = new Mock([
+        $mock = new MockHandler([
             new RequestException('Service unavailable', new Request('GET', 'test')),
             new RequestException('Service unavailable', new Request('GET', 'test')),
         ]);
-        $client = new GuzzleClient(['mock' => $mock]);
+        $client = new GuzzleClient(['handler' => $mock]);
 
         $circuitBreaker = new AdvancedCircuitBreaker(
             $system,
@@ -167,7 +167,7 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
         $this->assertSame(State::OPEN_STATE, $circuitBreaker->getState());
     }
 
-    public function testBackToClosedStateAfterSuccess()
+    public function testBackToClosedStateAfterSuccess(): void
     {
         $system = new MainSystem(
             new ClosedPlace(2, 0.2, 0),
@@ -175,12 +175,12 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
             new OpenPlace(0, 0, 1)
         );
         $symfonyCache = new SymfonyCache(new ArrayCache());
-        $mock = new Mock([
+        $mock = new MockHandler([
             new RequestException('Service unavailable', new Request('GET', 'test')),
             new RequestException('Service unavailable', new Request('GET', 'test')),
-            new Response(200, [], Stream::factory('{"hello": "world"}')),
+            new Response(200, [], Utils::streamFor('{"hello": "world"}')),
         ]);
-        $client = new GuzzleClient(['mock' => $mock]);
+        $client = new GuzzleClient(['handler' => $mock]);
 
         $circuitBreaker = new AdvancedCircuitBreaker(
             $system,
@@ -214,7 +214,7 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
         $this->assertSame(State::CLOSED_STATE, $circuitBreaker->getState());
     }
 
-    public function testStayInOpenStateAfterFailure()
+    public function testStayInOpenStateAfterFailure(): void
     {
         $system = new MainSystem(
             new ClosedPlace(2, 0.2, 0),
@@ -222,12 +222,12 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
             new OpenPlace(0, 0, 1)
         );
         $symfonyCache = new SymfonyCache(new ArrayCache());
-        $mock = new Mock([
+        $mock = new MockHandler([
             new RequestException('Service unavailable', new Request('GET', 'test')),
             new RequestException('Service unavailable', new Request('GET', 'test')),
             new RequestException('Service unavailable', new Request('GET', 'test')),
         ]);
-        $client = new GuzzleClient(['mock' => $mock]);
+        $client = new GuzzleClient(['handler' => $mock]);
 
         $circuitBreaker = new AdvancedCircuitBreaker(
             $system,
@@ -264,7 +264,7 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
     /**
      * @return AdvancedCircuitBreaker the circuit breaker for testing purposes
      */
-    private function createCircuitBreaker()
+    private function createCircuitBreaker(): AdvancedCircuitBreaker
     {
         $system = new MainSystem(
             new ClosedPlace(2, 0.2, 0),
@@ -273,7 +273,7 @@ class AdvancedCircuitBreakerTest extends CircuitBreakerTestCase
         );
 
         $symfonyCache = new SymfonyCache(new ArrayCache());
-        /** @var PHPUnit_Framework_MockObject_MockObject|TransitionDispatcherInterface $dispatcher */
+        /** @var TransitionDispatcherInterface $dispatcher */
         $dispatcher = $this->createMock(TransitionDispatcherInterface::class);
         $dispatcher->expects($this->spy = $this->any())
             ->method('dispatchTransition')

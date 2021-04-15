@@ -38,5 +38,5 @@ interface TransitionDispatcherInterface
      *
      * @return void
      */
-    public function dispatchTransition($transition, $service, array $serviceParameters);
+    public function dispatchTransition(string $transition, string $service, array $serviceParameters): void;
 }

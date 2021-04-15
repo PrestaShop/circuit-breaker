@@ -43,7 +43,7 @@ class DoctrineCacheTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->doctrineCache = new DoctrineCache(
             new FilesystemCache(sys_get_temp_dir() . '/ps__circuit_breaker')
@@ -53,13 +53,13 @@ class DoctrineCacheTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $filesystemAdapter = new FilesystemCache(sys_get_temp_dir() . '/ps__circuit_breaker');
         $filesystemAdapter->deleteAll();
     }
 
-    public function testCreation()
+    public function testCreation(): void
     {
         $doctrineCache = new DoctrineCache(
             new FilesystemCache(sys_get_temp_dir() . '/ps__circuit_breaker')
@@ -71,7 +71,7 @@ class DoctrineCacheTest extends TestCase
     /**
      * @depends testCreation
      */
-    public function testSaveTransaction()
+    public function testSaveTransaction(): void
     {
         $operation = $this->doctrineCache->saveTransaction(
             'http://test.com',
@@ -85,7 +85,7 @@ class DoctrineCacheTest extends TestCase
      * @depends testCreation
      * @depends testSaveTransaction
      */
-    public function testHasTransaction()
+    public function testHasTransaction(): void
     {
         $this->doctrineCache->saveTransaction('http://test.com', $this->createMock(TransactionInterface::class));
 
@@ -97,7 +97,7 @@ class DoctrineCacheTest extends TestCase
      * @depends testSaveTransaction
      * @depends testHasTransaction
      */
-    public function testGetTransaction()
+    public function testGetTransaction(): void
     {
         $translationStub = $this->createMock(TransactionInterface::class);
         $this->doctrineCache->saveTransaction('http://test.com', $translationStub);
@@ -112,7 +112,7 @@ class DoctrineCacheTest extends TestCase
      * @depends testGetTransaction
      * @depends testHasTransaction
      */
-    public function testGetNotFoundTransactionThrowsAnException()
+    public function testGetNotFoundTransactionThrowsAnException(): void
     {
         $this->expectException(TransactionNotFoundException::class);
 
@@ -123,7 +123,7 @@ class DoctrineCacheTest extends TestCase
      * @depends testSaveTransaction
      * @depends testGetTransaction
      */
-    public function testClear()
+    public function testClear(): void
     {
         $translationStub = $this->createMock(TransactionInterface::class);
         $this->doctrineCache->saveTransaction('http://a.com', $translationStub);

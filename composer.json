@@ -14,10 +14,10 @@
         }
     ],
     "require": {
-        "guzzlehttp/guzzle": "^7.3"
+        "guzzlehttp/guzzle": "^7.3",
+        "prestashop/php-dev-tools": "^4.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.12",
         "phpunit/phpunit": "^9",
         "doctrine/cache": "^1.10.2",
         "symfony/cache": "^4.4",

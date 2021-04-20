@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\PrestaShop\CircuitBreaker\Client;
 
 use PHPUnit\Framework\TestCase;

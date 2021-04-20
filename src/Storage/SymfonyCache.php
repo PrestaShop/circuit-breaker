@@ -97,7 +97,7 @@ final class SymfonyCache implements StorageInterface
      *
      * @return string the transaction unique identifier
      */
-    private function getKey($service): string
+    private function getKey(string $service): string
     {
         return md5($service);
     }

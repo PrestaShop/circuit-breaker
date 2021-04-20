@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,16 +17,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+
+declare(strict_types=1);
 
 namespace Tests\PrestaShop\CircuitBreaker;
 
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Utils;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory;
@@ -43,10 +48,8 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
      * @dataProvider getSettings
      *
      * @param FactorySettingsInterface $settings the Circuit Breaker settings
-     *
-     * @return void
      */
-    public function testCircuitBreakerCreation(FactorySettingsInterface $settings)
+    public function testCircuitBreakerCreation(FactorySettingsInterface $settings): void
     {
         $factory = new AdvancedCircuitBreakerFactory();
         $circuitBreaker = $factory->create($settings);
@@ -54,7 +57,7 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
         $this->assertInstanceOf(AdvancedCircuitBreaker::class, $circuitBreaker);
     }
 
-    public function testCircuitBreakerWithDispatcher()
+    public function testCircuitBreakerWithDispatcher(): void
     {
         $dispatcher = $this->getMockBuilder(TransitionDispatcherInterface::class)
             ->disableOriginalConstructor()
@@ -65,21 +68,19 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
         $expectedParameters = ['toto' => 'titi', 42 => 51];
 
         $dispatcher
-            ->expects($this->at(0))
+            ->expects($this->exactly(3))
             ->method('dispatchTransition')
-            ->with(
-                $this->equalTo(Transition::INITIATING_TRANSITION),
-                $this->equalTo($localeService),
-                $this->equalTo([])
-            )
-        ;
-        $dispatcher
-            ->expects($this->at(1))
-            ->method('dispatchTransition')
-            ->with(
-                $this->equalTo(Transition::TRIAL_TRANSITION),
-                $this->equalTo($localeService),
-                $this->equalTo($expectedParameters)
+            ->withConsecutive(
+                [
+                    $this->equalTo(Transition::INITIATING_TRANSITION),
+                    $this->equalTo($localeService),
+                    $this->equalTo([]),
+                ],
+                [
+                    $this->equalTo(Transition::TRIAL_TRANSITION),
+                    $this->equalTo($localeService),
+                    $this->equalTo($expectedParameters),
+                ]
             )
         ;
 
@@ -89,14 +90,22 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
             ->setStrippedTimeout(0.2)
             ->setDispatcher($dispatcher)
         ;
+
+        $mock = new MockHandler([
+            new Response(200, [], Utils::streamFor('{"hello": "world"}')),
+        ]);
+        $client = new GuzzleClient(['handler' => $mock]);
+        $settings->setClient($client);
+
         $circuitBreaker = $factory->create($settings);
 
         $this->assertInstanceOf(AdvancedCircuitBreaker::class, $circuitBreaker);
         $circuitBreaker->call($localeService, $expectedParameters, function () {
+            return false;
         });
     }
 
-    public function testCircuitBreakerWithStorage()
+    public function testCircuitBreakerWithStorage(): void
     {
         $storage = $this->getMockBuilder(StorageInterface::class)
             ->disableOriginalConstructor()
@@ -114,7 +123,7 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
         $this->assertInstanceOf(AdvancedCircuitBreaker::class, $circuitBreaker);
     }
 
-    public function testCircuitBreakerWithDefaultFallback()
+    public function testCircuitBreakerWithDefaultFallback(): void
     {
         $factory = new AdvancedCircuitBreakerFactory();
         $settings = new FactorySettings(2, 0.1, 10);
@@ -129,10 +138,7 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
         $this->assertEquals('default_fallback', $response);
     }
 
-    /**
-     * @return array
-     */
-    public function getSettings()
+    public function getSettings(): array
     {
         return [
             [

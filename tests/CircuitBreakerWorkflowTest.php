@@ -1,4 +1,30 @@
 <?php
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ */
+
+declare(strict_types=1);
 
 namespace Tests\PrestaShop\CircuitBreaker;
 
@@ -26,7 +52,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -43,7 +69,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
      *
      * @param CircuitBreakerInterface $circuitBreaker
      */
-    public function testCircuitBreakerIsInClosedStateAtStart($circuitBreaker)
+    public function testCircuitBreakerIsInClosedStateAtStart($circuitBreaker): void
     {
         $this->assertSame(State::CLOSED_STATE, $circuitBreaker->getState());
     }
@@ -56,7 +82,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
      *
      * @param CircuitBreakerInterface $circuitBreaker
      */
-    public function testCircuitBreakerWillBeOpenInCaseOfFailures($circuitBreaker)
+    public function testCircuitBreakerWillBeOpenInCaseOfFailures($circuitBreaker): void
     {
         // CLOSED
         $this->assertSame(State::CLOSED_STATE, $circuitBreaker->getState());
@@ -83,7 +109,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
      *
      * @param CircuitBreakerInterface $circuitBreaker
      */
-    public function testCircuitBreakerWillBeOpenWithoutFallback($circuitBreaker)
+    public function testCircuitBreakerWillBeOpenWithoutFallback($circuitBreaker): void
     {
         // CLOSED
         $this->assertSame(State::CLOSED_STATE, $circuitBreaker->getState());
@@ -110,7 +136,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
      *
      * @param CircuitBreakerInterface $circuitBreaker
      */
-    public function testOnceInHalfOpenModeServiceIsFinallyReachable($circuitBreaker)
+    public function testOnceInHalfOpenModeServiceIsFinallyReachable($circuitBreaker): void
     {
         // CLOSED - first call fails (twice)
         $this->assertSame(State::CLOSED_STATE, $circuitBreaker->getState());
@@ -140,7 +166,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
     /**
      * This is not useful for SimpleCircuitBreaker since it has a SimpleArray storage
      */
-    public function testRememberLastTransactionState()
+    public function testRememberLastTransactionState(): void
     {
         $system = new MainSystem(
             new ClosedPlace(1, 0.2, 0),
@@ -183,10 +209,8 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
 
     /**
      * Return the list of supported circuit breakers
-     *
-     * @return array
      */
-    public function getCircuitBreakers()
+    public function getCircuitBreakers(): array
     {
         return [
             'simple' => [$this->createSimpleCircuitBreaker()],
@@ -198,7 +222,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
     /**
      * @return SimpleCircuitBreaker the circuit breaker for testing purposes
      */
-    private function createSimpleCircuitBreaker()
+    private function createSimpleCircuitBreaker(): SimpleCircuitBreaker
     {
         return new SimpleCircuitBreaker(
             new OpenPlace(0, 0, self::OPEN_THRESHOLD), // threshold 1s
@@ -211,7 +235,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
     /**
      * @return AdvancedCircuitBreaker the circuit breaker for testing purposes
      */
-    private function createAdvancedCircuitBreaker()
+    private function createAdvancedCircuitBreaker(): AdvancedCircuitBreaker
     {
         $system = new MainSystem(
             new ClosedPlace(2, 0.2, 0),
@@ -232,7 +256,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
     /**
      * @return SymfonyCircuitBreaker the circuit breaker for testing purposes
      */
-    private function createSymfonyCircuitBreaker()
+    private function createSymfonyCircuitBreaker(): SymfonyCircuitBreaker
     {
         $system = new MainSystem(
             new ClosedPlace(2, 0.2, 0),
@@ -254,7 +278,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
     /**
      * @return callable the fallback callable
      */
-    private function createFallbackResponse()
+    private function createFallbackResponse(): callable
     {
         return function () {
             return '{}';

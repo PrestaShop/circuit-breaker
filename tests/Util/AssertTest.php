@@ -1,4 +1,30 @@
 <?php
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ */
+
+declare(strict_types=1);
 
 namespace Tests\PrestaShop\CircuitBreaker\Util;
 
@@ -12,9 +38,8 @@ class AssertTest extends TestCase
      * @dataProvider getValues
      *
      * @param mixed $value
-     * @param bool $expected
      */
-    public function testIsPositiveValue($value, $expected)
+    public function testIsPositiveValue($value, bool $expected): void
     {
         $this->assertSame($expected, Assert::isPositiveValue($value));
     }
@@ -23,9 +48,8 @@ class AssertTest extends TestCase
      * @dataProvider getURIs
      *
      * @param mixed $value
-     * @param bool $expected
      */
-    public function testIsURI($value, $expected)
+    public function testIsURI($value, bool $expected): void
     {
         $this->assertSame($expected, Assert::isURI($value));
     }
@@ -34,17 +58,13 @@ class AssertTest extends TestCase
      * @dataProvider getStrings
      *
      * @param mixed $value
-     * @param bool $expected
      */
-    public function testIsString($value, $expected)
+    public function testIsString($value, bool $expected): void
     {
         $this->assertSame($expected, Assert::isString($value));
     }
 
-    /**
-     * @return array
-     */
-    public function getValues()
+    public function getValues(): array
     {
         return [
             '0' => [0, true],
@@ -62,10 +82,7 @@ class AssertTest extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function getURIs()
+    public function getURIs(): array
     {
         return [
             'valid' => ['http://www.prestashop.com', true],
@@ -77,7 +94,7 @@ class AssertTest extends TestCase
         ];
     }
 
-    public function getStrings()
+    public function getStrings(): array
     {
         return [
             'valid' => ['foo', true],

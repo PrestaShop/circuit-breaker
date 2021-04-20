@@ -114,11 +114,6 @@ class AdvancedCircuitBreaker extends PartialCircuitBreaker
         return $this->defaultFallback;
     }
 
-    /**
-     * @param callable $defaultFallback|null
-     *
-     * @return AdvancedCircuitBreaker
-     */
     public function setDefaultFallback(?callable $defaultFallback = null): self
     {
         $this->defaultFallback = $defaultFallback;

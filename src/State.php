@@ -37,7 +37,7 @@ final class State
      * Once opened, a circuit breaker doesn't do any call
      * to third-party services. Only the alternative call is done.
      */
-    const OPEN_STATE = 'OPEN';
+    public const OPEN_STATE = 'OPEN';
 
     /**
      * After some conditions are valid, the circuit breaker
@@ -45,12 +45,12 @@ final class State
      * the circuit breaker go to CLOSED state. If it's not, the circuit breaker
      * go to OPEN state.
      */
-    const HALF_OPEN_STATE = 'HALF OPEN';
+    public const HALF_OPEN_STATE = 'HALF OPEN';
 
     /**
      * On the first call of the service, or if the service is valid
      * the circuit breaker is in CLOSED state. This means that the callable
      * to evaluate is done and not the alternative call.
      */
-    const CLOSED_STATE = 'CLOSED';
+    public const CLOSED_STATE = 'CLOSED';
 }

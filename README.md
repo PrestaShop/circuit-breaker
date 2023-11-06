@@ -19,6 +19,29 @@ composer require prestashop/circuit-breaker
 
 ## Use
 
+### Symfony Http Client and Guzzle Client implementations
+
+By default, Circuit Breaker use the Symfony Http Client library, and all the client options are described in the [official documentation](https://symfony.com/doc/current/http_client.html).
+
+For retro-compatibility, we let you use Guzzle Client instead of Symfony Http Client. To use Guzzle, you need to set the Guzzle client with `setClient()` of the settings factory, like this example below:
+
+```php
+use PrestaShop\CircuitBreaker\SimpleCircuitBreakerFactory;
+use PrestaShop\CircuitBreaker\FactorySettings;
+use PrestaShop\CircuitBreaker\Client\GuzzleClient
+
+$circuitBreakerFactory = new SimpleCircuitBreakerFactory();
+$factorySettings = new FactorySettings(2, 0.1, 10);
+$factorySettings->setClient(new GuzzleHttpClient());
+
+$circuitBreaker = $circuitBreakerFactory->create($factorySettings);
+```
+
+Be aware, that the client options depend on the client implementation you choose!
+ 
+> For the Guzzle implementation, the Client options are described
+> in the [HttpGuzzle documentation](http://docs.guzzlephp.org/en/stable/index.html).
+
 ### Simple Circuit Breaker
 
 You can use the factory to create a simple circuit breaker.
@@ -70,9 +93,6 @@ $settings->setClientOptions(['method' => 'POST']);
 $circuitBreaker = $circuitBreakerFactory->create($settings);
 $response = $circuitBreaker->call('https://api.domain.com/create/user', ['body' => ['firstname' => 'John', 'lastname' => 'Doe']]);
 ```
-
-> For the Guzzle implementation, the Client options are described
-> in the [HttpGuzzle documentation](http://docs.guzzlephp.org/en/stable/index.html).
 
 ### Advanced Circuit Breaker
 

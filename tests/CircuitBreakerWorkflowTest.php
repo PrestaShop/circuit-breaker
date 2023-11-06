@@ -47,7 +47,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
 {
-    const OPEN_THRESHOLD = 1;
+    public const OPEN_THRESHOLD = 1;
 
     /**
      * {@inheritdoc}

@@ -43,12 +43,12 @@ class GuzzleClient implements ClientInterface
     /**
      * @var string by default, calls are sent using GET method
      */
-    const DEFAULT_METHOD = 'GET';
+    public const DEFAULT_METHOD = 'GET';
 
     /**
      * Supported HTTP methods
      */
-    const SUPPORTED_METHODS = [
+    public const SUPPORTED_METHODS = [
         'GET',
         'HEAD',
         'POST',

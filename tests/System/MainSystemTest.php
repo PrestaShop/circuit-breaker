@@ -36,6 +36,9 @@ use PrestaShop\CircuitBreaker\Place\OpenPlace;
 use PrestaShop\CircuitBreaker\State;
 use PrestaShop\CircuitBreaker\System\MainSystem;
 
+/**
+ * @group common
+ */
 class MainSystemTest extends TestCase
 {
     public function testCreation(): void

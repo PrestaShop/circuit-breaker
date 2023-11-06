@@ -35,6 +35,9 @@ use PrestaShop\CircuitBreaker\Contract\TransactionInterface;
 use PrestaShop\CircuitBreaker\Exception\TransactionNotFoundException;
 use PrestaShop\CircuitBreaker\Storage\DoctrineCache;
 
+/**
+ * @group common
+ */
 class DoctrineCacheTest extends TestCase
 {
     /**

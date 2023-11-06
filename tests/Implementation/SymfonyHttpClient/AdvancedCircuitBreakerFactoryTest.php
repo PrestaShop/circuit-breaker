@@ -26,24 +26,23 @@
 
 declare(strict_types=1);
 
-namespace Tests\PrestaShop\CircuitBreaker\Implementation\GuzzleClient;
+namespace Tests\PrestaShop\CircuitBreaker\Implementation\SymfonyHttpClient;
 
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Utils;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory;
-use PrestaShop\CircuitBreaker\Client\GuzzleClient;
+use PrestaShop\CircuitBreaker\Client\SymfonyHttpClient;
 use PrestaShop\CircuitBreaker\Contract\FactorySettingsInterface;
 use PrestaShop\CircuitBreaker\Contract\StorageInterface;
 use PrestaShop\CircuitBreaker\Contract\TransitionDispatcherInterface;
 use PrestaShop\CircuitBreaker\FactorySettings;
 use PrestaShop\CircuitBreaker\State;
 use PrestaShop\CircuitBreaker\Transition;
+use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\Response\MockResponse;
 
 /**
- * @group guzzle-client
+ * @group symfony-http-client
  */
 class AdvancedCircuitBreakerFactoryTest extends TestCase
 {
@@ -67,7 +66,7 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
             ->getMock()
         ;
 
-        $localeService = 'file://' . __FILE__;
+        $localeService = 'https://prestashop-projects.org/';
         $expectedParameters = ['toto' => 'titi', 42 => 51];
 
         $dispatcher
@@ -94,10 +93,10 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
             ->setDispatcher($dispatcher)
         ;
 
-        $mock = new MockHandler([
-            new Response(200, [], Utils::streamFor('{"hello": "world"}')),
+        $mock = new MockHttpClient([
+             new MockResponse('{"hello": "world"}', ['http_code' => 200]),
         ]);
-        $client = new GuzzleClient(['handler' => $mock]);
+        $client = new SymfonyHttpClient([], $mock);
         $settings->setClient($client);
 
         $circuitBreaker = $factory->create($settings);
@@ -152,7 +151,7 @@ class AdvancedCircuitBreakerFactoryTest extends TestCase
             [
                 (new FactorySettings(2, 0.1, 10))
                     ->setStrippedTimeout(0.2)
-                    ->setClient(new GuzzleClient(['proxy' => '192.168.16.1:10'])),
+                    ->setClient(new SymfonyHttpClient(['proxy' => '192.168.16.1:10'])),
             ],
         ];
     }

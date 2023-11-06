@@ -31,6 +31,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Helper to share fixtures accross Place tests.
+ *
+ * @group common
  */
 class PlaceTestCase extends TestCase
 {

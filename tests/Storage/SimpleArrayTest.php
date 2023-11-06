@@ -33,6 +33,9 @@ use PrestaShop\CircuitBreaker\Contract\TransactionInterface;
 use PrestaShop\CircuitBreaker\Exception\TransactionNotFoundException;
 use PrestaShop\CircuitBreaker\Storage\SimpleArray;
 
+/**
+ * @group common
+ */
 class SimpleArrayTest extends TestCase
 {
     /**

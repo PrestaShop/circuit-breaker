@@ -31,6 +31,9 @@ namespace Tests\PrestaShop\CircuitBreaker\Exception;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\Exception\InvalidPlaceException;
 
+/**
+ * @group common
+ */
 class InvalidPlaceTest extends TestCase
 {
     public function testCreation()

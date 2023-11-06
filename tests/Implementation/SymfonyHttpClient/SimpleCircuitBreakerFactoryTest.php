@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\PrestaShop\CircuitBreaker\Implementation\GuzzleClient;
+namespace Tests\PrestaShop\CircuitBreaker\Implementation\SymfonyHttpClient;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\Contract\FactorySettingsInterface;
@@ -35,7 +35,7 @@ use PrestaShop\CircuitBreaker\SimpleCircuitBreaker;
 use PrestaShop\CircuitBreaker\SimpleCircuitBreakerFactory;
 
 /**
- * @group guzzle-client
+ * @group symfony-http-client
  */
 class SimpleCircuitBreakerFactoryTest extends TestCase
 {

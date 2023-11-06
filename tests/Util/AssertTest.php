@@ -32,6 +32,9 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\Util\Assert;
 use stdClass;
 
+/**
+ * @group common
+ */
 class AssertTest extends TestCase
 {
     /**

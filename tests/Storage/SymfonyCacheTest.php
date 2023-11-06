@@ -34,6 +34,9 @@ use PrestaShop\CircuitBreaker\Exception\TransactionNotFoundException;
 use PrestaShop\CircuitBreaker\Storage\SymfonyCache;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 
+/**
+ * @group common
+ */
 class SymfonyCacheTest extends TestCase
 {
     /**

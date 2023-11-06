@@ -32,6 +32,9 @@ use PrestaShop\CircuitBreaker\Exception\InvalidPlaceException;
 use PrestaShop\CircuitBreaker\Place\OpenPlace;
 use PrestaShop\CircuitBreaker\State;
 
+/**
+ * @group common
+ */
 class OpenPlaceTest extends PlaceTestCase
 {
     /**

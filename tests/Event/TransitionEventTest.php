@@ -31,6 +31,9 @@ namespace Tests\PrestaShop\CircuitBreaker\Event;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\Event\TransitionEvent;
 
+/**
+ * @group common
+ */
 class TransitionEventTest extends TestCase
 {
     public function testCreation()

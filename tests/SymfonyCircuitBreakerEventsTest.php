@@ -37,7 +37,11 @@ use PrestaShop\CircuitBreaker\SymfonyCircuitBreaker;
 use PrestaShop\CircuitBreaker\System\MainSystem;
 use Symfony\Component\Cache\Simple\ArrayCache;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Tests\PrestaShop\CircuitBreaker\Implementation\SymfonyHttpClient\CircuitBreakerTestCase;
 
+/**
+ * @group common
+ */
 class SymfonyCircuitBreakerEventsTest extends CircuitBreakerTestCase
 {
     /**

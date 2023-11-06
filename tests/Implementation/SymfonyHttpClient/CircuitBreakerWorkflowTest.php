@@ -26,10 +26,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\PrestaShop\CircuitBreaker\Implementation\GuzzleClient;
+namespace Tests\PrestaShop\CircuitBreaker\Implementation\SymfonyHttpClient;
 
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreaker;
-use PrestaShop\CircuitBreaker\Client\GuzzleClient;
+use PrestaShop\CircuitBreaker\Client\SymfonyHttpClient;
 use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
 use PrestaShop\CircuitBreaker\Exception\UnavailableServiceException;
 use PrestaShop\CircuitBreaker\Place\ClosedPlace;
@@ -46,7 +46,7 @@ use Symfony\Component\Cache\Simple\ArrayCache;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
- * @group guzzle-client
+ * @group symfony-http-client
  */
 class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
 {
@@ -177,7 +177,7 @@ class CircuitBreakerWorkflowTest extends CircuitBreakerTestCase
             new OpenPlace(0, 0, 1)
         );
         $storage = new SymfonyCache(new ArrayCache());
-        $client = $this->createMock(GuzzleClient::class);
+        $client = $this->createMock(SymfonyHttpClient::class);
         $client
             ->expects($this->once())
             ->method('request')

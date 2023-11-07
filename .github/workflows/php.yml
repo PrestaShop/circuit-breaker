@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['7.2', '7.3', '7.4', '8.0']
+        php-versions: ['7.2', '7.3', '7.4', '8.0', '8.1', '8.2']
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -35,7 +35,7 @@ jobs:
         run: ./vendor/bin/phpunit --coverage-clover build/clover.xml
 
       - name: PHP CS Fixer
-        run: ./vendor/bin/php-cs-fixer fix --dry-run
+        run: PHP_CS_FIXER_IGNORE_ENV=1 ./vendor/bin/php-cs-fixer fix --dry-run
 
       - name: Upload coverage results to Coveralls
         if: matrix.php-versions == '7.4'

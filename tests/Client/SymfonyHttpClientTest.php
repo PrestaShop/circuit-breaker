@@ -28,20 +28,20 @@ declare(strict_types=1);
 
 namespace Tests\PrestaShop\CircuitBreaker\Client;
 
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\CircuitBreaker\Client\GuzzleClient;
+use PrestaShop\CircuitBreaker\Client\SymfonyHttpClient;
 use PrestaShop\CircuitBreaker\Exception\UnavailableServiceException;
+use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\Response\MockResponse;
 
 /**
  * @group common
  */
-class GuzzleClientTest extends TestCase
+class SymfonyHttpClientTest extends TestCase
 {
     public function testRequestWorksAsExpected()
     {
-        $client = new GuzzleClient();
+        $client = new SymfonyHttpClient();
 
         $this->assertNotNull($client->request('https://www.google.com', [
             'method' => 'GET',
@@ -52,13 +52,13 @@ class GuzzleClientTest extends TestCase
     {
         $this->expectException(UnavailableServiceException::class);
 
-        $client = new GuzzleClient();
+        $client = new SymfonyHttpClient();
         $client->request('http://not-even-a-valid-domain.xxx', []);
     }
 
     public function testTheClientAcceptsHttpMethodOverride()
     {
-        $client = new GuzzleClient([
+        $client = new SymfonyHttpClient([
             'method' => 'HEAD',
         ]);
 
@@ -77,14 +77,13 @@ class GuzzleClientTest extends TestCase
             $this->expectNotToPerformAssertions();
         }
 
-        $mock = new MockHandler([
-            new Response(200),
+        $mock = new MockHttpClient([
+            new MockResponse('', ['http_code' => 200]),
         ]);
 
-        $client = new GuzzleClient([
+        $client = new SymfonyHttpClient([
             'method' => $method,
-            'handler' => $mock,
-        ]);
+        ], $mock);
         $client->request('https://www.google.fr', []);
     }
 

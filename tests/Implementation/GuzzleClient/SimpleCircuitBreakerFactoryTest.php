@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\PrestaShop\CircuitBreaker;
+namespace Tests\PrestaShop\CircuitBreaker\Implementation\GuzzleClient;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\Contract\FactorySettingsInterface;
@@ -34,6 +34,9 @@ use PrestaShop\CircuitBreaker\FactorySettings;
 use PrestaShop\CircuitBreaker\SimpleCircuitBreaker;
 use PrestaShop\CircuitBreaker\SimpleCircuitBreakerFactory;
 
+/**
+ * @group guzzle-client
+ */
 class SimpleCircuitBreakerFactoryTest extends TestCase
 {
     public function testCreation(): void

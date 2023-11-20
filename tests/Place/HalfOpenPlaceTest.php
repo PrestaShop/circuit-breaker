@@ -32,6 +32,9 @@ use PrestaShop\CircuitBreaker\Exception\InvalidPlaceException;
 use PrestaShop\CircuitBreaker\Place\HalfOpenPlace;
 use PrestaShop\CircuitBreaker\State;
 
+/**
+ * @group common
+ */
 class HalfOpenPlaceTest extends PlaceTestCase
 {
     /**

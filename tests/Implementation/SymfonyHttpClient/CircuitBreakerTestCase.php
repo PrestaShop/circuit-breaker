@@ -25,21 +25,18 @@
  */
 declare(strict_types=1);
 
-namespace Tests\PrestaShop\CircuitBreaker;
+namespace Tests\PrestaShop\CircuitBreaker\Implementation\SymfonyHttpClient;
 
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Utils;
 use PHPUnit\Framework\MockObject\Rule\AnyInvokedCount;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\CircuitBreaker\Client\GuzzleClient;
+use PrestaShop\CircuitBreaker\Client\SymfonyHttpClient;
 use ReflectionClass;
 use ReflectionException;
+use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\Response\MockResponse;
 
 /**
- * Helper to get a fake Guzzle client.
+ * Helper to get a fake Symfony Http Client.
  */
 abstract class CircuitBreakerTestCase extends TestCase
 {
@@ -47,15 +44,15 @@ abstract class CircuitBreakerTestCase extends TestCase
      * Returns an instance of Client able to emulate
      * available and not available services.
      */
-    protected function getTestClient(): GuzzleClient
+    protected function getTestClient(): SymfonyHttpClient
     {
-        $mock = new MockHandler([
-            new RequestException('Service unavailable', new Request('GET', 'test')),
-            new RequestException('Service unavailable', new Request('GET', 'test')),
-            new Response(200, [], Utils::streamFor('{"hello": "world"}')),
+        $mock = new MockHttpClient([
+            new MockResponse('', ['http_code' => 503]),
+            new MockResponse('', ['http_code' => 503]),
+            new MockResponse('{"hello": "world"}', ['http_code' => 200]),
         ]);
 
-        return new GuzzleClient(['handler' => $mock]);
+        return new SymfonyHttpClient([], $mock);
     }
 
     /**

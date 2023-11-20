@@ -34,6 +34,9 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\Contract\PlaceInterface;
 use PrestaShop\CircuitBreaker\Transaction\SimpleTransaction;
 
+/**
+ * @group common
+ */
 class SimpleTransactionTest extends TestCase
 {
     public function testCreation(): void

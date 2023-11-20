@@ -31,6 +31,9 @@ namespace Tests\PrestaShop\CircuitBreaker;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\FactorySettings;
 
+/**
+ * @group common
+ */
 class FactorySettingsTest extends TestCase
 {
     public function testSimpleSettings()

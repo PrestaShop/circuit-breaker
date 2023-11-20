@@ -31,6 +31,9 @@ namespace Tests\PrestaShop\CircuitBreaker\Exception;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\Exception\InvalidTransactionException;
 
+/**
+ * @group common
+ */
 class InvalidTransactionTest extends TestCase
 {
     public function testCreation(): void

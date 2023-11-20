@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\CircuitBreaker;
 
-use PrestaShop\CircuitBreaker\Client\GuzzleClient;
+use PrestaShop\CircuitBreaker\Client\SymfonyHttpClient;
 use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
 use PrestaShop\CircuitBreaker\Contract\ClientInterface;
 use PrestaShop\CircuitBreaker\Contract\FactoryInterface;
@@ -53,7 +53,7 @@ final class SimpleCircuitBreakerFactory implements FactoryInterface
         $halfOpenPlace = new HalfOpenPlace($settings->getFailures(), $settings->getStrippedTimeout(), 0);
 
         /** @var ClientInterface $client */
-        $client = $settings->getClient() ?: new GuzzleClient($settings->getClientOptions());
+        $client = $settings->getClient() ?: new SymfonyHttpClient($settings->getClientOptions());
 
         return new SimpleCircuitBreaker(
             $openPlace,

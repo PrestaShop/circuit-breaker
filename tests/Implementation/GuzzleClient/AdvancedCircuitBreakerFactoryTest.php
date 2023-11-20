@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\PrestaShop\CircuitBreaker;
+namespace Tests\PrestaShop\CircuitBreaker\Implementation\GuzzleClient;
 
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
@@ -42,6 +42,9 @@ use PrestaShop\CircuitBreaker\FactorySettings;
 use PrestaShop\CircuitBreaker\State;
 use PrestaShop\CircuitBreaker\Transition;
 
+/**
+ * @group guzzle-client
+ */
 class AdvancedCircuitBreakerFactoryTest extends TestCase
 {
     /**

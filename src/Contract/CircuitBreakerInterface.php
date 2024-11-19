@@ -45,7 +45,7 @@ interface CircuitBreakerInterface
      * @param array $parameters the parameters for the request
      * @param callable|null $fallback if the service is unavailable, rely on the fallback
      */
-    public function call(string $service, array $parameters = [], callable $fallback = null): string;
+    public function call(string $service, array $parameters = [], ?callable $fallback = null): string;
 
     /**
      * @return bool checks if the circuit breaker is open

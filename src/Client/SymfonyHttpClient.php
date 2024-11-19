@@ -69,7 +69,7 @@ class SymfonyHttpClient implements ClientInterface
      */
     private $client;
 
-    public function __construct(array $defaultOptions = [], HttpClientInterface $client = null)
+    public function __construct(array $defaultOptions = [], ?HttpClientInterface $client = null)
     {
         $this->defaultOptions = $defaultOptions;
         $this->client = $client;

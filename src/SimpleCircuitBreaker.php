@@ -56,7 +56,7 @@ final class SimpleCircuitBreaker extends PartialCircuitBreaker
     public function call(
         string $service,
         array $serviceParameters = [],
-        callable $fallback = null
+        ?callable $fallback = null
     ): string {
         $transaction = $this->initTransaction($service);
         try {

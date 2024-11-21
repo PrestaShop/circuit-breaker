@@ -1,8 +1,8 @@
 {
     "name": "prestashop/circuit-breaker",
     "description": "A circuit breaker implementation for PHP",
-    "type": "library",
     "license": "MIT",
+    "type": "library",
     "authors": [
         {
             "name": "PrestaShop SA",
@@ -14,23 +14,24 @@
         }
     ],
     "require": {
-        "php": ">=7.2.5",
-        "symfony/http-client": "^5.4"
+        "php": ">=7.4",
+        "ergebnis/composer-normalize": "^2.44",
+        "symfony/http-client": "^5.4 || ^6"
     },
     "require-dev": {
+        "doctrine/cache": "^1.10.2",
         "guzzlehttp/guzzle": "^7.3",
         "phpunit/phpunit": "^8",
-        "doctrine/cache": "^1.10.2",
-        "symfony/cache": "^4.4",
-        "symfony/event-dispatcher": "^4.4",
+        "prestashop/php-dev-tools": "^4.1",
         "psr/simple-cache": "^1.0",
-        "prestashop/php-dev-tools": "^4.1"
+        "symfony/cache": "^4.4",
+        "symfony/event-dispatcher": "^4.4"
     },
     "suggest": {
-        "symfony/cache": "Allows use of Symfony Cache adapters to store transactions",
-        "doctrine/cache": "Allows use of Doctrine Cache adapters to store transactions",
         "ext-apcu": "Allows use of APCu adapter (performant) to store transactions",
-        "guzzlehttp/guzzle": "Allows use of Guzzle to perform HTTP requests instead of Symfony HttpClient"
+        "doctrine/cache": "Allows use of Doctrine Cache adapters to store transactions",
+        "guzzlehttp/guzzle": "Allows use of Guzzle to perform HTTP requests instead of Symfony HttpClient",
+        "symfony/cache": "Allows use of Symfony Cache adapters to store transactions"
     },
     "autoload": {
         "psr-4": {
@@ -40,6 +41,11 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\PrestaShop\\CircuitBreaker\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true
         }
     },
     "scripts": {

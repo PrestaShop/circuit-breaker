@@ -14,8 +14,7 @@
         }
     ],
     "require": {
-        "php": ">=7.4",
-        "ergebnis/composer-normalize": "^2.44",
+        "php": ">=7.2.34",
         "symfony/http-client": "^5.4 || ^6"
     },
     "require-dev": {
@@ -44,9 +43,6 @@
         }
     },
     "config": {
-        "allow-plugins": {
-            "ergebnis/composer-normalize": true
-        }
     },
     "scripts": {
         "cs-fix": "@php ./vendor/bin/php-cs-fixer fix",

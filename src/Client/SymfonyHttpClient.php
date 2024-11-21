@@ -29,16 +29,18 @@ declare(strict_types=1);
 namespace PrestaShop\CircuitBreaker\Client;
 
 use Exception;
-use GuzzleHttp\Client as OriginalGuzzleClient;
 use PrestaShop\CircuitBreaker\Contract\ClientInterface;
 use PrestaShop\CircuitBreaker\Exception\UnavailableServiceException;
 use PrestaShop\CircuitBreaker\Exception\UnsupportedMethodException;
+use Symfony\Component\HttpClient\HttpClient as OriginalSymfonyHttpClient;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
- * Guzzle implementation of client.
+ * Symfony Http Client implementation.
  * The possibility of extending this client is intended.
  */
-class GuzzleClient implements ClientInterface
+class SymfonyHttpClient implements ClientInterface
 {
     /**
      * @var string by default, calls are sent using GET method
@@ -62,9 +64,15 @@ class GuzzleClient implements ClientInterface
      */
     private $defaultOptions;
 
-    public function __construct(array $defaultOptions = [])
+    /**
+     * @var HttpClientInterface|null
+     */
+    private $client;
+
+    public function __construct(array $defaultOptions = [], ?HttpClientInterface $client = null)
     {
         $this->defaultOptions = $defaultOptions;
+        $this->client = $client;
     }
 
     /**
@@ -76,12 +84,16 @@ class GuzzleClient implements ClientInterface
     {
         try {
             $options = array_merge($this->defaultOptions, $options);
-            $client = new OriginalGuzzleClient($options);
             $method = $this->getHttpMethod($options);
-            $options['exceptions'] = true;
+            // Symfony Http Client not support "method" passed in options array.
+            unset($options['method']);
+            // If we haven't already injected a client, we create a new one.
+            if (!$this->client) {
+                $this->client = OriginalSymfonyHttpClient::create($options);
+            }
 
-            return (string) $client->request($method, $resource, $options)->getBody();
-        } catch (Exception $e) {
+            return (string) $this->client->request($method, $resource, $options)->getContent();
+        } catch (Exception|TransportExceptionInterface $e) {
             throw new UnavailableServiceException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }

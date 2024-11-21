@@ -1,8 +1,8 @@
 {
     "name": "prestashop/circuit-breaker",
     "description": "A circuit breaker implementation for PHP",
-    "type": "library",
     "license": "MIT",
+    "type": "library",
     "authors": [
         {
             "name": "PrestaShop SA",
@@ -14,23 +14,24 @@
         }
     ],
     "require": {
-        "php": ">=5.6",
-        "guzzlehttp/guzzle": "^5"
+        "php": ">=7.4",
+        "ergebnis/composer-normalize": "^2.44",
+        "symfony/http-client": "^5.4 || ^6"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.12",
-        "phpunit/phpunit": "^5.7.0",
-        "doctrine/cache": "^1.6.0",
-        "symfony/cache": "^3.4.0",
-        "symfony/event-dispatcher": "^3.4",
-        "vimeo/psalm": "^1.1",
-        "squizlabs/php_codesniffer": "3.*"
+        "doctrine/cache": "^1.10.2",
+        "guzzlehttp/guzzle": "^7.3",
+        "phpunit/phpunit": "^8",
+        "prestashop/php-dev-tools": "^4.1",
+        "psr/simple-cache": "^1.0",
+        "symfony/cache": "^4.4",
+        "symfony/event-dispatcher": "^4.4"
     },
     "suggest": {
-        "symfony/cache": "Allows use of Symfony Cache adapters to store transactions",
-        "doctrine/cache": "Allows use of Doctrine Cache adapters to store transactions",
         "ext-apcu": "Allows use of APCu adapter (performant) to store transactions",
-        "guzzlehttp/cache-subscriber": "Allow use of Guzzle cache (use dev-master for most recent changes)"
+        "doctrine/cache": "Allows use of Doctrine Cache adapters to store transactions",
+        "guzzlehttp/guzzle": "Allows use of Guzzle to perform HTTP requests instead of Symfony HttpClient",
+        "symfony/cache": "Allows use of Symfony Cache adapters to store transactions"
     },
     "autoload": {
         "psr-4": {
@@ -42,25 +43,23 @@
             "Tests\\PrestaShop\\CircuitBreaker\\": "tests/"
         }
     },
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true
+        }
+    },
     "scripts": {
-        "psalm": [
-            "@php ./vendor/bin/psalm --init",
-            "@php ./vendor/bin/psalm --find-dead-code --threads=8 --diff"
-        ],
-        "phpcs": "@php ./vendor/bin/phpcs -p --standard=PSR2  --ignore=\"vendor/*\" \"./\" --extensions=php",
-        "phpcbf": "@php ./vendor/bin/phpcbf -p --standard=PSR2  --ignore=\"vendor/*\" \"./\" --extensions=php",
         "cs-fix": "@php ./vendor/bin/php-cs-fixer fix",
-        "test": "@php ./vendor/bin/phpunit"
+        "test": "@php ./vendor/bin/phpunit",
+        "test-common": "@php ./vendor/bin/phpunit --group=common",
+        "test-guzzle-client": "@php ./vendor/bin/phpunit --group=guzzle-client",
+        "test-symfony-http-client": "@php ./vendor/bin/phpunit --group=symfony-http-client"
     },
     "scripts-descriptions": {
-        "psalm": "Execute Psalm on PHP7.0+, you need to install it",
         "cs-fix": "Check and fix coding styles using PHP CS Fixer",
-        "test": "Launch PHPUnit test suite"
-    },
-    "config": {
-        "sort-packages": true,
-        "platform": {
-            "php": "5.6"
-        }
+        "tests": "Launch PHPUnit test suite",
+        "tests-common": "Launch PHPUnit test suite for commons",
+        "tests-guzzle": "Launch PHPUnit test suite for Guzzle",
+        "tests-symfony-http-client": "Launch PHPUnit test suite for Symfony Http Client"
     }
 }

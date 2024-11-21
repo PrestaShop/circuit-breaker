@@ -1,23 +1,45 @@
 <?php
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ */
+
+declare(strict_types=1);
 
 namespace PrestaShop\CircuitBreaker;
 
-use PrestaShop\CircuitBreaker\Transaction\SimpleTransaction;
+use DateTime;
+use PrestaShop\CircuitBreaker\Client\GuzzleClient;
 use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
-use PrestaShop\CircuitBreaker\Contract\TransactionInterface;
-use PrestaShop\CircuitBreaker\Contract\StorageInterface;
-use PrestaShop\CircuitBreaker\Contract\SystemInterface;
 use PrestaShop\CircuitBreaker\Contract\ClientInterface;
 use PrestaShop\CircuitBreaker\Contract\PlaceInterface;
-use DateTime;
+use PrestaShop\CircuitBreaker\Contract\StorageInterface;
+use PrestaShop\CircuitBreaker\Contract\SystemInterface;
+use PrestaShop\CircuitBreaker\Contract\TransactionInterface;
+use PrestaShop\CircuitBreaker\Transaction\SimpleTransaction;
 
 abstract class PartialCircuitBreaker implements CircuitBreakerInterface
 {
-    /**
-     * @param SystemInterface $system
-     * @param ClientInterface $client
-     * @param StorageInterface $storage
-     */
     public function __construct(
         SystemInterface $system,
         ClientInterface $client,
@@ -52,12 +74,12 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
     /**
      * {@inheritdoc}
      */
-    abstract public function call($service, array $serviceParameters = [], callable $fallback = null);
+    abstract public function call(string $service, array $serviceParameters = [], ?callable $fallback = null): string;
 
     /**
      * {@inheritdoc}
      */
-    public function getState()
+    public function getState(): string
     {
         return $this->currentPlace->getState();
     }
@@ -65,7 +87,7 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
     /**
      * {@inheritdoc}
      */
-    public function isOpened()
+    public function isOpened(): bool
     {
         return State::OPEN_STATE === $this->currentPlace->getState();
     }
@@ -73,7 +95,7 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
     /**
      * {@inheritdoc}
      */
-    public function isHalfOpened()
+    public function isHalfOpened(): bool
     {
         return State::HALF_OPEN_STATE === $this->currentPlace->getState();
     }
@@ -81,32 +103,25 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
     /**
      * {@inheritdoc}
      */
-    public function isClosed()
+    public function isClosed(): bool
     {
         return State::CLOSED_STATE === $this->currentPlace->getState();
     }
 
-    /**
-     * @param callable|null $fallback
-     *
-     * @return string
-     */
-    protected function callFallback(callable $fallback = null)
+    protected function callFallback(?callable $fallback = null): string
     {
         if (null === $fallback) {
             return '';
         }
 
-        return call_user_func($fallback);
+        return (string) call_user_func($fallback);
     }
 
     /**
      * @param string $state the Place state
      * @param string $service the service URI
-     *
-     * @return bool
      */
-    protected function moveStateTo($state, $service)
+    protected function moveStateTo(string $state, string $service): bool
     {
         $this->currentPlace = $this->places[$state];
         $transaction = SimpleTransaction::createFromPlace(
@@ -119,10 +134,8 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
 
     /**
      * @param string $service the service URI
-     *
-     * @return TransactionInterface
      */
-    protected function initTransaction($service)
+    protected function initTransaction(string $service): TransactionInterface
     {
         if ($this->storage->hasTransaction($service)) {
             $transaction = $this->storage->getTransaction($service);
@@ -144,20 +157,16 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
 
     /**
      * @param TransactionInterface $transaction the Transaction
-     *
-     * @return bool
      */
-    protected function isAllowedToRetry(TransactionInterface $transaction)
+    protected function isAllowedToRetry(TransactionInterface $transaction): bool
     {
         return $transaction->getFailures() < $this->currentPlace->getFailures();
     }
 
     /**
      * @param TransactionInterface $transaction the Transaction
-     *
-     * @return bool
      */
-    protected function canAccessService(TransactionInterface $transaction)
+    protected function canAccessService(TransactionInterface $transaction): bool
     {
         return $transaction->getThresholdDateTime() < new DateTime();
     }
@@ -167,17 +176,18 @@ abstract class PartialCircuitBreaker implements CircuitBreakerInterface
      *
      * @param string $service the service URI
      * @param array $parameters the service URI parameters
-     *
-     * @return string
      */
-    protected function request($service, array $parameters = [])
+    protected function request(string $service, array $parameters = []): string
     {
+        $forcedParameters = ['timeout' => $this->currentPlace->getTimeout()];
+
+        if ($this->client instanceof GuzzleClient) {
+            $forcedParameters['connect_timeout'] = $this->currentPlace->getTimeout();
+        }
+
         return $this->client->request(
             $service,
-            array_merge($parameters, [
-                'connect_timeout' => $this->currentPlace->getTimeout(),
-                'timeout' => $this->currentPlace->getTimeout(),
-            ])
+            array_merge($parameters, $forcedParameters)
         );
     }
 }

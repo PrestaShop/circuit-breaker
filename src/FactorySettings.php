@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,13 +17,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+
+declare(strict_types=1);
 
 namespace PrestaShop\CircuitBreaker;
 
@@ -67,15 +69,10 @@ class FactorySettings implements FactorySettingsInterface
     /** @var callable|null */
     private $defaultFallback;
 
-    /**
-     * @param int $failures
-     * @param float $timeout
-     * @param int $threshold
-     */
     public function __construct(
-        $failures,
-        $timeout,
-        $threshold
+        int $failures,
+        float $timeout,
+        int $threshold
     ) {
         $this->failures = $this->strippedFailures = $failures;
         $this->timeout = $this->strippedTimeout = $timeout;
@@ -85,7 +82,7 @@ class FactorySettings implements FactorySettingsInterface
     /**
      * {@inheritdoc}
      */
-    public static function merge(FactorySettingsInterface $settingsA, FactorySettingsInterface $settingsB)
+    public static function merge(FactorySettingsInterface $settingsA, FactorySettingsInterface $settingsB): FactorySettingsInterface
     {
         $mergedSettings = new FactorySettings(
             $settingsB->getFailures(),
@@ -114,17 +111,12 @@ class FactorySettings implements FactorySettingsInterface
     /**
      * {@inheritdoc}
      */
-    public function getFailures()
+    public function getFailures(): int
     {
         return $this->failures;
     }
 
-    /**
-     * @param int $failures
-     *
-     * @return FactorySettings
-     */
-    public function setFailures($failures)
+    public function setFailures(int $failures): self
     {
         $this->failures = $failures;
 
@@ -134,17 +126,12 @@ class FactorySettings implements FactorySettingsInterface
     /**
      * {@inheritdoc}
      */
-    public function getTimeout()
+    public function getTimeout(): float
     {
         return $this->timeout;
     }
 
-    /**
-     * @param float $timeout
-     *
-     * @return FactorySettings
-     */
-    public function setTimeout($timeout)
+    public function setTimeout(float $timeout): self
     {
         $this->timeout = $timeout;
 
@@ -154,17 +141,12 @@ class FactorySettings implements FactorySettingsInterface
     /**
      * {@inheritdoc}
      */
-    public function getThreshold()
+    public function getThreshold(): int
     {
         return $this->threshold;
     }
 
-    /**
-     * @param int $threshold
-     *
-     * @return FactorySettings
-     */
-    public function setThreshold($threshold)
+    public function setThreshold(int $threshold): self
     {
         $this->threshold = $threshold;
 
@@ -174,37 +156,24 @@ class FactorySettings implements FactorySettingsInterface
     /**
      * {@inheritdoc}
      */
-    public function getStrippedTimeout()
+    public function getStrippedTimeout(): float
     {
         return $this->strippedTimeout;
     }
 
-    /**
-     * @param float $strippedTimeout
-     *
-     * @return FactorySettings
-     */
-    public function setStrippedTimeout($strippedTimeout)
+    public function setStrippedTimeout(float $strippedTimeout): self
     {
         $this->strippedTimeout = $strippedTimeout;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getStrippedFailures()
+    public function getStrippedFailures(): int
     {
         return $this->strippedFailures;
     }
 
-    /**
-     * @param int $strippedFailures
-     *
-     * @return FactorySettings
-     */
-    public function setStrippedFailures($strippedFailures)
+    public function setStrippedFailures(int $strippedFailures): self
     {
         $this->strippedFailures = $strippedFailures;
 
@@ -214,17 +183,12 @@ class FactorySettings implements FactorySettingsInterface
     /**
      * {@inheritdoc}
      */
-    public function getStorage()
+    public function getStorage(): ?StorageInterface
     {
         return $this->storage;
     }
 
-    /**
-     * @param StorageInterface $storage
-     *
-     * @return FactorySettings
-     */
-    public function setStorage(StorageInterface $storage)
+    public function setStorage(StorageInterface $storage): self
     {
         $this->storage = $storage;
 
@@ -234,17 +198,12 @@ class FactorySettings implements FactorySettingsInterface
     /**
      * {@inheritdoc}
      */
-    public function getDispatcher()
+    public function getDispatcher(): ?TransitionDispatcherInterface
     {
         return $this->dispatcher;
     }
 
-    /**
-     * @param TransitionDispatcherInterface $dispatcher
-     *
-     * @return FactorySettings
-     */
-    public function setDispatcher(TransitionDispatcherInterface $dispatcher)
+    public function setDispatcher(TransitionDispatcherInterface $dispatcher): self
     {
         $this->dispatcher = $dispatcher;
 
@@ -254,17 +213,12 @@ class FactorySettings implements FactorySettingsInterface
     /**
      * {@inheritdoc}
      */
-    public function getClientOptions()
+    public function getClientOptions(): array
     {
         return $this->clientOptions;
     }
 
-    /**
-     * @param array $clientOptions
-     *
-     * @return FactorySettings
-     */
-    public function setClientOptions(array $clientOptions)
+    public function setClientOptions(array $clientOptions): self
     {
         $this->clientOptions = $clientOptions;
 
@@ -274,17 +228,12 @@ class FactorySettings implements FactorySettingsInterface
     /**
      * {@inheritdoc}
      */
-    public function getClient()
+    public function getClient(): ?ClientInterface
     {
         return $this->client;
     }
 
-    /**
-     * @param ClientInterface|null $client
-     *
-     * @return FactorySettings
-     */
-    public function setClient(ClientInterface $client = null)
+    public function setClient(?ClientInterface $client = null): self
     {
         $this->client = $client;
 
@@ -294,17 +243,12 @@ class FactorySettings implements FactorySettingsInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultFallback()
+    public function getDefaultFallback(): ?callable
     {
         return $this->defaultFallback;
     }
 
-    /**
-     * @param callable $defaultFallback
-     *
-     * @return FactorySettings
-     */
-    public function setDefaultFallback(callable $defaultFallback)
+    public function setDefaultFallback(callable $defaultFallback): self
     {
         $this->defaultFallback = $defaultFallback;
 
